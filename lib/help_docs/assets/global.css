@@ -1,0 +1,39 @@
+/* 
+    Document   : global
+    Created on : Feb 6, 2012, 1:55:59 PM
+    Author     : Curtis Oakley
+    Description:
+        Defines the general styles for all the help documentation.
+		Note: The native Java HTML renderer only has basic CSS 1.0 support.
+*/
+
+body {
+	background-color: #FFFFFF;
+	color: #111111;
+}
+
+h1, h3, .center {
+	text-align: center;
+}
+
+h3 {
+	margin-top: 15px;
+}
+
+ul {
+	list-style-type: none;
+	margin: 6px;
+}
+
+li {
+	margin: 5px;
+}
+
+p {
+	margin: 6px;
+}
+
+#nav {
+	margin-top: 20px;
+	margin-left: 20px;
+}

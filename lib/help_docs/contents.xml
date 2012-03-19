@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<help_docs>
+ <article>
+  <name>Introduction</name>
+  <file>index.html</file>
+ </article>
+ <article>
+  <!-- The Profile Manager -->
+  <name>Profile Manager Basics</name>
+  <file>how-to-use.html</file>
+  <article>
+   <name>Main Interface</name>
+   <file>interface.html</file>
+  </article>
+  <article>
+   <name>Menus Explained</name>
+   <file>menus.html</file>
+  </article>
+  <article>
+   <name>Editing a Profile</name>
+   <file>edit-profile.html</file>
+  </article>
+  <article>
+   <name>Keyboard Shortcuts</name>
+   <file>keyboard-shortcuts.html</file>
+  </article>
+ </article>
+ <article>
+  <!-- The Configuration -->
+  <name>Configuration</name>
+  <file>config.html</file>
+  <article>
+   <name>Settings Window</name>
+   <file>config-basic.html</file>
+  </article>
+  <article>
+   <!-- Advanced Configuration -->
+   <name>Advanced Configuration</name>
+   <file>config-advanced.html</file>
+  </article>
+ </article>
+ <article>
+  <name>About</name>
+  <file>about.html</file>
+ </article>
+ <article>
+  <name>License</name>
+  <file>../LICENSE.TXT</file>
+ </article>
+</help_docs>

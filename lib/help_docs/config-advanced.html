@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <title>Advanced Configuration</title>
+  <link href="assets/global.css" type="text/css" rel="stylesheet" />
+ </head>
+ <body>
+  <h1>Advanced Configuration and Settings</h1>
+  
+  <h3>profile_manager.ini</h3>
+  <p>
+   Below is a list of all the ini settings that the Profile Manager recognizes.
+   Always use caution when manually editing the profile_manager.ini. If the
+   ini file becomes corrupted just delete it and a new one will be created
+   when the Profile Manager is next run (you may need to change the data directories
+   and executables for the games though, since they will be reset to the game's
+   default install location).
+  </p>
+  <table>
+   <thead>
+    <tr><th>Key</th><th>Notes</th></tr>
+   </thead>
+   <tbody>
+    <tr><td>active_tabs=</td><td>
+	 List of all the active game tabs specified by the games internal ID, their order
+	 determines the game tabs order. Each ID should be comma separated with no spaces.
+	</td></tr>
+    <tr><td>start_tab=</td><td>The internal game ID for the tab that the Profile Manager will open into when started.</td></tr>
+	<tr><td>start_in_last_tab=</td><td>
+	 <tt>true</tt> or <tt>false</tt> depending on whether or not the Profile Manger
+	 should start up in the same tab that was open when it was last closed.
+	 Default is <tt>true</tt>.
+	</td></tr>
+    <tr><td>exit_on_launch=</td><td>
+	 <tt>true</tt> if the Profile Manager should exit when a game is started,
+	 <tt>false</tt> if the Profile Manager should remain open.
+	 Default is <tt>true</tt>.
+	</td></tr>
+	<tr><td>user_directoy=</td><td>
+	 The directory to the user's 'My Documents' folder. This should end with a 
+	 backslash.
+	</td></tr>
+	<tr><td>deep_scan=</td><td>
+	 Indicates how the Profile Manager should scan files for characters names
+	 when running auto create profiles. Accepts the values <tt>true, false, auto</tt>.
+	 When <tt>true</tt> it will always scan the files contents for the characters name.
+	 When <tt>false</tt> it will only use the name of the saved games files to get
+	 the characters name.
+	 When <tt>auto</tt> it will use the name of the saved games files to get the
+	 characters name for normal saves, and will scan the files contents for
+	 autosaves and quicksaves. Default is <tt>auto</tt>.
+	</td></tr>
+	
+    <tr><td> </td><td> </td></tr>
+	
+    <tr><td>fallout3_data_dir=</td><td>
+	 The directory that contains the saved games folder and FALLOUT.INI.
+	 This should end with a backslash.
+	</td></tr>
+    <tr><td>fallout3_exe=</td><td>
+	 The executable file to run when the launch game button is hit in the
+	 Fallout 3 tab.
+	</td></tr>
+    <tr><td>fallout3_save_dir=</td><td>
+	 The name of the folder in the <tt>fallout3_data_dir</tt> where the
+	 saved games are stored.
+	 Default is "Saves".
+	</td></tr>
+	
+    <tr><td> </td><td> </td></tr>
+	
+    <tr><td>morrowind_data_dir=</td><td>
+	 The directory that contains the saved games folder for Morrowind.
+	 This should end with a backslash.
+	</td></tr>
+    <tr><td>morrowind_exe=</td><td>
+	 The executable file to run when the launch game button is hit in the
+	 Morrowind tab.
+	</td></tr>
+    <tr><td>morrowind_save_dir=</td><td>
+	 The name of the folder in the <tt>morrowind_data_dir</tt> where the
+	 saved games are stored.
+	 Default is "Saves".
+	</td></tr>
+    <tr><td>morrowind_profiles_dir=</td><td>
+	 The name of the folder in the <tt>morrowind_data_dir</tt> where the
+	 inactive profile's saved games are stored.
+	 Default is "Profiles".
+	</td></tr>
+	
+    <tr><td> </td><td> </td></tr>
+	
+	<tr><td>new_vegas_data_dir=</td><td>
+	 The directory that contains the saved games folder and Fallout.ini.
+	 This should end with a backslash.
+	</td></tr>
+	<tr><td>new_vegas_exe=</td><td>
+	 The executable file to run when the launch game button is hit in the
+	 New Vegas tab.
+	</td></tr>
+    <tr><td>new_vegas_save_dir=</td><td>
+	 The name of the folder in the <tt>new_vegas_data_dir</tt> where the
+	 saved games are stored.
+	 Default is "Saves".
+	</td></tr>
+	
+    <tr><td> </td><td> </td></tr>
+	
+    <tr><td>oblivion_data_dir=</td><td>
+	 The directory that contains the saved games folder and Oblivion.ini.
+	 This should end with a backslash.
+	</td></tr>
+    <tr><td>oblivion_exe=</td><td>
+	 The executable file to run when the launch game button is hit in the
+	 Oblivion tab.
+	</td></tr>
+    <tr><td>oblivion_save_dir=</td><td>
+	 The name of the folder in the <tt>oblivion_data_dir</tt> where the
+	 saved games are stored.
+	 Default is "Saves".
+	</td></tr>
+	
+    <tr><td> </td><td> </td></tr>
+	
+    <tr><td>skyrim_data_dir=</td><td>
+	 The directory that contains the saved games folder and Skyrim.ini.
+	 This should end with a backslash.
+	</td></tr>
+    <tr><td>skyrim_exe=</td><td>
+	 The executable file to run when the launch game button is hit in the
+	 Skyrim tab.
+	</td></tr>
+    <tr><td>skyrim_save_dir=</td><td>
+	 The name of the folder in the <tt>skyrim_data_dir</tt> where the
+	 saved games are stored.
+	 Default is "Saves".
+	</td></tr>
+   </tbody>
+  </table>
+  
+  <h3>Command Line Arguments</h3>
+  <p>
+   The Profile Manager can be started using the following command line
+   arguments.
+  </p>
+  <table>
+   <thead>
+    <tr><th>Argument</th><th>Effect</th></tr>
+   </thead>
+   <tbody>
+    <tr><td>-l</td><td>Outputs a list of all the profiles.</td></tr>
+	<tr><td>-m</td><td>Starts the GUI in The Elder Scrolls III: Morrowind tab. This argument and all the other game start tab arguments take precedence over the ini settings.</td></tr>
+    <tr><td>-o</td><td>Starts the GUI in The Elder Scrolls IV: Oblivion tab.</td></tr>
+    <tr><td>-s</td><td>Starts the GUI in The Elder Scrolls V: Skyrim tab.</td></tr>
+    <tr><td>-f</td><td>Starts the GUI in the Fallout 3 tab.</td></tr>
+    <tr><td>-n</td><td>Starts the GUI in the Fallout: New Vegas tab.</td></tr>
+    <tr><td>-p [Profile ID]</td><td>Activates the provided profile and then launches its respective game.</td></tr>
+    <tr><td>help</td><td>Outputs the command line help documentation.</td></tr>
+   </tbody>
+  </table>
+  <p>
+   Some of the arguments may be combined. For example the argument '-lo'
+   would output a list off all the profiles and then launch the GUI into
+   the Oblivion tab.
+  </p>
+  
+  <div id='nav'>
+   <a href="config-basic.html">Prev</a> - <a href="about.html">Next</a>
+  </div>
+ </body>
+</html>
