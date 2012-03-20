@@ -1,4 +1,4 @@
-/*
+/* Profile Manager
  * Copyright (C) 2012 Curtis Oakley
  *
  * This program is free software: you can redistribute it and/or modify
@@ -228,11 +228,12 @@ public class EditGame extends javax.swing.JDialog {
                         .addComponent(savesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(savesSelectBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(iconLabel)
-                    .addComponent(iconTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(gameIcon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(iconSelectBtn))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(iconLabel)
+                        .addComponent(iconTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(iconSelectBtn)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -262,11 +263,11 @@ public class EditGame extends javax.swing.JDialog {
             else if (evt.getSource() == iconSelectBtn) {
                 EditGame.this.iconSelectBtnActionPerformed(evt);
             }
-            else if (evt.getSource() == cancelBtn) {
-                EditGame.this.cancelBtnActionPerformed(evt);
-            }
             else if (evt.getSource() == okBtn) {
                 EditGame.this.okBtnActionPerformed(evt);
+            }
+            else if (evt.getSource() == cancelBtn) {
+                EditGame.this.cancelBtnActionPerformed(evt);
             }
         }
     }// </editor-fold>//GEN-END:initComponents

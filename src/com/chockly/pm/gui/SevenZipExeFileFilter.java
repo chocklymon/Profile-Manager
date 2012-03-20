@@ -16,15 +16,13 @@
  */
 package com.chockly.pm.gui;
 
-import com.chockly.pm.IOHelper;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * Creates a new Executable File Filter.<br/>
+ * Creates a new seven zip executable filter.<br/>
  * <br/>
- * This will only accept files that have an .exe, .bat, .cmd, .com, or .jar
- * extension.
+ * This will only accept files named 7z.exe and 7za.exe.
  * @author Curtis Oakley
  */
 public class SevenZipExeFileFilter extends FileFilter {

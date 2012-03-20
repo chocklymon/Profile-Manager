@@ -1,4 +1,4 @@
-/*
+/* Profile Manager
  * Copyright (C) 2012 Curtis Oakley
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,11 +25,16 @@ import java.io.File;
 import javax.swing.JFrame;
 
 /**
- *
+ * Creates a new uninstaller and starts it.
  * @author Curtis Oakley
  */
 public class Uninstall {
     
+    /**
+     * Creates a new un-installer and starts it.
+     * @param gameIds The id numbers of the games to un-install.
+     * @param returnTo The JFrame to re-open if the uninstaller is canceled.
+     */
     public static void uninstall(byte[] gameIds, final JFrame returnTo){
         final GameUninstaller[] gus = new GameUninstaller[gameIds.length];
         Game g;

@@ -34,6 +34,7 @@ public class Config {
     //          CONSTANTS          //
     //                             //
     /////////////////////////////////
+
     // GENERAL CONFIG VALUES
     /** Indicates that the double click event should activate the profile. */
     public static final String DB_CLICK_ACTIVATE = "activate";
@@ -59,14 +60,14 @@ public class Config {
     public static final String ZIP_FORMAT = "zip";
     /**
      * Value for {@link Key#archive_format} that indicates that profile
-     * backups should use the 7z (LZMA) file format to archive the saves.
+     * backups should use the 7z file format to archive the saves.
      */
     public static final String SEVEN_ZIP_FORMAT = "7z";
     
     /**
-     * Contains the keys used by the Configuration file to store and retrieve values
-     * from the Profile Manager's properties file.
-     * 
+     * Contains the keys used by the Configuration file to store and retrieve
+     * values from the Profile Manager's properties file.<br/>
+     * <br/>
      * The keys also store their default value.
      * 
      * @author Curtis Oakley
@@ -74,116 +75,115 @@ public class Config {
     public enum Key {
         
         /** 
-        * Key used to retrieve/store the user's "My documents" directoy value.<br/>
-        * It is safe to assume that the value returned by this key will not be NULL
-        * since the value should be set when the program first runs.<br/>
-        * Like all other directory values, this one will have a trailing path separator.<br/>
-        * <br/>
-        * Defualt Value: <tt>null</tt>
-        */
+         * Key used to retrieve/store the user's "My documents" directory value.<br/>
+         * It is safe to assume that the value returned by this key will not be NULL
+         * since the value should be set when the program first runs.<br/>
+         * Like all other directory values, this one will have a trailing path separator.<br/>
+         * <br/>
+         * Default Value: <tt>null</tt>
+         */
         user_directoy,
         
         /**
-        * Key used to retrieve/store the boolean String value indicating if the
-        * program should terminate when a game is launched.<br/>
-        * <br/>
-        * Default Value: true
-        */
+         * Key used to retrieve/store the boolean String value indicating if the
+         * program should terminate when a game is launched.<br/>
+         * <br/>
+         * Default Value: true
+         */
         exit_on_launch ("true"),
         
         /**
-        * Key used to retrieve/store the byte value indicating the default tab that
-        * the program should start in.<br/>
-        * <br/>
-        * Defualt Value: <tt>null</tt>
-        */
+         * Key used to retrieve/store the byte value indicating the default tab that
+         * the program should start in.<br/>
+         * <br/>
+         * Defualt Value: <tt>null</tt>
+         */
         start_tab,
         
         /**
-        * Key used to retrieve/store the boolean String value indicating if the
-        * program should open with the last opened tab.<br/>
-        * If true the START_TAB's value is the last tab that was opened, if false
-        * the START_TAB's value indicates the preferred starting tab.<br/>
-        * <br/>
-        * Default Value: true
-        */
+         * Key used to retrieve/store the boolean String value indicating if the
+         * program should open with the last opened tab.<br/>
+         * If true the START_TAB's value is the last tab that was opened, if false
+         * the START_TAB's value indicates the preferred starting tab.<br/>
+         * <br/>
+         * Default Value: true
+         */
         start_in_last_tab ("true"),
         
         /**
-        * Key used to retrieve/store the active tabs. Active tabs are defined by a
-        * comma separated list of game ID.<br/>
-        * <br/>
-        * Defualt Value: <tt>null</tt>
-        */
+         * Key used to retrieve/store the active tabs. Active tabs are defined by a
+         * comma separated list of game ID.<br/>
+         * <br/>
+         * Defualt Value: <tt>null</tt>
+         */
         active_tabs,
 
         
         /**
-        * Key used to retrieve/store the action to be taken when double clicking
-        * the icons in the profile list.<br/>
-        * <br/>
-        * Default Value: {@link Config#DB_CLICK_ACTIVATE}
-        */
+         * Key used to retrieve/store the action to be taken when double clicking
+         * the icons in the profile list.<br/>
+         * <br/>
+         * Default Value: {@link Config#DB_CLICK_ACTIVATE}
+         */
         double_click_icon (DB_CLICK_ACTIVATE),
         
         /**
-        * Key used to retrieve/store the action to be taken when double clicking
-        * the profile's name in the profile list.<br/>
-        * <br/>
-        * Default Value: {@link Config#DB_CLICK_RENAME}
-        */
+         * Key used to retrieve/store the action to be taken when double clicking
+         * the profile's name in the profile list.<br/>
+         * <br/>
+         * Default Value: {@link Config#DB_CLICK_RENAME}
+         */
         double_click_name (DB_CLICK_RENAME),
 
 
         /**
-        * Key used to retrieve/store the deep scan flag for saved games.<br/>
-        * <br/>
-        * Valid values for the key: <tt>true, false, auto</tt><br/>
-        * <br/>
-        * Default Value: {@link Config#DEEP_SCAN_AUTO}
-        */
+         * Key used to retrieve/store the deep scan flag for saved games.<br/>
+         * <br/>
+         * Valid values for the key: <tt>true, false, auto</tt><br/>
+         * <br/>
+         * Default Value: {@link Config#DEEP_SCAN_AUTO}
+         */
         deep_scan (DEEP_SCAN_AUTO),
 
 
         /**
-        * Key used to retrieve/store how the Profile Manager should react to folders
-        * being created in the games profile folder.<br/>
-        * <br/>
-        * Valid values for the key: <tt>true, false, prompt</tt>.<br/>
-        * <br/>
-        * Default Value: {@link Config#AUTO_PROMPT}
-        */
+         * Key used to retrieve/store how the Profile Manager should react to folders
+         * being created in the games profile folder.<br/>
+         * <br/>
+         * Valid values for the key: <tt>true, false, prompt</tt>.<br/>
+         * <br/>
+         * Default Value: {@link Config#AUTO_PROMPT}
+         */
         auto_create (AUTO_PROMPT),
         /**
-        * Key used to retrieve/store how the Profile Manager should react to folders
-        * being deleted in the games profile folder.<br/>
-        * <br/>
-        * Valid values for the key: <tt>true, false, prompt</tt>.<br/>
-        * <br/>
-        * Default Value: {@link Config#AUTO_PROMPT}
-        */
+         * Key used to retrieve/store how the Profile Manager should react to folders
+         * being deleted in the games profile folder.<br/>
+         * <br/>
+         * Valid values for the key: <tt>true, false, prompt</tt>.<br/>
+         * <br/>
+         * Default Value: {@link Config#AUTO_PROMPT}
+         */
         auto_delete (AUTO_PROMPT),
 
         
         /**
-        * Key used to retrieve/store what compression format should be used to
-        * archive the profiles.<br/>
-        * <br/>
-        * Default Value: {@link Config#ZIP_FORMAT}
-        */
+         * Key used to retrieve/store what compression format should be used to
+         * archive the profiles.<br/>
+         * <br/>
+         * Default Value: {@link Config#ZIP_FORMAT}
+         */
         archive_format (ZIP_FORMAT),
         /**
-        * Key used to retrieve/store the location of 7z.exe.<br/>
-        * <br/>
-        * Default Value: C:\Program Files\7-Zip\7z.exe
-        */
+         * Key used to retrieve/store the location of 7z.exe.<br/>
+         * <br/>
+         * Default Value: C:\Program Files\7-Zip\7z.exe
+         */
         seven_zip_exe ("C:\\Program Files\\7-Zip\\7z.exe");
 
+        
         private final String defaultValue;
 
-        /**
-        * Creates a new ConfigKey with the default value of <tt>null</tt>.
-        */
+        /** Creates a new ConfigKey with the default value of <tt>null</tt>. */
         private Key(){
             defaultValue = null;
         }
@@ -231,8 +231,7 @@ public class Config {
     //          METHODS            //
     //                             //
     /////////////////////////////////
-    
-    
+
     /**
      * Loads the configuration files from disk.<br/>
      * In general this should be called only once per program run, as reloading

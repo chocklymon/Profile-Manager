@@ -33,7 +33,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
 
     /** Creates new form ConfigGUI */
     public ConfigGUI(java.awt.Frame parent) {
-        super(parent, false);
+        super(parent, true);
         initComponents();
 
         // Generate the tabs
@@ -173,7 +173,6 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         setTitle("Profile Manager Preferences");
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/gear.png")).getImage());
         setLocationByPlatform(true);
-        setModal(true);
 
         archivePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Backup Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
@@ -628,6 +627,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         }
     }
     
+    /** Builds the game settigns tabs for the built in games. */
     private void buildTabs(){
         if(emptyPanels == null){
             emptyPanels = new javax.swing.JPanel[builtInGames.length];
@@ -650,6 +650,10 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         gameSettingsTabPane.setSelectedIndex(selectedTab);
     }
     
+    /**
+     * Opens up a JFileChooser to select a file/directory.
+     * @param dirTxt A byte representing which textarea the file chooser is for.
+     */
     private void findFile(byte dirTxt){
         JFileChooser fc = new JFileChooser();
         
@@ -699,6 +703,11 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         }
     }
     
+    /**
+     * Implodes a byte array into a comma separated string.
+     * @param a The byte array to implode.
+     * @return The byte array as a comma separated string.
+     */
     private String implode(byte[] a){
         if (a == null)
             return "";
@@ -717,6 +726,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         }
     }
 
+    /** Moves the currently selected game up one in the game list. */
     private void moveGameUp(){
         int index = gameList.getSelectedIndex();
         
@@ -771,6 +781,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         }
     }
     
+    /** Moves the currently selected game down one in the game list. */
     private void moveGameDown(){
         final int index = gameList.getSelectedIndex();
         
@@ -858,6 +869,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         }
     }
 
+    /** Puts the changes into the configuration and saves it to disk. */
     private void saveConfig() {
         // Iterate through the prefs and save to config
         java.util.Iterator<String> i = prefs.keySet().iterator();
@@ -867,7 +879,8 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         }
         Config.saveConfig();
     }
-    
+
+    /** Sets the start in last tab configuration and updates the GUI. */
     private void setStartInLastTab() {
         // Save the start in last tab value
         boolean startInLastTab = startInLastTabCB.isSelected();
@@ -886,7 +899,8 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
                 startInThisTabCB.setEnabled(true);
         }
     }
-    
+
+    /** Sets the start in this tab configuration and updates the GUI. */
     private void setStartInThisTab(){
         if(startInThisTabCB.isSelected()){
             prefs.put(Config.Key.start_tab.toString(),
@@ -896,7 +910,13 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             prefs.put(Config.Key.start_tab.toString(), "0");
         }
     }
-    
+
+    /**
+     * Toggles if it is possible to edit the 7z settings, and saves the archive
+     * settings.
+     * @param isZip If <tt>true</tt> means that the program is using zip to
+     * archive the profiles, <tt>false</tt> if using 7z.
+     */
     private void toogleArchiveMode(boolean isZip){
         // Toogle the seven zip fields as needed
         if(isZip == sevenZipExeTxt.isEnabled()){
@@ -917,7 +937,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         }
         
         private void updatePrefs(){
-            // Do respond to programatic changes (such as those caused by changing tabs).
+            // Do not respond to programatic changes (such as those caused by changing tabs).
             if(programaticDocChange){
                 programaticDocChange = false;
                 return;
@@ -935,6 +955,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
                 default:
                     newValue = sevenZipExeTxt.getText();
             }
+            System.out.println("Value:\t" + newValue);
             
             if(newValue == null || newValue.isEmpty())
                 return;
@@ -970,16 +991,19 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         
         @Override
         public void insertUpdate(DocumentEvent e) {
+            System.out.println("Insert\t" + programaticDocChange);
             updatePrefs();
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
+            System.out.println("Remove\t" + programaticDocChange);
             updatePrefs();
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
+            System.out.println("Changed\t" + programaticDocChange);
             // Ignore
         }
     }

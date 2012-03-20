@@ -116,5 +116,4 @@ public class UpdateProfilesChecker {
         return check("The saved game folder for " + name + " has been deleted.\n\nWould you like to delete this profile?",
                 false);
     }
-    
 }

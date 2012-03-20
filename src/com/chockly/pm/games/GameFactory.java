@@ -174,7 +174,7 @@ public class GameFactory {
     
     /**
      * Returns all game IDs for the custom games.
-     * @return 
+     * @return The id numbers of all the built in games.
      */
     public static byte[] getAllBuiltInGameIds(){
         return new byte[] {MORROWIND_ID, OBLIVION_ID, SKYRIM_ID, FALLOUT_3_ID, FALLOUT_NV_ID};
@@ -267,6 +267,12 @@ public class GameFactory {
         return max;
     }
     
+    /**
+     * Returns if the provided game id represents an custom game.
+     * @param gameId The game id to check.
+     * @return <tt>true</tt> if the game is a custom game, <tt>false</tt> false
+     * otherwise.
+     */
     public static boolean isCustomGame(byte gameId){
         return ArrayHelper.getIndex(getAllBuiltInGameIds(), gameId) == -1;
     }
@@ -284,11 +290,10 @@ public class GameFactory {
             checkForConflicts();
     }
     
-    public static void saveCustomGames(){
-        if(customGames != null)
-            XMLHelper.GamesToXML(customGames, CUSTOM_GAME_FILE);
-    }
-    
+    /**
+     * Removes the custom game from the list of custom games.
+     * @param id The id number of the game to remove.
+     */
     public static void removeCustomGame(byte id){
         for(int i=0; i<customGames.length; i++){
             if(id == customGames[i].getId()){
@@ -308,7 +313,23 @@ public class GameFactory {
             }
         }
     }
+    
+    /** Saves the custom games to disk. */
+    public static void saveCustomGames(){
+        if(customGames != null)
+            XMLHelper.GamesToXML(customGames, CUSTOM_GAME_FILE);
+    }
 
+    /**
+     * Updates the provided custom game with the new information provided.
+     * @param game The custom game to update.
+     * @param name The new name of the game.
+     * @param gameDir The new game directory.
+     * @param exe The new executable.
+     * @param icon The new icon.
+     * @param profileDir The new profile directory name.
+     * @param saveDir The new save directory name.
+     */
     public static void updateCustomGame(CustomGame game,
             String name,
             String gameDir,

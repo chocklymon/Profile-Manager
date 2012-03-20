@@ -1,4 +1,4 @@
-/*
+/* Profile Manager
  * Copyright (C) 2012 Curtis Oakley
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 /**
- * This class is used to create a custom directory swapping game.
- * 
+ * This class is used to create a custom directory swapping games.
  * @author Curtis Oakley
  */
 public class CustomGame extends AbstractDirGame {

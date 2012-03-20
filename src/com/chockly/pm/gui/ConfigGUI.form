@@ -122,7 +122,6 @@
       <Connection code="new javax.swing.ImageIcon(getClass().getResource(&quot;/com/chockly/pm/resources/gear.png&quot;)).getImage()" type="code"/>
     </Property>
     <Property name="locationByPlatform" type="boolean" value="true"/>
-    <Property name="modal" type="boolean" value="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>

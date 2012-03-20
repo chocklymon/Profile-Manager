@@ -31,14 +31,6 @@ public abstract class BethesdaGame implements Game {
     
     protected static final String SAVES_FOLDER = "Saves";
     
-    /**
-     * Activates a profile.<br/>
-     * <br/>
-     * This sets the ini's "SLocalSavePath" in the "[General]" section to the profile's save directory.
-     * @param ini The ini file and it's path.
-     * @param profile The Profile to activate.
-     * @return True if the profile was correctly activated, false otherwise.
-     */
     @Override
     public boolean activateProfile(Profile profile) {
         try
@@ -109,8 +101,11 @@ public abstract class BethesdaGame implements Game {
      * character's name twice.
      */
     protected void autoSetupProfiles(String[] validExtensions,
-            long nameStartOffset, int backTrackAmount,
-            String nameStart, String nameEnd, boolean repeatNameEnd)
+            long nameStartOffset,
+            int backTrackAmount,
+            String nameStart,
+            String nameEnd,
+            boolean repeatNameEnd)
     {
         // Detect the state of the deepscan
         String deepScan = Config.get(Config.Key.deep_scan);
@@ -273,10 +268,6 @@ public abstract class BethesdaGame implements Game {
         }
     }
     
-    /**
-     * Deactivates all profiles. Effectively restoring the game to it's default
-     * setting.
-     */
     @Override
     public void deactivateProfiles(){
         try
@@ -287,7 +278,7 @@ public abstract class BethesdaGame implements Game {
                     getSave() + File.separator,
                     "[General]");
             
-            ProfileFactory.clearActiveProfiles(getId());
+            ProfileFactory.clearActiveProfile(getId());
         }
         catch(FileNotFoundException fnfe)
         {

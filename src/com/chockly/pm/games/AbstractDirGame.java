@@ -1,4 +1,4 @@
-/*
+/* Profile Manager
  * Copyright (C) 2012 Curtis Oakley
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import com.chockly.pm.ProfileFactory;
 import java.io.File;
 
 /**
- *
+ * Represents a game that operates by moving directories to activate profiles.
  * @author Curtis Oakley
  */
 public abstract class AbstractDirGame implements Game {

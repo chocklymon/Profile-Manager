@@ -19,6 +19,7 @@ package com.chockly.pm;
 import com.chockly.pm.games.Game;
 import com.chockly.pm.games.GameFactory;
 import com.chockly.pm.gui.ProfileManager;
+import java.io.PrintWriter;
 
 /**
  * Profile Manger main class.<br/>
@@ -30,23 +31,26 @@ import com.chockly.pm.gui.ProfileManager;
  *   profile_manager.ini
  *   error.log
  *  [lib]
+ *    games.xml
  *    HelpSystem.jar
+ *    LICENSE.TXT
+ *    Uninstaller.jar
  *   [help_docs]
  *      contents.xml
  *      + The various help documentation HTML files.
  *  [Profiles]
  *    .profile_manager
+ *    default.png
  *    profiles.obj
- *    + The various profile images
  * </pre>
  * 
  * @author Curtis Oakley
- * @version 1.3.15
+ * @version 1.3.17
  */
 public class Main {
     
     /** The current version number for the Profile Manager. */
-    public static final String VERSION_NUM = "1.3.15";
+    public static final String VERSION_NUM = "1.3.17";
 
     /**
      * This exception level indicates that a fatal error has occurred. This will 
@@ -68,7 +72,7 @@ public class Main {
     private static byte gameID = 0;
     private static int profileID = 0;
     
-    private static java.io.PrintWriter errFile = null;
+    private static PrintWriter errFile = null;
 
     /**
      * Starts up the profile manager.
@@ -271,7 +275,7 @@ public class Main {
         // Create the error log writer as needed
         if(errFile == null){
             try {
-                errFile = new java.io.PrintWriter(new java.io.FileWriter("error.log", true));
+                errFile = new PrintWriter(new java.io.FileWriter("error.log", true));
             } catch(java.io.IOException ioe){
                 ioe.printStackTrace(System.err);
             }

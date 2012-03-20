@@ -32,7 +32,8 @@ public class IOHelper {
      * Checks the provided game's save directory for any folders that have been
      * added or removed, and then adds or deletes profiles as appropriate.
      * @param gameID The ID of the game to check.
-     * @return True if any profiles where added or removed.
+     * @return <tt>True</tt> if any profiles where added or removed, <tt>false</tt>
+     * otherwise.
      */
     public static boolean checkForProfileDirChanges(byte gameID){
         Game g = GameFactory.getGameFromID(gameID);
@@ -268,9 +269,10 @@ public class IOHelper {
      * adds the key and value if it doesn't exist.<br/>
      * <br/>
      * This will only work on MS INI formated files that use the standard 
-     * key=value arrangment. Attempting to use this method on other file 
+     * key=value arrangement. Attempting to use this method on other file 
      * types/formats may have unexpected results including and quite likely
      * corrupting the provided file.
+     * 
      * @param fileName The name of the file to edit.
      * @param key The key to search for. Do not include the equals sign.
      * @param value The value to replace the keys current value with.
@@ -278,6 +280,7 @@ public class IOHelper {
      * placed in if the key doesn't currently exist. If the section doesn't exist
      * it will be appended to the end of the file. Sections names should contain
      * the opening and closing square brackets. For example: "[General]".
+     * 
      * @throws FileNotFoundException If the file denoted by fileName doesn't exist.
      */
     public static void setINIValue(String fileName, String key, String value, String section)
@@ -325,7 +328,7 @@ public class IOHelper {
                 // Key found, update it
                 start += key.length() + 1;
 
-                // Replace the current save file location
+                // Replace the current value with the new value
                 file.replace(start,
                         file.indexOf(newLine, start),
                         value);
@@ -346,7 +349,6 @@ public class IOHelper {
                         "An IO Exception has occured while saving the game's INI file to disk.",
                         ioe, Main.WARN_LEVEL);
             }
-
         } catch(FileNotFoundException fnfe){
             throw new FileNotFoundException(fnfe.getMessage());
         } catch(IOException ioe){
@@ -364,7 +366,8 @@ public class IOHelper {
     public static void startProgram(String exe) throws FileNotFoundException {
         
         if( ! new File(exe).exists())
-            throw new FileNotFoundException("Unable to find the specified executable \"" + exe + '"');
+            throw new FileNotFoundException("Unable to find the specified executable \""
+                    + exe + '"');
         
         try
         {
@@ -373,7 +376,8 @@ public class IOHelper {
                 // Extract the path and then change the working directory to the path
                 String path = exe.substring(0, exe.lastIndexOf(File.separator));
 
-                Runtime.getRuntime().exec("cmd /c pushd \"" + path + "\" & cmd /c \"" + exe + '"');
+                Runtime.getRuntime().exec("cmd /c pushd \"" + path
+                        + "\" & cmd /c \"" + exe + '"');
             
             } else {
                 // Attempt to run the file
@@ -386,5 +390,4 @@ public class IOHelper {
                     ioe, Main.WARN_LEVEL);
         }
     }
-
 }

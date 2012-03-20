@@ -16,8 +16,6 @@
  */
 package com.chockly.pm;
 
-import com.chockly.pm.games.CustomGame;
-
 /**
  * Contains methods helpful to Array manipulations.
  * @author Curtis Oakley
@@ -25,22 +23,13 @@ import com.chockly.pm.games.CustomGame;
 public class ArrayHelper {
     
     /**
-     * Removes the specified CustomGame from an array of CustomGame, returning
-     * an array that is one element shorter.
+     * Removes the specified index from the array. Returning an array with a
+     * length one shorter.
      * @param array The array to splice.
      * @param index The index of the Object to remove.
      * @return 
      */
-    public static CustomGame[] splice(CustomGame[] array, int index){
-        CustomGame[] temp = new CustomGame[array.length-1];
-        if(temp.length > 0){
-            System.arraycopy(array, 0, temp, 0, index);
-            System.arraycopy(array, index+1, temp, index, temp.length-index);
-        }
-        return temp;
-    }
-	
-	public static <T> T[] splice(T[] array, int index){
+    public static <T> T[] splice(T[] array, int index){
         T[] temp = (T[]) new Object[array.length-1];
         if(temp.length > 0){
             System.arraycopy(array, 0, temp, 0, index);

@@ -198,6 +198,7 @@ public class EditProfile extends javax.swing.JDialog implements ActionListener {
         }
     }
     
+    /** Saves the changes to the Profile and closes the dialog. */
     private void saveAndExit(){
         if(editDirCheckBox.isSelected()){
             if( !dirTxt.getText().equals(profile.getSaveDir())){

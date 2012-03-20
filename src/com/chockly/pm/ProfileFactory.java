@@ -140,7 +140,7 @@ public class ProfileFactory {
      * Deactivates the active profile for the given game.
      * @param gameID The game id for the profile to deactivate.
      */
-    public static void clearActiveProfiles(byte gameID){
+    public static void clearActiveProfile(byte gameID){
         for(int x=0; x<size; x++){
             if(profiles[x].getGameID() == gameID){
                 if(profiles[x].isActive()){
@@ -332,7 +332,6 @@ public class ProfileFactory {
         }
     }
 
-
     private static Profile[] profiles;
     private static int size;
 
@@ -342,5 +341,4 @@ public class ProfileFactory {
 
 
     private static final String PROFILES_FILE = "profiles.obj";
-
 }

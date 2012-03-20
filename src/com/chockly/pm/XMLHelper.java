@@ -237,12 +237,7 @@ public class XMLHelper {
                     
                     if(name == null || dir == null){
                         // Invalid remove from the profile array
-                        Profile[] temp = new Profile[profiles.length-1];
-                        if(temp.length > 0){
-                            System.arraycopy(profiles, 0, temp, 0, i);
-                            System.arraycopy(profiles, i+1, temp, i, temp.length-i);
-                        }
-                        profiles = temp;
+                        profiles = ArrayHelper.splice(profiles, i);
                         i--;
                     } else {
                         profiles[i] = new Profile(name, dir, 
