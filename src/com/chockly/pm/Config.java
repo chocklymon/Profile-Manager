@@ -82,7 +82,7 @@ public class Config {
          * <br/>
          * Default Value: <tt>null</tt>
          */
-        user_directoy,
+        user_directoy,// TODO fix this misspelling
         
         /**
          * Key used to retrieve/store the boolean String value indicating if the

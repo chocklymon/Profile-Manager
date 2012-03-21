@@ -45,12 +45,12 @@ import java.io.PrintWriter;
  * </pre>
  * 
  * @author Curtis Oakley
- * @version 1.3.17
+ * @version 1.3.18
  */
 public class Main {
     
     /** The current version number for the Profile Manager. */
-    public static final String VERSION_NUM = "1.3.17";
+    public static final String VERSION_NUM = "1.3.18";
 
     /**
      * This exception level indicates that a fatal error has occurred. This will 
@@ -219,7 +219,7 @@ public class Main {
          * Version 1.35 - Add auto-update profiles based on folders.(2)                                                           Due: 03/10/2012     Status: COMPLETED
          * Version 1.4  - Add backup saves functionality.                                                                         Due: 03/16/2012     Status: COMPLETED
          * Version 1.44 - Add installer                                                                                           Due: 03/23/2012     Status: COMPLETED
-         * Version 1.45 - Add un-installer                                                                                        Due: 03/30/2012     Status: In-testing
+         * Version 1.45 - Add un-installer                                                                                        Due: 03/30/2012     Status: COMPLETED
          * Version 1.46 - Add ability to export/import profiles through xml.                                                      Due: 04/06/2012     Status:
          * Version 2.0  - Add active plugin swapper.                                                                              Due: 05/01/2012     Status:
          * Version 2.1  - Add ini swapper.                                                                                        

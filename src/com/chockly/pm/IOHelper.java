@@ -66,6 +66,7 @@ public class IOHelper {
             for(int i=0; i<profiles.length; i++){
                 if( !new File(saveDir, profiles[i].getSaveDir()).exists() ){
                     // File removed, delete the profile
+                    // TODO, with morrowind, the profile folder will be gone when active, check for this.
                     if(UpdateProfilesChecker.deleteProfile(profiles[i].getName())){
                         ProfileFactory.removeProfile(profiles[i]);
                         changes = true;

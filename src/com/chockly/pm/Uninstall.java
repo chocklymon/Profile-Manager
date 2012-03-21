@@ -29,7 +29,7 @@ import javax.swing.JFrame;
  * @author Curtis Oakley
  */
 public class Uninstall {
-    
+
     /**
      * Creates a new un-installer and starts it.
      * @param gameIds The id numbers of the games to un-install.
@@ -57,9 +57,9 @@ public class Uninstall {
                         g.getName(),
                         new File(dir, g.getIni()),
                         "SLocalSavePath",
-                        g.getSave());
+                        g.getSave() + '\\');
             else
-                gus[i] = new GameUninstaller(new File(dir, g.getSave()),
+                gus[i] = new GameUninstaller(new File(dir, g.getGameSaveDir()),
                         profileDir,
                         g.getName());
         }
