@@ -503,10 +503,15 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             if(exe == null)
                 exe = g.getExe();
             
+            // Mark these change to the text field as being by the program not the user
             programaticDocChange = true;
             
+            // Update the text fields text
             dataDirTxt.setText(dir);
             exeFileTxt.setText(exe);
+            
+            // Clear the programtic text change field
+            programaticDocChange = false;
         }
     }//GEN-LAST:event_gameSettingsTabPaneStateChanged
 
@@ -938,10 +943,8 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         
         private void updatePrefs(){
             // Do not respond to programatic changes (such as those caused by changing tabs).
-            if(programaticDocChange){
-                programaticDocChange = false;
+            if(programaticDocChange)
                 return;
-            }
             
             // Get the new text field value
             String newValue;
@@ -955,7 +958,6 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
                 default:
                     newValue = sevenZipExeTxt.getText();
             }
-            System.out.println("Value:\t" + newValue);
             
             if(newValue == null || newValue.isEmpty())
                 return;
@@ -976,12 +978,9 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
 
             String value = prefs.containsKey(prefsKey) ? prefs.get(prefsKey)
                     : Config.get(prefsKey);
-            
-            if(value == null || value.isEmpty())
-                return;
-            
-            // See if the value has changed
-            if( !value.equals(newValue)){
+
+            if(value == null || !value.equals(newValue)){
+                // Value has changed, update the value
                 if( !applyBtn.isEnabled())
                     applyBtn.setEnabled(true);
                 
@@ -991,19 +990,16 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         
         @Override
         public void insertUpdate(DocumentEvent e) {
-            System.out.println("Insert\t" + programaticDocChange);
             updatePrefs();
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
-            System.out.println("Remove\t" + programaticDocChange);
             updatePrefs();
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
-            System.out.println("Changed\t" + programaticDocChange);
             // Ignore
         }
     }
