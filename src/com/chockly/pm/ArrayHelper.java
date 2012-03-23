@@ -29,7 +29,7 @@ public class ArrayHelper {
      * @param index The index of the Object to remove.
      * @return 
      */
-    public static <T> T[] splice(T[] array, int index){
+    public static <T> T[] splice(T[] array, int index){// TODO fix the unchecked with this method
         T[] temp = (T[]) new Object[array.length-1];
         if(temp.length > 0){
             System.arraycopy(array, 0, temp, 0, index);

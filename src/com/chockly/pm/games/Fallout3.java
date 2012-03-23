@@ -66,7 +66,7 @@ public class Fallout3 extends BethesdaGame {
     public String getDir() {
         String path = Config.get(FALLOUT3_DATA_DIR);
         if(path == null)
-            path = Config.get(Config.Key.user_directoy.toString()) + "My Games"
+            path = Config.get(Config.Key.user_directory.toString()) + "My Games"
                     + File.separator + "Fallout3" + File.separator;
         
         return path;

@@ -89,7 +89,7 @@ public class Skyrim extends BethesdaGame {
     public String getDir(){
         String dir = Config.get(SKYRIM_DATA_DIR);
         if(dir == null)
-            dir = Config.get(Config.Key.user_directoy.toString()) + "My Games"
+            dir = Config.get(Config.Key.user_directory.toString()) + "My Games"
                     + File.separator + "Skyrim" + File.separator;
 
         return dir;

@@ -34,6 +34,11 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
     /** Creates new form ConfigGUI */
     public ConfigGUI(java.awt.Frame parent) {
         super(parent, true);
+        
+        // Build the game arrays
+        buildGameArrays();
+        
+        // Initialize the GUI's components
         initComponents();
 
         // Generate the tabs
@@ -632,8 +637,61 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         }
     }
     
-    /** Builds the game settigns tabs for the built in games. */
+    /** Builds the game arrays. */
+    private void buildGameArrays(){
+        byte[] allGames = GameFactory.getAllGameIds();
+        byte[] stanGames = GameFactory.getAllBuiltInGameIds();
+        
+        // Get the active games
+        activeGames = GameFactory.getActiveGameIds();
+        
+
+        // Build the built in games array
+        builtInGames = new byte[stanGames.length];
+        
+        // Place the built in games into the order of active games.
+        int stanGameCount = 0;
+        for(int i=0; i<activeGames.length; i++){
+            byte next = activeGames[i];
+            
+            if(ArrayHelper.getIndex(stanGames, next) != -1){
+                builtInGames[stanGameCount] = next;
+                stanGameCount++;
+            }
+        }
+        
+        // Add in any built in games that are not active.
+        if(stanGameCount < stanGames.length){
+            for(int i=0; i<stanGames.length; i++){
+                if(ArrayHelper.getIndex(builtInGames, stanGames[i]) == -1){
+                    builtInGames[stanGameCount] = stanGames[i];
+                    stanGameCount++;
+                }
+            }
+        }
+        
+
+        // Build the games array
+        int activeGameCount = activeGames.length;
+        if(activeGameCount == allGames.length){
+            games = Arrays.copyOf(activeGames, activeGameCount);
+        } else {
+            // Add activeGames to all games then add in any games left over.
+            games = new byte[allGames.length];
+            System.arraycopy(activeGames, 0, games, 0, activeGameCount);
+            
+            for(int x=0, added = activeGameCount; x<games.length; x++){
+                if(ArrayHelper.getIndex(games, allGames[x]) == -1){
+                    games[added] = allGames[x];
+                    added++;
+                }
+            }
+        }
+    }
+    
+    /** Builds the game settings tabs for the built in games. */
     private void buildTabs(){
+
         if(emptyPanels == null){
             emptyPanels = new javax.swing.JPanel[builtInGames.length];
             for(int x=0; x<builtInGames.length; x++){
@@ -840,33 +898,12 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
 
     /** Populates the gameList JList with all the games. */
     private void populateGameList(){
-        // Get the active and all game information
-        byte[] allGames = GameFactory.getAllGameIds();
-        activeGames = GameFactory.getActiveGameIds();
-        builtInGames = GameFactory.getAllBuiltInGameIds();
-        
-        int activeGameCount = activeGames.length;
-        if(activeGameCount == allGames.length){
-            games = Arrays.copyOf(activeGames, activeGameCount);
-        } else {
-            // Add activeGames to all games then add in any games left over.
-            games = new byte[allGames.length];
-            System.arraycopy(activeGames, 0, games, 0, activeGameCount);
-            
-            for(int x=0, added = activeGameCount; x<games.length; x++){
-                if(ArrayHelper.getIndex(games, allGames[x]) == -1){
-                    games[added] = allGames[x];
-                    added++;
-                }
-            }
-        }
-        
         // Setup the list model
         for(int x=0; x<games.length; x++){
             // Create and set the gameList Item
             GameListItem game = new GameListItem(
                     GameFactory.getNameFromID(games[x]), games[x]);
-            if(x < activeGameCount)
+            if(x < activeGames.length)
                 game.setSelected(true);
 
             // Add to the model

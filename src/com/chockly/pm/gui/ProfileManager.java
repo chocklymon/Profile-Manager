@@ -21,7 +21,9 @@ import com.chockly.pm.games.CustomGame;
 import com.chockly.pm.games.Game;
 import com.chockly.pm.games.GameFactory;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
 import java.util.Arrays;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -336,26 +338,31 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
 
         customGameMenu.setText("Games");
 
+        newGameMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/plus.png"))); // NOI18N
         newGameMenuItem.setText("New Custom Game");
         newGameMenuItem.addActionListener(this);
         customGameMenu.add(newGameMenuItem);
 
+        editGameMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/pencil.png"))); // NOI18N
         editGameMenuItem.setText("Edit Game");
         editGameMenuItem.setEnabled(false);
         editGameMenuItem.addActionListener(this);
         customGameMenu.add(editGameMenuItem);
         customGameMenu.add(jSeparator1);
 
+        exportGameMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/script-export.png"))); // NOI18N
         exportGameMenuItem.setText("Export Game");
         exportGameMenuItem.setEnabled(false);
         exportGameMenuItem.addActionListener(this);
         customGameMenu.add(exportGameMenuItem);
 
+        importGameMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/script-import.png"))); // NOI18N
         importGameMenuItem.setText("Import Game");
         importGameMenuItem.addActionListener(this);
         customGameMenu.add(importGameMenuItem);
         customGameMenu.add(jSeparator2);
 
+        deleteGameMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/cross-script.png"))); // NOI18N
         deleteGameMenuItem.setText("Delete Game");
         deleteGameMenuItem.setEnabled(false);
         deleteGameMenuItem.addActionListener(this);
@@ -365,7 +372,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
 
         toolsMenu.setText("Tools");
 
-        deactivateMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/minus-circle.png"))); // NOI18N
+        deactivateMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/tick-red.png"))); // NOI18N
         deactivateMenuItem.setText("Deactivate Profiles");
         deactivateMenuItem.addActionListener(this);
         toolsMenu.add(deactivateMenuItem);
@@ -377,10 +384,12 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         toolsMenu.add(backupProfileMenuItem);
         toolsMenu.add(jSeparator3);
 
+        exportProfilesMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/card-export.png"))); // NOI18N
         exportProfilesMenuItem.setText("Export Profiles");
         exportProfilesMenuItem.addActionListener(this);
         toolsMenu.add(exportProfilesMenuItem);
 
+        importProfileMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/card-import.png"))); // NOI18N
         importProfileMenuItem.setText("Import Profiles");
         importProfileMenuItem.addActionListener(this);
         toolsMenu.add(importProfileMenuItem);
@@ -499,6 +508,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             profileList.setSelectedIndex(
                     profileList.locationToIndex(evt.getPoint()));
             // Show the right click menu
+            // TODO detect if there is something selected and only display the pop-up a profile is selected.
             profilePopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_profileListMouseClicked
@@ -634,6 +644,14 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                 showEditGame(true);
             } else if(source.equals(deleteGameMenuItem)){
                 deleteCustomGame();
+            } else if(source.equals(exportGameMenuItem)){
+                exportCustomGame();
+            } else if(source.equals(exportProfilesMenuItem)){
+                exportProfiles();
+            } else if(source.equals(importGameMenuItem)){
+                // TODO
+            } else if(source.equals(importProfileMenuItem)){
+                // TODO
             }
         } catch(Exception ex){
             // Log the error and inform the user
@@ -898,6 +916,39 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         this.dispose();
     }
     
+    private void exportCustomGame(){
+        // TODO refine and test this.
+        JFileChooser fc = new JFileChooser();
+        
+        if(fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+            CustomGame[] g = {(CustomGame) GameFactory.getGameFromID(gameID)};
+            
+            XMLHelper.GamesToXML(g, fc.getSelectedFile().getAbsolutePath());
+        }
+    }
+    
+    private void exportProfiles(){
+        // TODO refine and test this.
+        JFileChooser fc = new JFileChooser();
+        fc.setFileFilter(new xmlFileFilter());
+        
+        if(fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+            File file = fc.getSelectedFile();
+            
+            String fName = file.getName();
+            if( !fName.contains(".") || 
+                    !fName.substring(fName.lastIndexOf('.')).equalsIgnoreCase(".xml"))
+                fName += ".xml";
+            
+            
+            XMLHelper.ProfilesToXML(ProfileFactory.getProfiles(gameID),
+                    file.getParent() + File.separator + fName);
+            
+            infoTxt.setText("Export complete.");
+        }
+    }
+    
+    /** Signals that a profile backup has completed, updates the GUI to reflect this. */
     public void finishBackupProfile(){
         progressBar.setVisible(false);
         

@@ -65,15 +65,21 @@ public class IOHelper {
             // Check for removed profile folders
             for(int i=0; i<profiles.length; i++){
                 if( !new File(saveDir, profiles[i].getSaveDir()).exists() ){
-                    // File removed, delete the profile
-                    // TODO, with morrowind, the profile folder will be gone when active, check for this.
+                    // File removed
+                    
+                    if(profiles[i].isActive() && !g.usesIni())
+                        // Profile is active for folder swapping game, ignore
+                        continue;
+                    
                     if(UpdateProfilesChecker.deleteProfile(profiles[i].getName())){
+                        // Delete the profile
                         ProfileFactory.removeProfile(profiles[i]);
                         changes = true;
                     }
                 }
             }
         }
+        
         return changes;
     }
     
@@ -179,8 +185,8 @@ public class IOHelper {
     /**
      * Gets the file extension of the provided file.
      * @param f The file to get the extension of.
-     * @return The file's extension or null if it has no extension.<br/>
-     * The returned string will not have the extension's period.
+     * @return The file's extension or <tt>null</tt> if it has no extension.<br/>
+     * The returned string will be in lower case, and not have the extension's period.
      */
     public static String getExtension(File f) {
         String ext = null;

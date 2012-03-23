@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
@@ -353,6 +353,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="newGameMenuItem">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/com/chockly/pm/resources/plus.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="New Custom Game"/>
               </Properties>
               <AuxValues>
@@ -361,6 +364,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="editGameMenuItem">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/com/chockly/pm/resources/pencil.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Edit Game"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
@@ -372,6 +378,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="exportGameMenuItem">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/com/chockly/pm/resources/script-export.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Export Game"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
@@ -381,6 +390,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="importGameMenuItem">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/com/chockly/pm/resources/script-import.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Import Game"/>
               </Properties>
               <AuxValues>
@@ -391,6 +403,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="deleteGameMenuItem">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/com/chockly/pm/resources/cross-script.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Delete Game"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
@@ -408,7 +423,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="deactivateMenuItem">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/com/chockly/pm/resources/minus-circle.png"/>
+                  <Image iconType="3" name="/com/chockly/pm/resources/tick-red.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Deactivate Profiles"/>
               </Properties>
@@ -433,6 +448,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="exportProfilesMenuItem">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/com/chockly/pm/resources/card-export.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Export Profiles"/>
               </Properties>
               <AuxValues>
@@ -441,6 +459,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="importProfileMenuItem">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/com/chockly/pm/resources/card-import.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Import Profiles"/>
               </Properties>
               <AuxValues>

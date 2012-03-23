@@ -91,7 +91,7 @@ public class FalloutNV extends BethesdaGame {
     public String getDir() {
         String path = Config.get(NEW_VEGAS_DATA_DIR);
         if(path == null)
-            path = Config.get(Config.Key.user_directoy.toString()) + "My Games"
+            path = Config.get(Config.Key.user_directory.toString()) + "My Games"
                     + File.separator + "FalloutNV" + File.separator;
         
         return path;

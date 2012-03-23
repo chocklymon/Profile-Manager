@@ -93,7 +93,7 @@ public class Oblivion extends BethesdaGame {
     public String getDir() {
         String path = Config.get(OBLIVION_DATA_DIR);
         if(path == null)
-            path = Config.get(Config.Key.user_directoy.toString()) + "My Games"
+            path = Config.get(Config.Key.user_directory.toString()) + "My Games"
                     + File.separator + "Oblivion" + File.separator;
         
         return path;

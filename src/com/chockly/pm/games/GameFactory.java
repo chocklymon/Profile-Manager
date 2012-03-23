@@ -142,16 +142,16 @@ public class GameFactory {
     public static byte[] getActiveGameIds(){
         // Create a default active game id array
         byte[] allIds = getAllGameIds();
-        byte[] activeIds = allIds;
+        byte[] activeIds = Arrays.copyOf(allIds, allIds.length);
         
-        int idsCount = allIds.length;
+        int idsCount = 0;
         
         // Try to retrieve the active ids from the config
         String value = Config.get(Config.Key.active_tabs);
 
         if(value != null){
             String[] activeTabs = value.split(",");
-            idsCount = 0;
+
             if(activeTabs.length > activeIds.length)
                 activeIds = Arrays.copyOf(activeIds, activeTabs.length);
 
@@ -160,15 +160,17 @@ public class GameFactory {
                     byte tab = Byte.parseByte(activeTabs[x]);
 
                     if(ArrayHelper.getIndex(allIds, tab) != -1){
-                        activeIds[x] = tab;
+                        activeIds[idsCount] = tab;
                         idsCount++;
                     }
                 }
             } catch(NumberFormatException nfe){
                 Main.handleException(null, nfe, Main.LOG_LEVEL);
             }
+        } else {
+            idsCount = allIds.length;
         }
-        
+
         return Arrays.copyOf(activeIds, idsCount);
     }
     
@@ -177,7 +179,11 @@ public class GameFactory {
      * @return The id numbers of all the built in games.
      */
     public static byte[] getAllBuiltInGameIds(){
-        return new byte[] {MORROWIND_ID, OBLIVION_ID, SKYRIM_ID, FALLOUT_3_ID, FALLOUT_NV_ID};
+        return new byte[] {MORROWIND_ID,
+            OBLIVION_ID,
+            SKYRIM_ID,
+            FALLOUT_3_ID,
+            FALLOUT_NV_ID};
     }
     
     /**
@@ -196,14 +202,11 @@ public class GameFactory {
         byte[] allIds = new byte[builtInIdSize + customGames.length];
         
         // Populate the ids array
-        for(int i=0; i<allIds.length; i++){
-            if(i >= builtInIdSize){
-                allIds[i] = customGames[i - builtInIdSize].getId();
-            } else {
-                allIds[i] = builtInIds[i];
-            }
+        System.arraycopy(builtInIds, 0, allIds, 0, builtInIdSize);
+        for(int i=builtInIdSize; i<allIds.length; i++){
+            allIds[i] = customGames[i - builtInIdSize].getId();
         }
-        
+
         return allIds;
     }
     

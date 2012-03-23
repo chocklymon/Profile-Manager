@@ -45,12 +45,12 @@ import java.io.PrintWriter;
  * </pre>
  * 
  * @author Curtis Oakley
- * @version 1.3.18
+ * @version 1.3.19
  */
 public class Main {
     
     /** The current version number for the Profile Manager. */
-    public static final String VERSION_NUM = "1.3.18";
+    public static final String VERSION_NUM = "1.3.19";
 
     /**
      * This exception level indicates that a fatal error has occurred. This will 
@@ -146,8 +146,8 @@ public class Main {
         Config.loadConfig();
 
         // Set the default user directoy
-        if(Config.get(Config.Key.user_directoy) == null){
-            Config.set(Config.Key.user_directoy,
+        if(Config.get(Config.Key.user_directory) == null){
+            Config.set(Config.Key.user_directory,
                     javax.swing.filechooser.FileSystemView.getFileSystemView()
                     .getDefaultDirectory().toString() + java.io.File.separatorChar);
         }
