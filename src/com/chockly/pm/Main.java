@@ -45,12 +45,12 @@ import java.io.PrintWriter;
  * </pre>
  * 
  * @author Curtis Oakley
- * @version 1.3.19
+ * @version 1.3.20
  */
 public class Main {
     
     /** The current version number for the Profile Manager. */
-    public static final String VERSION_NUM = "1.3.19";
+    public static final String VERSION_NUM = "1.3.20";
 
     /**
      * This exception level indicates that a fatal error has occurred. This will 

@@ -131,7 +131,7 @@ public class XMLHelper {
                             || saveDir == null)
                     {
                         // Invalid remove from the profile array
-                        games = (CustomGame[]) ArrayHelper.splice(games, i);
+                        games = ArrayHelper.splice(games, i);
                         i--;
                     } else {
                         games[i] = new CustomGame(Byte.parseByte(game.getAttribute(ID_ATR)),
@@ -237,7 +237,13 @@ public class XMLHelper {
                     
                     if(name == null || dir == null){
                         // Invalid remove from the profile array
-                        profiles = ArrayHelper.splice(profiles, i);
+                        Profile[] temp = new Profile[profiles.length-1];
+                        if(temp.length > 0){
+                            System.arraycopy(profiles, 0, temp, 0, i);
+                            System.arraycopy(profiles, i+1, temp, i, temp.length-i);
+                        }
+                        profiles = temp;
+                        
                         i--;
                     } else {
                         profiles[i] = new Profile(name, dir, 

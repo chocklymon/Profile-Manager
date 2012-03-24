@@ -386,6 +386,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
 
         exportProfilesMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/card-export.png"))); // NOI18N
         exportProfilesMenuItem.setText("Export Profiles");
+        exportProfilesMenuItem.setEnabled(false);
         exportProfilesMenuItem.addActionListener(this);
         toolsMenu.add(exportProfilesMenuItem);
 
@@ -459,7 +460,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
 
             // Check if button and menu items need to be changed
             if(profileList.getSelectedIndex() == -1)
-                setProfileEnabled(false);
+                setProfileIsSelected(false);
             
             setCustomGame(GameFactory.isCustomGame(gameID));
         }
@@ -472,7 +473,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     private void profileListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_profileListValueChanged
         // If a profile is selected update the UI
         if(profileList.getSelectedIndex() >= 0)
-            setProfileEnabled(true);
+            setProfileIsSelected(true);
     }//GEN-LAST:event_profileListValueChanged
 
     private void profileListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profileListMouseClicked
@@ -507,9 +508,10 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             // Set the selected index to the item being righ clicked on
             profileList.setSelectedIndex(
                     profileList.locationToIndex(evt.getPoint()));
-            // Show the right click menu
-            // TODO detect if there is something selected and only display the pop-up a profile is selected.
-            profilePopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+            
+            // Show the right click menu (Only when something is selected).
+            if( !profileList.isSelectionEmpty() )
+                profilePopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_profileListMouseClicked
 
@@ -584,6 +586,8 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     private javax.swing.DefaultListModel profileListModel;
     private javax.swing.ImageIcon defaultProfileIcon;
     
+    private JFileChooser xmlChooser = null;
+    
     private int previousTab = 0;
     private boolean[] tabProfilesChecked = null;
     private byte[] activeGames;
@@ -645,13 +649,13 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             } else if(source.equals(deleteGameMenuItem)){
                 deleteCustomGame();
             } else if(source.equals(exportGameMenuItem)){
-                exportCustomGame();
+                exportImport(true, false);
             } else if(source.equals(exportProfilesMenuItem)){
-                exportProfiles();
+                exportImport(true, true);
             } else if(source.equals(importGameMenuItem)){
-                // TODO
+                exportImport(false, false);
             } else if(source.equals(importProfileMenuItem)){
-                // TODO
+                exportImport(false, true);
             }
         } catch(Exception ex){
             // Log the error and inform the user
@@ -756,6 +760,12 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             tabPane.setSelectedIndex(previousTab);
     }
     
+    private void buildXMLFileChooser(){
+        xmlChooser = new JFileChooser();
+        xmlChooser.setFileFilter(new xmlFileFilter());
+        xmlChooser.setDialogTitle("Save ...");
+    }
+    
     /**
      * Displays the ImageFileChooser to change the currently selected profile's
      * image.
@@ -782,8 +792,8 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                 tabProfilesChecked = Arrays.copyOf(tabProfilesChecked, previousTab+1);
             
             if(!tabProfilesChecked[previousTab] &&
-                    !profileListModel.isEmpty())
-            {// TODO deal with previous list model having items, but this one not
+                    ProfileFactory.getProfiles(gameID).length > 0)
+            {
                 tabProfilesChecked[previousTab] = true;
                 return IOHelper.checkForProfileDirChanges(gameID);
             }
@@ -850,7 +860,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         {
             GameFactory.getGameFromID(gameID).deactivateProfiles();
             updateProfileList();
-            setProfileEnabled(false);
+            setProfileIsSelected(false);
         }
     }
     
@@ -901,7 +911,10 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                     profileList.getSelectedIndex());
             
             // Indicate that no profile is selected.
-            setProfileEnabled(false);
+            setProfileIsSelected(false);
+            
+            // Enabled/disable the export profiles buttons as needed
+            exportProfilesMenuItem.setEnabled( !profileListModel.isEmpty());
         }
     }
     
@@ -916,35 +929,57 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         this.dispose();
     }
     
-    private void exportCustomGame(){
-        // TODO refine and test this.
-        JFileChooser fc = new JFileChooser();
-        
-        if(fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-            CustomGame[] g = {(CustomGame) GameFactory.getGameFromID(gameID)};
-            
-            XMLHelper.GamesToXML(g, fc.getSelectedFile().getAbsolutePath());
+    private void exportImport(boolean isExport, boolean isProfiles){
+        if(xmlChooser == null){
+            xmlChooser = new JFileChooser();
+            xmlChooser.setFileFilter(new xmlFileFilter());
         }
-    }
-    
-    private void exportProfiles(){
-        // TODO refine and test this.
-        JFileChooser fc = new JFileChooser();
-        fc.setFileFilter(new xmlFileFilter());
         
-        if(fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-            File file = fc.getSelectedFile();
+        if(isExport){
+            if(xmlChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+                File file = xmlChooser.getSelectedFile();
+
+                String fName = file.getName();
+                if( !fName.contains(".") || 
+                        !fName.substring(fName.lastIndexOf('.')).equalsIgnoreCase(".xml"))
+                    fName += ".xml";
+
+                String out = file.getParent() + File.separator + fName;
+                
+                if(isProfiles){
+                    XMLHelper.ProfilesToXML(ProfileFactory.getProfiles(gameID), out);
+                } else {
+                    CustomGame[] g = {(CustomGame) GameFactory.getGameFromID(gameID)};
             
-            String fName = file.getName();
-            if( !fName.contains(".") || 
-                    !fName.substring(fName.lastIndexOf('.')).equalsIgnoreCase(".xml"))
-                fName += ".xml";
-            
-            
-            XMLHelper.ProfilesToXML(ProfileFactory.getProfiles(gameID),
-                    file.getParent() + File.separator + fName);
-            
-            infoTxt.setText("Export complete.");
+                    XMLHelper.GamesToXML(g, out);
+                }
+
+                infoTxt.setText("Export complete.");
+            }
+        } else {
+            if(xmlChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+                if(isProfiles){
+                    Profile[] profiles = XMLHelper.ProfilesFromXML(xmlChooser.getSelectedFile().getAbsolutePath());
+                    if(profiles == null || profiles.length == 0){
+                        infoTxt.setText("No profiles imported.");
+                        return;
+                    } else {
+                        ProfileFactory.addProfiles(profiles, gameID);
+                        updateProfileList();
+                    }
+                } else {
+                    CustomGame[] games = XMLHelper.GamesFromXML(xmlChooser.getSelectedFile().getAbsolutePath());
+                    if(games == null || games.length == 0){
+                        infoTxt.setText("No games imported.");
+                        return;
+                    } else {
+                        GameFactory.addCustomGames(games);
+                        buildTabs();
+                    }
+                }
+                
+                infoTxt.setText("Import complete.");
+            }
         }
     }
     
@@ -956,6 +991,18 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             backupProfileMenuItem.setEnabled(true);
         
         infoTxt.setText("Backup complete");
+    }
+    
+    private String getSelectedXMLFile(){
+        File file = xmlChooser.getSelectedFile();
+
+        String fName = file.getName();
+        if( !fName.contains(".") || 
+                !fName.substring(fName.lastIndexOf('.')).equalsIgnoreCase(".xml"))
+            fName += ".xml";
+
+
+        return file.getParent() + File.separator + fName;
     }
     
     /** Launches the game using the currently selected profile. */
@@ -1042,7 +1089,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
      * been selected, False if the UI should be updated to reflect that no
      * profile is selected.
      */
-    private void setProfileEnabled(boolean yes){
+    private void setProfileIsSelected(boolean yes){
         // Enable/Disable buttons and menu items as needed
         if( launchGameBtn.isEnabled() != yes )
         {
@@ -1229,10 +1276,13 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         profileListModel.removeAllElements();
         for(int x=0; x<p.length; x++){
             profileListModel.addElement(p[x]);
-            
+
             // Auto select the active profile
             if(p[x].isActive())
                 profileList.setSelectedIndex(x);
         }
+        
+        // Enabled/disable the export profiles buttons as needed
+        exportProfilesMenuItem.setEnabled(p.length > 0);
     }
 }

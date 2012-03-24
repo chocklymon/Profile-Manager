@@ -45,7 +45,8 @@ public class GameFactory {
     private static final String CUSTOM_GAME_FILE = "lib/games.xml";
     
     private static CustomGame[] customGames = null;
-    
+
+
     public static void addCustomGame(String name,
             String gameDir,
             String exe,
@@ -71,6 +72,29 @@ public class GameFactory {
         
         if(activeTabs != null)
             Config.set(Config.Key.active_tabs, activeTabs + ',' + id);
+    }
+
+    public static void addCustomGames(CustomGame[] games){
+        int start = customGames.length;
+        byte newId = getNextAvailableId();
+        String activeTabs = Config.get(Config.Key.active_tabs);
+
+        customGames = Arrays.copyOf(customGames, start + games.length);
+        for(int i=0; i<games.length; i++){
+            customGames[start + i] = games[i].clone(newId);
+
+            if(activeTabs != null){
+                if( !activeTabs.contains(Byte.toString(newId)))
+                    activeTabs += "," + newId;
+            }
+
+            newId++;
+        }
+        
+        saveCustomGames();
+
+        if(activeTabs != null)
+            Config.set(Config.Key.active_tabs, activeTabs);
     }
     
     /** Checks if any of the game IDs are the same (conflicting). */
@@ -123,7 +147,7 @@ public class GameFactory {
                     else
                     {
                         // Remove the CustomGame
-                        customGames = (CustomGame[]) ArrayHelper.splice(customGames, i);
+                        customGames = ArrayHelper.splice(customGames, i);
                     }
                 }
             }
@@ -157,11 +181,13 @@ public class GameFactory {
 
             try {
                 for(int x=0; x<activeTabs.length; x++){
-                    byte tab = Byte.parseByte(activeTabs[x]);
+                    if( !activeTabs[x].isEmpty() ){
+                        byte tab = Byte.parseByte(activeTabs[x]);
 
-                    if(ArrayHelper.getIndex(allIds, tab) != -1){
-                        activeIds[idsCount] = tab;
-                        idsCount++;
+                        if(ArrayHelper.getIndex(allIds, tab) != -1){
+                            activeIds[idsCount] = tab;
+                            idsCount++;
+                        }
                     }
                 }
             } catch(NumberFormatException nfe){
@@ -301,14 +327,23 @@ public class GameFactory {
         for(int i=0; i<customGames.length; i++){
             if(id == customGames[i].getId()){
                 // Remove the custom Game from the array and save
-                customGames = (CustomGame[]) ArrayHelper.splice(customGames, i);
+                customGames = ArrayHelper.splice(customGames, i);
                 saveCustomGames();
                 
                 // Remove from the active tabs
                 String activeTabs = Config.get(Config.Key.active_tabs);
                 if(activeTabs != null){
-                    activeTabs.replace(Byte.toString(id), "");
-                    activeTabs.replace(",,", "");
+                    if(activeTabs.contains("," + id + ",")){
+                        // Game id in the middle of the tabs
+                        activeTabs = activeTabs.replace("," + id + ",", ",");
+                    } else if(activeTabs.endsWith("," + id)){
+                        // Game id at the end
+                        activeTabs = activeTabs.substring(0, activeTabs.lastIndexOf(","));
+                    } else if(activeTabs.startsWith(id + ",")){
+                        // Game id at the start
+                        activeTabs = activeTabs.substring(activeTabs.indexOf(",")+1);
+                    }
+
                     Config.set(Config.Key.active_tabs, activeTabs);
                 }
                 

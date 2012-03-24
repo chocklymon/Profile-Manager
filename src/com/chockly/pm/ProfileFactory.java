@@ -60,6 +60,23 @@ public class ProfileFactory {
         profileIdCounter++;
     }
     
+    public static void addProfiles(Profile[] p, byte gameID){
+        
+        if(profilesNotLoaded)
+            loadProfiles();
+        
+        Game g = GameFactory.getGameFromID(gameID);
+        
+        for(int i=0; i<p.length; i++){
+            if(profiles.length == size)
+                profiles = Arrays.copyOf(profiles, size+3);
+
+            profiles[size] = p[i].clone(gameID);
+            g.setupProfile(profiles[size]);
+            size++;
+        }
+    }
+    
     /** Checks for profiles that don't have a valid game ID. */
     private static void checkForOrphanProfiles(){
         byte[] gameIds = GameFactory.getAllGameIds();
