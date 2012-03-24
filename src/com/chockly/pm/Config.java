@@ -16,6 +16,7 @@
  */
 package com.chockly.pm;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -25,7 +26,6 @@ import java.util.Properties;
  * to disk as a properties file.
  * 
  * @author Curtis Oakley
- * @see com.chockly.pm.ConfigKey
  */
 public class Config {
 
@@ -173,6 +173,7 @@ public class Config {
          * Default Value: {@link Config#ZIP_FORMAT}
          */
         archive_format (ZIP_FORMAT),
+        
         /**
          * Key used to retrieve/store the location of 7z.exe.<br/>
          * <br/>
@@ -241,7 +242,7 @@ public class Config {
     public static void loadConfig(){
         try {
             props.load(new java.io.FileInputStream(CONFIG_FILE));
-        } catch(java.io.FileNotFoundException fnfe){
+        } catch(FileNotFoundException fnfe){
             System.out.println(CONFIG_FILE
                     + " not found. Rebuilding.");
             BuildIni.buildDefaultIni();
@@ -251,7 +252,7 @@ public class Config {
         }
         try {
             privateProps.load(new java.io.FileInputStream(PRIVATE_CONFIG_FILE));
-        } catch(java.io.FileNotFoundException fnfe){
+        } catch(FileNotFoundException fnfe){
             System.out.println("Private config not found. Using the default configuration.");
         } catch(IOException ioe){
             System.err.println("An IO Exception occured while attempting to read the private configuration file. Using the default configuration.");

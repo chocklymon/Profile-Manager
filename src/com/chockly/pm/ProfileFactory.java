@@ -60,6 +60,15 @@ public class ProfileFactory {
         profileIdCounter++;
     }
     
+    /**
+     * Adds profiles and sets them up.<br/>
+     * <br/>
+     * Profiles will only be added if there are no profiles using the same
+     * directory as the ones being added.
+     * 
+     * @param p The array of Profiles to add.
+     * @param gameID The id number of the game to attache the Profiles to.
+     */
     public static void addProfiles(Profile[] p, byte gameID){
         
         if(profilesNotLoaded)
@@ -71,9 +80,13 @@ public class ProfileFactory {
             if(profiles.length == size)
                 profiles = Arrays.copyOf(profiles, size+3);
 
-            profiles[size] = p[i].clone(gameID);
-            g.setupProfile(profiles[size]);
-            size++;
+            // Check if the profile is already in use
+            if( !profileDirExists(p[i].getSaveDir(), gameID)){
+                // Add the profile
+                profiles[size] = p[i].clone(gameID);
+                g.setupProfile(profiles[size]);
+                size++;
+            }
         }
     }
     
@@ -128,7 +141,7 @@ public class ProfileFactory {
                     options[i] = GameFactory.getNameFromID(gameIds[i]);
                 }
                 
-                String s = (String)JOptionPane.showInputDialog(null,
+                String s = (String) JOptionPane.showInputDialog(null,
                         "What game would you like to assign these profile to?",
                         "Change Profile Game",
                         JOptionPane.QUESTION_MESSAGE,
@@ -224,22 +237,16 @@ public class ProfileFactory {
      * @return True if there is a game profile that already uses the provided directory, false otherwise.
      */
     public static boolean profileDirExists(String dir, byte gameID){
-        if(profilesNotLoaded)
-            loadProfiles();
-        
-        boolean exists = false;
-
         // Check all the profiles for the game.
         for(int x=0; x<size; x++){
             if( profiles[x].getGameID() == gameID 
                     && profiles[x].getSaveDir().equalsIgnoreCase(dir) )
             {
-                exists = true;
-                break;
+                return true;
             }
         }
 
-        return exists;
+        return false;
     }
 
     /**
@@ -249,9 +256,11 @@ public class ProfileFactory {
     public static void removeProfile(Profile p){
         // Loop to find the profile
         for (int index = 0; index < size; index++){
-            if (p.equals(profiles[index]))
+            if (p.equals(profiles[index])){
                 // Profile found, remove it
                 removeProfile(index);
+                break;
+            }
         }
     }
     

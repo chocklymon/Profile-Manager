@@ -810,7 +810,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         String name = JOptionPane.showInputDialog(this, "Profile Name?",
                 "Create New Profile", JOptionPane.QUESTION_MESSAGE);
         if(name != null){
-
+            // Validate the directory
             String dir = name.replaceAll("[^a-zA-Z0-9]", "");
             
             if(dir.length() == 0){
@@ -824,10 +824,14 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             if(dir.length() > 10)
                 dir = dir.substring(0, 10);
             
-            for(int x=0; ProfileFactory.profileDirExists(dir, gameID); x++){
-                dir += x;
+            for(int x=1; ProfileFactory.profileDirExists(dir, gameID); x++){
+                if(x == 1)
+                    dir += x;
+                else
+                    dir = dir.substring(0, dir.length()-1) + x;
             }
 
+            // Add the profile and update the profile list
             ProfileFactory.addProfile(name, dir, gameID);
 
             updateProfileList();

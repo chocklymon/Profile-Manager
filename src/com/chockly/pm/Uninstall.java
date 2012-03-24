@@ -36,9 +36,11 @@ public class Uninstall {
      * @param returnTo The JFrame to re-open if the uninstaller is canceled.
      */
     public static void uninstall(byte[] gameIds, final JFrame returnTo){
+        // Build the GameUninstallers
         final GameUninstaller[] gus = new GameUninstaller[gameIds.length];
         Game g;
         Profile[] profiles;
+        
         for(int i=0; i<gameIds.length; i++){
             g = GameFactory.getGameFromID(gameIds[i]);
             profiles = ProfileFactory.getProfiles(gameIds[i]);
@@ -64,6 +66,7 @@ public class Uninstall {
                         g.getName());
         }
         
+        // Schedule the uninstaller to build and run
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

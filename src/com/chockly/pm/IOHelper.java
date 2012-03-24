@@ -46,6 +46,8 @@ public class IOHelper {
                 return false;
             
             Profile[] profiles = ProfileFactory.getProfiles(gameID);
+            
+            UpdateProfilesChecker check = new UpdateProfilesChecker();
 
             // Check for new files
             for(int i=0; i<folders.length; i++){
@@ -54,7 +56,7 @@ public class IOHelper {
                     String name = folders[i].getName();
                     if( !dirInUse(name, profiles)){
                         // Folder not used, add a new profile
-                        if(UpdateProfilesChecker.createProfile(name)){
+                        if(check.createProfile(name)){
                             ProfileFactory.addProfile(name, name, gameID);
                             changes = true;
                         }
@@ -71,7 +73,7 @@ public class IOHelper {
                         // Profile is active for folder swapping game, ignore
                         continue;
                     
-                    if(UpdateProfilesChecker.deleteProfile(profiles[i].getName())){
+                    if(check.deleteProfile(profiles[i].getName())){
                         // Delete the profile
                         ProfileFactory.removeProfile(profiles[i]);
                         changes = true;
@@ -131,9 +133,8 @@ public class IOHelper {
      * @param p The Profile to delete the directory of.
      */
     public static void deleteProfileDir(Profile p){
-        Game g = GameFactory.getGameFromID(p.getGameID());
         
-        File dir = getProfileDir(g, p);
+        File dir = getProfileDir(GameFactory.getGameFromID(p.getGameID()), p);
         
         if( !deleteFile(dir) )
             Main.handleException("Unable to delete all the files associated with the profile \""

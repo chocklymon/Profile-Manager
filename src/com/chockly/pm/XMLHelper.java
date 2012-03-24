@@ -79,7 +79,7 @@ public class XMLHelper {
      */
     public static CustomGame[] GamesFromXML(String fileName){
         
-        CustomGame[] games = null;
+        CustomGame[] games;
         
         try {
             Document doc = DocumentBuilderFactory.newInstance()
@@ -197,7 +197,7 @@ public class XMLHelper {
      */
     public static Profile[] ProfilesFromXML(String fileName){
         
-        Profile[] profiles = null;
+        Profile[] profiles;
         
         try {
             Document doc = DocumentBuilderFactory.newInstance()

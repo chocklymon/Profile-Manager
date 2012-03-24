@@ -29,8 +29,15 @@ public class UpdateProfilesChecker {
     private static final byte TRUE = 0;
     private static final byte FALSE = 1;
     
-    private static byte sessionCreate = NOT_SET;
-    private static byte sessionDelete = NOT_SET;
+    private static final String[] options = {"Yes to all, Always",
+        "Yes to all",
+        "Yes",
+        "No",
+        "No to all",
+        "No to all, Always"};
+    
+    private byte sessionCreate = NOT_SET;
+    private byte sessionDelete = NOT_SET;
     
     /**
      * Checks if a change should occur, prompts the user as needed.
@@ -39,7 +46,7 @@ public class UpdateProfilesChecker {
      * <tt>false</tt> if checking that a profile should be deleted.
      * @return <tt>True</tt> if a change should be made, <tt>false</tt> otherwise.
      */
-    private static boolean check(String text, boolean creates){
+    private boolean check(String name, boolean creates){
         
         Config.Key configKey = creates ? Config.Key.auto_create
                 : Config.Key.auto_delete;
@@ -51,15 +58,14 @@ public class UpdateProfilesChecker {
         } else if(session == FALSE || prompt.equalsIgnoreCase("false")){
             return false;
         } else {
-            Object[] options = {"Yes to all, Always",
-                                "Yes to all",
-                                "Yes",
-                                "No",
-                                "No to all",
-                                "No to all, Always"};
 
             int response = JOptionPane.showOptionDialog(null,
-                    text,
+                    creates ? "A new saved game folder was detected.\nName: "
+                               + name
+                               + "\n\nWould you like to create a new profile for this folder?"
+                        : "The saved game folder for "
+                               + name
+                               + " has been deleted.\n\nWould you like to delete this profile?",
                     creates ? "Create New Profile" : "Delete Profile",
                     JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE,
@@ -100,9 +106,8 @@ public class UpdateProfilesChecker {
      * @return <tt>True</tt> if a new profile should be created, <tt>false</tt>
      * otherwise.
      */
-    public static boolean createProfile(String name){
-        return check("A new saved game folder was detected.\nName: " + name + "\n\nWould you like to create a new profile for this folder?",
-                true);
+    public boolean createProfile(String name){
+        return check(name, true);
     }
     
     /**
@@ -112,8 +117,7 @@ public class UpdateProfilesChecker {
      * @return <tt>True</tt> if a new profile should be deleted, <tt>false</tt>
      * otherwise.
      */
-    public static boolean deleteProfile(String name){
-        return check("The saved game folder for " + name + " has been deleted.\n\nWould you like to delete this profile?",
-                false);
+    public boolean deleteProfile(String name){
+        return check(name, false);
     }
 }
