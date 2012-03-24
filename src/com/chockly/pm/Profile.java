@@ -19,7 +19,7 @@ package com.chockly.pm;
 /**
  * Profiles contain data representing a separation of saved games (a profile)
  * for a given game.
- * @version 1.4.2
+ * @version 1.4.3
  * @author Curtis Oakley
  */
 public class Profile implements java.io.Serializable, Comparable<Profile> {
@@ -58,7 +58,21 @@ public class Profile implements java.io.Serializable, Comparable<Profile> {
      * @return A duplicate of the Profile with with a different game id.
      */
     public Profile clone(byte newGameId){
-        return new Profile(profileName,profileSaveDir,newGameId,ID);
+        Profile p = new Profile(profileName,profileSaveDir,newGameId,ID);
+        p.setImage(image);
+        return p;
+    }
+    
+    /**
+     * Creates a duplicate of the profile with a new GameId and profile ID.
+     * @param newGameId The new game ID.
+     * @param newId The new profile ID.
+     * @return A duplicate of the Profile with a new game and id.
+     */
+    public Profile clone(byte newGameId, int newId){
+        Profile p = new Profile(profileName, profileSaveDir, newGameId, newId);
+        p.setImage(image);
+        return p;
     }
 
     /**

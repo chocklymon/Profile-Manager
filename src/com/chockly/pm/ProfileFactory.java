@@ -83,7 +83,7 @@ public class ProfileFactory {
             // Check if the profile is already in use
             if( !profileDirExists(p[i].getSaveDir(), gameID)){
                 // Add the profile
-                profiles[size] = p[i].clone(gameID);
+                profiles[size] = p[i].clone(gameID, ++profileIdCounter);
                 g.setupProfile(profiles[size]);
                 size++;
             }
