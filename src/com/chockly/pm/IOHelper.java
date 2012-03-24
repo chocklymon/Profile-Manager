@@ -20,6 +20,7 @@ import com.chockly.pm.games.Game;
 import com.chockly.pm.games.GameFactory;
 import com.chockly.pm.win86.JLnk;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 
 /**
@@ -116,10 +117,14 @@ public class IOHelper {
         link.setName(profile.getName() + " " + game.getName());
         
         // Get the jar's name and location
-        link.setPath(
-                new java.io.File(
-                IOHelper.class.getProtectionDomain().getCodeSource().getLocation().getPath())
-                .getAbsolutePath());
+        try {
+            link.setPath(new File(
+                    IOHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI())
+                    .getAbsolutePath());
+            
+        } catch (URISyntaxException ex) {
+            throw new IOException(ex.getMessage(), ex);
+        }
         
         link.setArguments("-p " + profile.getID());
         link.setIconLocation(game.getExe());
