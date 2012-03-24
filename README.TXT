@@ -13,17 +13,17 @@ Java 6 or higher
 
 Icons:
 ============================
-Fugue Icons
-
+-Fugue Icons-
 (C) 2012 Yusuke Kamiyamane. All rights reserved.
+<http://p.yusukekamiyamane.com/>
 These icons are licensed under a Creative Commons
 Attribution 3.0 License.
 <http://creativecommons.org/licenses/by/3.0/>
 
-Game Icons 
+-Game Icons-
 Bethesda Softworks
 
-Fallout: New Vegas Die Icon
+-Fallout: New Vegas Die Icon-
 Shoedude
 <http://shoedude.deviantart.com/art/Fallout-New-Vegas-Die-Icon-3-186884666>
  
