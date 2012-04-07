@@ -16,7 +16,7 @@
  */
 package com.chockly.pm.gui;
 
-import com.chockly.pm.IOHelper;
+import com.chockly.pm.IOUtils;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
@@ -34,7 +34,7 @@ public class ExeFileFilter extends FileFilter {
         if (f.isDirectory())
             return true;
 
-        String extension = IOHelper.getExtension(f);
+        String extension = IOUtils.getExtension(f);
         if (extension != null) {
             if (extension.equals("exe") ||
                     extension.equals("bat") ||

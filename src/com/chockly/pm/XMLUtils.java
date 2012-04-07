@@ -35,7 +35,7 @@ import org.w3c.dom.NodeList;
  * 
  * @author Curtis Oakley
  */
-public class XMLHelper {
+public class XMLUtils {
     
     /**
      * Outputs the provided games to an XML file.
@@ -131,7 +131,7 @@ public class XMLHelper {
                             || saveDir == null)
                     {
                         // Invalid remove from the profile array
-                        games = ArrayHelper.splice(games, i);
+                        games = Utils.splice(games, i);
                         i--;
                     } else {
                         games[i] = new CustomGame(Byte.parseByte(game.getAttribute(ID_ATR)),

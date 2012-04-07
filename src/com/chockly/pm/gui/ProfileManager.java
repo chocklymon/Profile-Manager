@@ -793,7 +793,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                     pf.getProfiles(gameID).length > 0)
             {
                 tabProfilesChecked[previousTab] = true;
-                return IOHelper.checkForProfileDirChanges(gameID);
+                return IOUtils.checkForProfileDirChanges(gameID);
             }
         }
         return false;
@@ -843,7 +843,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         
         try {
             // Try to create the shortcut
-            IOHelper.createShortcut(p);
+            IOUtils.createShortcut(p);
 
             infoTxt.setText("Shortcut created");
 
@@ -904,7 +904,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                     JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
             {
                 // Delete the files
-                IOHelper.deleteProfileDir(p);
+                IOUtils.deleteProfileDir(p);
             }
             
             // Delete the profile and remove it from the list.
@@ -949,11 +949,11 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                 String out = file.getParent() + File.separator + fName;
                 
                 if(isProfiles){
-                    XMLHelper.ProfilesToXML(pf.getProfiles(gameID), out);
+                    XMLUtils.ProfilesToXML(pf.getProfiles(gameID), out);
                 } else {
                     CustomGame[] g = {(CustomGame) GameFactory.getGameFromID(gameID)};
             
-                    XMLHelper.GamesToXML(g, out);
+                    XMLUtils.GamesToXML(g, out);
                 }
 
                 infoTxt.setText("Export complete.");
@@ -961,7 +961,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         } else {
             if(xmlChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
                 if(isProfiles){
-                    Profile[] profiles = XMLHelper.ProfilesFromXML(xmlChooser.getSelectedFile().getAbsolutePath());
+                    Profile[] profiles = XMLUtils.ProfilesFromXML(xmlChooser.getSelectedFile().getAbsolutePath());
                     if(profiles == null || profiles.length == 0){
                         infoTxt.setText("No profiles imported.");
                         return;
@@ -970,7 +970,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                         updateProfileList();
                     }
                 } else {
-                    CustomGame[] games = XMLHelper.GamesFromXML(xmlChooser.getSelectedFile().getAbsolutePath());
+                    CustomGame[] games = XMLUtils.GamesFromXML(xmlChooser.getSelectedFile().getAbsolutePath());
                     if(games == null || games.length == 0){
                         infoTxt.setText("No games imported.");
                         return;
@@ -1021,7 +1021,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
 
             try {
                 // Launch the game
-                IOHelper.startProgram( g.getExe() );
+                IOUtils.startProgram( g.getExe() );
 
                 // Exit if needed
                 if( Boolean.parseBoolean(Config.get(Config.Key.exit_on_launch)) )

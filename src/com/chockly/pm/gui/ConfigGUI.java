@@ -16,7 +16,7 @@
  */
 package com.chockly.pm.gui;
 
-import com.chockly.pm.ArrayHelper;
+import com.chockly.pm.Utils;
 import com.chockly.pm.Config;
 import com.chockly.pm.games.Game;
 import com.chockly.pm.games.GameFactory;
@@ -441,7 +441,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             item.setSelected(selected);
             
             // Enable/Disable tabs as needed
-            int tabIndex = ArrayHelper.getIndex(builtInGames, item.getID());
+            int tabIndex = Utils.getIndex(builtInGames, item.getID());
             if(tabIndex != -1 
                     && selected != gameSettingsTabPane.isEnabledAt(tabIndex))
                 gameSettingsTabPane.setEnabledAt(tabIndex, selected);
@@ -654,7 +654,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         for(int i=0; i<activeGames.length; i++){
             byte next = activeGames[i];
             
-            if(ArrayHelper.getIndex(stanGames, next) != -1){
+            if(Utils.getIndex(stanGames, next) != -1){
                 builtInGames[stanGameCount] = next;
                 stanGameCount++;
             }
@@ -663,7 +663,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         // Add in any built in games that are not active.
         if(stanGameCount < stanGames.length){
             for(int i=0; i<stanGames.length; i++){
-                if(ArrayHelper.getIndex(builtInGames, stanGames[i]) == -1){
+                if(Utils.getIndex(builtInGames, stanGames[i]) == -1){
                     builtInGames[stanGameCount] = stanGames[i];
                     stanGameCount++;
                 }
@@ -681,7 +681,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             System.arraycopy(activeGames, 0, games, 0, activeGameCount);
             
             for(int x=0, added = activeGameCount; x<games.length; x++){
-                if(ArrayHelper.getIndex(games, allGames[x]) == -1){
+                if(Utils.getIndex(games, allGames[x]) == -1){
                     games[added] = allGames[x];
                     added++;
                 }
@@ -706,7 +706,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             Game g = GameFactory.getGameFromID(builtInGames[x]);
             gameSettingsTabPane.addTab(g.getName(), g.getIcon(), emptyPanels[x], "Manage settings for " + g.getFullName());
             
-            if(ArrayHelper.getIndex(activeGames, builtInGames[x]) == -1)
+            if(Utils.getIndex(activeGames, builtInGames[x]) == -1)
                 gameSettingsTabPane.setEnabledAt(x, false);
         }
         
@@ -802,8 +802,8 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             byte movedGameId = games[index-1];
             
             // Update the active games array
-            if(ArrayHelper.getIndex(activeGames, games[index]) != -1){
-                int movedGameIndex = ArrayHelper.getIndex(activeGames, movedGameId);
+            if(Utils.getIndex(activeGames, games[index]) != -1){
+                int movedGameIndex = Utils.getIndex(activeGames, movedGameId);
 
                 // Only update the active games when the moved game is active and not the last game.
                 if(movedGameIndex != -1 && movedGameIndex < activeGames.length-1){
@@ -816,7 +816,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             }
             
             // Store the built in game ID index
-            int bIndex = ArrayHelper.getIndex(builtInGames, games[index]);
+            int bIndex = Utils.getIndex(builtInGames, games[index]);
 
             // Update the games array
             games[index-1] = games[index];
@@ -831,7 +831,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             gameList.setSelectedIndex(index-1);
             
             // Only run this when both games involved are built in.
-            if(bIndex != -1 && ArrayHelper.getIndex(builtInGames, movedGameId) != -1)
+            if(bIndex != -1 && Utils.getIndex(builtInGames, movedGameId) != -1)
             {
                 // Update the games id position in the built in games array
                 builtInGames[bIndex-1] = builtInGames[bIndex];
@@ -857,8 +857,8 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             byte movedGameId = games[index+1];
             
             // Update the active games array
-            if(ArrayHelper.getIndex(activeGames, games[index]) != -1){// Only run when the game being moved is active
-                int movedGameIndex = ArrayHelper.getIndex(activeGames, movedGameId);
+            if(Utils.getIndex(activeGames, games[index]) != -1){// Only run when the game being moved is active
+                int movedGameIndex = Utils.getIndex(activeGames, movedGameId);
 
                 // Make sure that the movedGameID is not the first active game
                 if(movedGameIndex > 0){
@@ -871,7 +871,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             }
             
             // Store the built in game ID index
-            int bIndex = ArrayHelper.getIndex(builtInGames, games[index]);
+            int bIndex = Utils.getIndex(builtInGames, games[index]);
             
             games[index+1] = games[index];
             games[index] = movedGameId;
@@ -883,7 +883,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             gameList.setSelectedIndex(index+1);
             
             // Only run this when both games involved are built in.
-            if(bIndex != -1 && ArrayHelper.getIndex(builtInGames, movedGameId) > 0)
+            if(bIndex != -1 && Utils.getIndex(builtInGames, movedGameId) > 0)
             {
                 // Update the games id position in the built in games array
                 builtInGames[bIndex+1] = builtInGames[bIndex];

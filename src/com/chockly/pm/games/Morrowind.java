@@ -229,7 +229,7 @@ public class Morrowind extends AbstractDirGame {
                     }
 
                     // Move the saved game file
-                    IOHelper.moveFile(
+                    IOUtils.moveFile(
                             new File(savesFolder, fileName),
                             new File(profilesFolder, dirName + File.separator + fileName ));
                 }
@@ -241,7 +241,7 @@ public class Morrowind extends AbstractDirGame {
             profilesFolder = new File(profilesFolder, activeProfile.getSaveDir());
             File[] saves = profilesFolder.listFiles();
             for(int i=0; i<saves.length; i++){
-                IOHelper.moveFile(saves[i],
+                IOUtils.moveFile(saves[i],
                         new File(savesFolder, saves[i].getName()));
             }
             

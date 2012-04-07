@@ -35,7 +35,7 @@ public abstract class BethesdaGame implements Game {
     public boolean activateProfile(Profile profile) {
         try
         {
-            IOHelper.setINIValue(
+            IOUtils.setINIValue(
                     getDir() + getIni(),
                     "SLocalSavePath",
                     getSave() + File.separator + profile.getSaveDir() + File.separator,
@@ -260,7 +260,7 @@ public abstract class BethesdaGame implements Game {
                         }
 
                         // Move the saved game file
-                        IOHelper.moveFile(
+                        IOUtils.moveFile(
                                 new File(savesFolder + fileName),
                                 new File(savesFolder + dirName + File.separator + fileName ));
                     }
@@ -273,7 +273,7 @@ public abstract class BethesdaGame implements Game {
     public void deactivateProfiles(){
         try
         {
-            IOHelper.setINIValue(
+            IOUtils.setINIValue(
                     getDir() + getIni(),
                     "SLocalSavePath",
                     getSave() + File.separator,
@@ -315,7 +315,7 @@ public abstract class BethesdaGame implements Game {
     
     @Override
     public void setupProfile(Profile profile) {
-        IOHelper.createFolder(
+        IOUtils.createFolder(
                 new File(getDir() + getSave(), profile.getSaveDir()));
     }
     

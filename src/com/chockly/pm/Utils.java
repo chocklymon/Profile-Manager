@@ -22,7 +22,7 @@ import com.chockly.pm.games.CustomGame;
  * Contains methods helpful to Array manipulations.
  * @author Curtis Oakley
  */
-public class ArrayHelper {
+public class Utils {
     
     /**
      * Removes the specified index from the custom game array. Returning an

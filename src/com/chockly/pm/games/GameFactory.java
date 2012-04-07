@@ -16,10 +16,10 @@
  */
 package com.chockly.pm.games;
 
-import com.chockly.pm.ArrayHelper;
+import com.chockly.pm.Utils;
 import com.chockly.pm.Config;
 import com.chockly.pm.Main;
-import com.chockly.pm.XMLHelper;
+import com.chockly.pm.XMLUtils;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 
@@ -147,7 +147,7 @@ public class GameFactory {
                     else
                     {
                         // Remove the CustomGame
-                        customGames = ArrayHelper.splice(customGames, i);
+                        customGames = Utils.splice(customGames, i);
                     }
                 }
             }
@@ -184,7 +184,7 @@ public class GameFactory {
                     if( !activeTabs[x].isEmpty() ){
                         byte tab = Byte.parseByte(activeTabs[x]);
 
-                        if(ArrayHelper.getIndex(allIds, tab) != -1){
+                        if(Utils.getIndex(allIds, tab) != -1){
                             activeIds[idsCount] = tab;
                             idsCount++;
                         }
@@ -303,13 +303,13 @@ public class GameFactory {
      * otherwise.
      */
     public static boolean isCustomGame(byte gameId){
-        return ArrayHelper.getIndex(getAllBuiltInGameIds(), gameId) == -1;
+        return Utils.getIndex(getAllBuiltInGameIds(), gameId) == -1;
     }
     
     /** Loads the custom games from disk. */
     private static void loadCustomGames(){
         if(new java.io.File(CUSTOM_GAME_FILE).exists())
-            customGames = XMLHelper.GamesFromXML(CUSTOM_GAME_FILE);
+            customGames = XMLUtils.GamesFromXML(CUSTOM_GAME_FILE);
         
         if(customGames == null)
             // Create an empty custom game
@@ -327,7 +327,7 @@ public class GameFactory {
         for(int i=0; i<customGames.length; i++){
             if(id == customGames[i].getId()){
                 // Remove the custom Game from the array and save
-                customGames = ArrayHelper.splice(customGames, i);
+                customGames = Utils.splice(customGames, i);
                 saveCustomGames();
                 
                 // Remove from the active tabs
@@ -355,7 +355,7 @@ public class GameFactory {
     /** Saves the custom games to disk. */
     public static void saveCustomGames(){
         if(customGames != null)
-            XMLHelper.GamesToXML(customGames, CUSTOM_GAME_FILE);
+            XMLUtils.GamesToXML(customGames, CUSTOM_GAME_FILE);
     }
 
     /**

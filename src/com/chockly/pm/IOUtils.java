@@ -27,7 +27,7 @@ import java.nio.channels.FileChannel;
  * Contains static methods to help perform I/O operations.
  * @author Curtis Oakley
  */
-public class IOHelper {
+public class IOUtils {
 
     /**
      * Checks the provided game's save directory for any folders that have been
@@ -120,7 +120,7 @@ public class IOHelper {
         // Get the jar's name and location
         try {
             link.setPath(new File(
-                    IOHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI())
+                    IOUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI())
                     .getAbsolutePath());
             
         } catch (URISyntaxException ex) {

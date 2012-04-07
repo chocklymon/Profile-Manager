@@ -16,7 +16,7 @@
  */
 package com.chockly.pm.games;
 
-import com.chockly.pm.IOHelper;
+import com.chockly.pm.IOUtils;
 import com.chockly.pm.Main;
 import com.chockly.pm.Profile;
 import com.chockly.pm.ProfileFactory;
@@ -168,7 +168,7 @@ public abstract class AbstractDirGame implements Game {
             profilesFolder = new File(profilesFolder, activeProfile.getSaveDir());
             File[] saves = profilesFolder.listFiles();
             for(int i=0; i<saves.length; i++){
-                IOHelper.moveFile(saves[i],
+                IOUtils.moveFile(saves[i],
                         new File(savesFolder, saves[i].getName()));
             }
             
@@ -213,7 +213,7 @@ public abstract class AbstractDirGame implements Game {
     
     @Override
     public void setupProfile(Profile profile) {
-        IOHelper.createFolder(
+        IOUtils.createFolder(
                 new File(getDir() + getSave(), profile.getSaveDir()));
     }
     

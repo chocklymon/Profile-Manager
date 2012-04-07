@@ -149,7 +149,7 @@ public final class ProfileFactory {
         
         // Loop through all profiles and check for orphans
         for(int i=0; i<size; i++){
-            if(ArrayHelper.getIndex(gameIds, profiles[i].getGameID()) == -1){
+            if(Utils.getIndex(gameIds, profiles[i].getGameID()) == -1){
                 orphanIndexs[numOrphans] = i;
                 orphanNames[numOrphans] = profiles[i].getName();
                 numOrphans++;

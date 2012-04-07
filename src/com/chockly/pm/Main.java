@@ -166,7 +166,7 @@ public class Main {
                 pf.saveProfiles();
 
                 try {
-                    IOHelper.startProgram( game.getExe() );
+                    IOUtils.startProgram( game.getExe() );
                 } catch(java.io.FileNotFoundException fnfe){
                     handleException(null, fnfe, WARN_LEVEL);
                 }

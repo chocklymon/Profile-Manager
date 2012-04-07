@@ -48,7 +48,7 @@ public class ProfileBackup extends SwingWorker<Void, Void> {
     public void backupProfile(){
         Game g = GameFactory.getGameFromID(p.getGameID());
         
-        File dir = IOHelper.getProfileDir(g, p);
+        File dir = IOUtils.getProfileDir(g, p);
         
         if( Config.get(Config.Key.archive_format)
                 .equals(Config.SEVEN_ZIP_FORMAT) )
