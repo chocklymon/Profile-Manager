@@ -934,7 +934,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     private void exportImport(boolean isExport, boolean isProfiles){
         if(xmlChooser == null){
             xmlChooser = new JFileChooser();
-            xmlChooser.setFileFilter(new xmlFileFilter());
+            xmlChooser.setFileFilter(new GenericFileFilter(new String[] {"xml"}, "xml"));
         }
         
         if(isExport){

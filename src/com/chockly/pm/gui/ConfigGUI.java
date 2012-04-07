@@ -741,7 +741,11 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             if(path == null)
                 path = g.getDir();
         } else {
-            fc.setFileFilter(new SevenZipExeFileFilter());
+            // Create a new 7-zip executable filter
+            fc.setFileFilter(new GenericFileFilter(
+                    new String[] {"7z.exe","7za.exe"},
+                    "7z.exe"));
+            
             fc.setDialogTitle("Select the 7zip Executable");
             
             path = prefs.get(Config.Key.seven_zip_exe.toString());

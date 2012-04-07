@@ -16,31 +16,51 @@
  */
 package com.chockly.pm.gui;
 
+import com.chockly.pm.IOHelper;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * Creates a new seven zip executable filter.<br/>
+ * Creates a new Executable File Filter.<br/>
  * <br/>
- * This will only accept files named 7z.exe and 7za.exe.
+ * This will only accept files that have an .exe, .bat, .cmd, .com, or .jar
+ * extension.
  * @author Curtis Oakley
  */
-public class SevenZipExeFileFilter extends FileFilter {
+public class GenericFileFilter extends FileFilter {
+    
+    private final String[] extensions;
+    private final String description;
+    
+    public GenericFileFilter(String[] extensions, String description){
+        this.extensions = new String[extensions.length];
+        for(int i=0; i<extensions.length; i++){
+            this.extensions[i] = extensions[i].toLowerCase();
+        }
+        this.description = description;
+    }
 
     @Override
     public boolean accept(File f) {
         if (f.isDirectory())
             return true;
 
-        String name = f.getName();
-        if(name.equals("7z.exe") || name.equals("7za.exe"))
-            return true;
+        String s = f.getName();
+        int index = s.lastIndexOf('.');
 
+        if (index > 0 &&  index < s.length() - 1) {
+            String  ext = s.substring(index+1).toLowerCase();
+            for(int i=0; i<extensions.length; i++){
+                if(extensions[i].equals(ext))
+                    return true;
+            }
+        }
+        
         return false;
     }
 
     @Override
     public String getDescription() {
-        return "7z.exe";
+        return description;
     }
 }

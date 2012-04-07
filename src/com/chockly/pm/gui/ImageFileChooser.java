@@ -51,7 +51,12 @@ public class ImageFileChooser extends JComponent implements PropertyChangeListen
         fc = new JFileChooser();
         
         fc.setApproveButtonText("Select");
-        fc.setFileFilter(new ImageFileFilter());
+        
+        // Create a generic filter for images
+        fc.setFileFilter(new GenericFileFilter(
+                new String[] {"jpg","jpeg","gif","png","bmp"},
+                "Images (*.jpg, *.gif, *.png)"));
+        
         fc.setAcceptAllFileFilterUsed(false);
         fc.setDialogTitle("Select profile image");
         
