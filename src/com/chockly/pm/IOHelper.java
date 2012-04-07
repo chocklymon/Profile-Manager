@@ -46,7 +46,8 @@ public class IOHelper {
             if(folders == null)
                 return false;
             
-            Profile[] profiles = ProfileFactory.getProfiles(gameID);
+            ProfileFactory pf = ProfileFactory.getInstance();
+            Profile[] profiles = pf.getProfiles(gameID);
             
             UpdateProfilesChecker check = new UpdateProfilesChecker();
 
@@ -58,7 +59,7 @@ public class IOHelper {
                     if( !dirInUse(name, profiles)){
                         // Folder not used, add a new profile
                         if(check.createProfile(name)){
-                            ProfileFactory.addProfile(name, name, gameID);
+                            pf.add(name, name, gameID);
                             changes = true;
                         }
                     }
@@ -76,7 +77,7 @@ public class IOHelper {
                     
                     if(check.deleteProfile(profiles[i].getName())){
                         // Delete the profile
-                        ProfileFactory.removeProfile(profiles[i]);
+                        pf.remove(profiles[i]);
                         changes = true;
                     }
                 }

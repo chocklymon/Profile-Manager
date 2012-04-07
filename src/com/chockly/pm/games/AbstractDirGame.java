@@ -37,7 +37,8 @@ public abstract class AbstractDirGame implements Game {
         String profilesDir = dataDir + getSave() + File.separator;
         
         // Find the currently active profile
-        Profile[] profiles = ProfileFactory.getProfiles(getId());
+        ProfileFactory pf = ProfileFactory.getInstance();
+        Profile[] profiles = pf.getProfiles(getId());
         Profile currentProfile = null;
         for(int x=0; x<profiles.length; x++){
             if(profiles[x].isActive()){
@@ -71,7 +72,7 @@ public abstract class AbstractDirGame implements Game {
         
         // Rename the profile's save game directory to the morrowind save directory
         if( profileSaves.renameTo(new File(saveDir)) ) {
-            ProfileFactory.setActive(profile);
+            pf.setActive(profile);
             return true;
         } else {
             Main.handleException("Unable to move the profile's saved games into the save game folder.",
@@ -92,7 +93,8 @@ public abstract class AbstractDirGame implements Game {
                 new java.util.HashMap<String, String>();
         
         // Input any existing profiles
-        Profile[] existingProfiles = ProfileFactory.getProfiles(getId());
+        ProfileFactory pf = ProfileFactory.getInstance();
+        Profile[] existingProfiles = pf.getProfiles(getId());
         Profile activeProfile = null;
         for(int i=0; i<existingProfiles.length; i++){
             profileData.put(
@@ -120,7 +122,7 @@ public abstract class AbstractDirGame implements Game {
                         profileData.put(fileName, fileName);
 
                         // Add the new profile
-                        ProfileFactory.addProfile(fileName, fileName, getId());
+                        pf.add(fileName, fileName, getId());
                     }
                 }
             }
@@ -151,7 +153,7 @@ public abstract class AbstractDirGame implements Game {
                         profileData.put(fileName, fileName);
 
                         // Add the new profile
-                        ProfileFactory.addProfile(fileName, fileName, getId());
+                        pf.add(fileName, fileName, getId());
                     } else {
                         Main.handleException("Unable to move the folder "
                                 + profileDir.getPath() + ".",
@@ -185,7 +187,7 @@ public abstract class AbstractDirGame implements Game {
         File saveDir = new File(dataDir, getGameSaveDir());
         
         // Find the currently active profile
-        Profile[] profiles = ProfileFactory.getProfiles(getId());
+        Profile[] profiles = ProfileFactory.getInstance().getProfiles(getId());
         
         for(int i=0; i<profiles.length; i++){
             if( profiles[i].isActive() ){

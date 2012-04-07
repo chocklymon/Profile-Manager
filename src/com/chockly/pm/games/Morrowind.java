@@ -65,7 +65,8 @@ public class Morrowind extends AbstractDirGame {
                 new java.util.HashMap<String, String>();
         
         // Input any existing profiles
-        Profile[] existingProfiles = ProfileFactory.getProfiles(GameFactory.MORROWIND_ID);
+        ProfileFactory pf = ProfileFactory.getInstance();
+        Profile[] existingProfiles = pf.getProfiles(GameFactory.MORROWIND_ID);
         Profile activeProfile = null;
         for(int i=0; i<existingProfiles.length; i++){
             profileData.put(
@@ -93,7 +94,7 @@ public class Morrowind extends AbstractDirGame {
                         profileData.put(fileName, fileName);
 
                         // Add the new profile
-                        ProfileFactory.addProfile(fileName, fileName,
+                        pf.add(fileName, fileName,
                                 GameFactory.MORROWIND_ID);
                     }
                 }
@@ -124,7 +125,7 @@ public class Morrowind extends AbstractDirGame {
                         profileData.put(fileName, fileName);
 
                         // Add the new profile
-                        ProfileFactory.addProfile(fileName, fileName,
+                        pf.add(fileName, fileName,
                                 GameFactory.MORROWIND_ID);
                     } else {
                         Main.handleException("Unable to move the folder "
@@ -216,7 +217,7 @@ public class Morrowind extends AbstractDirGame {
                         profileData.put(dirName, characterName.toString());
 
                         // Add the new profile
-                        ProfileFactory.addProfile(
+                        pf.add(
                                 characterName.toString(), dirName, GameFactory.MORROWIND_ID);
 
                         /* Comment out this line to print out the newly added profile information

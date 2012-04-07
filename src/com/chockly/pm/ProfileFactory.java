@@ -29,7 +29,50 @@ import javax.swing.JOptionPane;
  * Holds all the profiles for the program. Use this to manage the profiles.
  * @author Curtis Oakley
  */
-public class ProfileFactory {
+public final class ProfileFactory {
+    
+    private ProfileFactory(){
+        // Load the profiles
+        try {
+            ObjectInputStream in = new ObjectInputStream(
+                    new java.io.FileInputStream(Config.PROFILE_DATA_DIR + PROFILES_FILE) );
+
+            profiles = (Profile[]) in.readObject();
+            profileIdCounter = in.readInt();
+
+            in.close();
+
+            size = profiles.length;
+
+        } catch(java.io.FileNotFoundException fnfe){
+            // Create a new pofile array
+            System.out.println("Profile data not found, executing first run code.");
+
+            (new File(Config.PROFILE_DATA_DIR)).mkdir();
+
+            profiles = new Profile[5];
+            size = 0;
+
+            profileIdCounter = 1;
+
+        } catch(IOException ioe){
+            Main.handleException(
+                    "A fatal IO Exception occured while attempting to load the profiles.",
+                    ioe, Main.FATAL_LEVEL);
+        } catch(Exception ex){
+            Main.handleException("A fatal error has occured.",
+                    ex, Main.FATAL_LEVEL);
+        }
+
+        checkForOrphanProfiles();
+    }
+    
+    public static ProfileFactory getInstance(){
+        if(instance == null)
+            instance = new ProfileFactory();
+        
+        return instance;
+    }
 
     /**
      * Adds a new profile and sets it up.
@@ -41,16 +84,13 @@ public class ProfileFactory {
      * @param gameID The Game ID for the game that the profile belongs to.<br/>
      * For a list of valid game IDs see the {@link GameFactory}.
      */
-    public static void addProfile(String name, String saveDir, byte gameID){
-
-        if(profilesNotLoaded)
-            loadProfiles();
-
-        Profile newProfile = new Profile(name, saveDir, gameID, profileIdCounter);
-
-        // Add the profile to profiles array
+    public void add(String name, String saveDir, byte gameID){
+        // Increase the profile array size
         if(profiles.length == size)
             profiles = Arrays.copyOf(profiles, size+3);
+        
+        // Add the profile to profiles array
+        Profile newProfile = new Profile(name, saveDir, gameID, profileIdCounter);
         
         profiles[size] = newProfile;
         size++;
@@ -69,10 +109,7 @@ public class ProfileFactory {
      * @param p The array of Profiles to add.
      * @param gameID The id number of the game to attache the Profiles to.
      */
-    public static void addProfiles(Profile[] p, byte gameID){
-        
-        if(profilesNotLoaded)
-            loadProfiles();
+    public void addAll(Profile[] p, byte gameID){
         
         Game g = GameFactory.getGameFromID(gameID);
         
@@ -81,17 +118,30 @@ public class ProfileFactory {
                 profiles = Arrays.copyOf(profiles, size+3);
 
             // Check if the profile is already in use
-            if( !profileDirExists(p[i].getSaveDir(), gameID)){
+            int updateIndex = -1;
+            for(int x=0; x<size; x++){
+                if( profiles[x].getGameID() == gameID 
+                        && profiles[x].getSaveDir().equalsIgnoreCase(p[i].getSaveDir()) 
+                        && profiles[x].getID() == p[i].getID()){
+                    updateIndex = x;
+                    break;
+                }
+            }
+            if( updateIndex == -1 ){
                 // Add the profile
                 profiles[size] = p[i].clone(gameID, ++profileIdCounter);
                 g.setupProfile(profiles[size]);
                 size++;
+            } else {
+                // Update the profile
+                profiles[updateIndex].setImage(p[i].getImage());
+                profiles[updateIndex].setName(p[i].getName());
             }
         }
     }
     
     /** Checks for profiles that don't have a valid game ID. */
-    private static void checkForOrphanProfiles(){
+    private void checkForOrphanProfiles(){
         byte[] gameIds = GameFactory.getAllGameIds();
         int[] orphanIndexs = new int[size];
         String[] orphanNames = new String[size];
@@ -132,7 +182,7 @@ public class ProfileFactory {
             if(choice == 0){
                 // Delete
                 for(int i=0; i<numOrphans; i++){
-                    removeProfile(orphanIndexs[i]);
+                    remove(orphanIndexs[i]);
                 }
             } else if(choice == 1){
                 // Change game ID
@@ -170,7 +220,7 @@ public class ProfileFactory {
      * Deactivates the active profile for the given game.
      * @param gameID The game id for the profile to deactivate.
      */
-    public static void clearActiveProfile(byte gameID){
+    public void clearActiveProfile(byte gameID){
         for(int x=0; x<size; x++){
             if(profiles[x].getGameID() == gameID){
                 if(profiles[x].isActive()){
@@ -186,13 +236,9 @@ public class ProfileFactory {
      * @param id The id number of the profile to retrieve.
      * @return The Profile with the given id.
      */
-    public static Profile getProfile(int id){
-        
+    public Profile getProfile(int id){
         if(id < 0)
             throw new IllegalArgumentException("Pofile IDs must be positive.");
-
-        if(profilesNotLoaded)
-            loadProfiles();
 
         for(int x=0; x < size; x++){
             if(profiles[x].getID() == id)
@@ -207,11 +253,8 @@ public class ProfileFactory {
      * @param gameID The game to retrieve the profiles for.
      * @return Array of all profiles for the given game, if no profiles exits returns an array with zero length.
      */
-    public static Profile[] getProfiles(byte gameID){
-
-        if(profilesNotLoaded)
-            loadProfiles();
-
+    public Profile[] getProfiles(byte gameID){
+        
         Profile[] gameProfiles = new Profile[10];
         int length = 0;
 
@@ -236,7 +279,7 @@ public class ProfileFactory {
      * @param gameID The ID number of the game that the pofiles should belong to.
      * @return True if there is a game profile that already uses the provided directory, false otherwise.
      */
-    public static boolean profileDirExists(String dir, byte gameID){
+    public boolean profileDirExists(String dir, byte gameID){
         // Check all the profiles for the game.
         for(int x=0; x<size; x++){
             if( profiles[x].getGameID() == gameID 
@@ -253,12 +296,12 @@ public class ProfileFactory {
      * Removes the given profile from the profile factory.
      * @param p The profile to remove.
      */
-    public static void removeProfile(Profile p){
+    public void remove(Profile p){
         // Loop to find the profile
         for (int index = 0; index < size; index++){
             if (p.equals(profiles[index])){
                 // Profile found, remove it
-                removeProfile(index);
+                remove(index);
                 break;
             }
         }
@@ -268,78 +311,16 @@ public class ProfileFactory {
      * Removes the Profile at the given index.
      * @param index The index number of the Profile to remove.
      */
-    private static void removeProfile(int index){
+    private void remove(int index){
         int numMoved = size - index - 1;
         if (numMoved > 0)
             System.arraycopy(profiles, index+1, profiles, index, numMoved);
 
         profiles[--size] = null;
     }
-    
-    /**
-     * Marks the provided profile as being active, while marking other profiles
-     * as in-active.
-     * @param profile The Profile to mark as active. 
-     */
-    public static void setActive(Profile profile){
-        byte gameID = profile.getGameID();
-
-        for(int x=0; x<size; x++){
-            if(profiles[x].getGameID() == gameID){
-                if(profile.equals(profiles[x]))
-                    profile.setActive(true);
-                else
-                    profiles[x].setActive(false);
-            }
-        }
-    }
-
-    /** Loads profiles from the hard disk. */
-    public static void loadProfiles(){
-        if(profilesNotLoaded){
-            // Load the profiles
-            try {
-                ObjectInputStream in = new ObjectInputStream(
-                        new java.io.FileInputStream(Config.PROFILE_DATA_DIR + PROFILES_FILE) );
-
-                profiles = (Profile[]) in.readObject();
-                profileIdCounter = in.readInt();
-
-                in.close();
-
-                size = profiles.length;
-                
-                profilesNotLoaded = false;
-
-            } catch(java.io.FileNotFoundException fnfe){
-                // Create a new pofile array
-                System.out.println("Profile data not found, executing first run code.");
-                
-                (new File(Config.PROFILE_DATA_DIR)).mkdir();
-                
-                profiles = new Profile[5];
-                size = 0;
-                
-                profileIdCounter = 1;
-                profilesNotLoaded = false;
-            } catch(IOException ioe){
-                Main.handleException(
-                        "A fatal IO Exception occured while attempting to load the profiles.",
-                        ioe, Main.FATAL_LEVEL);
-            } catch(ClassNotFoundException cnfe){
-                Main.handleException("A fatal error has occured.",
-                        cnfe, Main.FATAL_LEVEL);
-            } catch(ClassCastException cce){
-                Main.handleException("A fatal error has occured.",
-                        cce, Main.FATAL_LEVEL);
-            }
-            
-            checkForOrphanProfiles();
-        }
-    }
 
     /** Saves the profiles to disk. */
-    public static void saveProfiles(){
+    public void saveProfiles(){
         // Trim profiles to size
         profiles = Arrays.copyOf(profiles, size);
 
@@ -357,14 +338,31 @@ public class ProfileFactory {
                     ioe, Main.WARN_LEVEL);
         }
     }
+    
+    /**
+     * Marks the provided profile as being active, while marking other profiles
+     * as in-active.
+     * @param profile The Profile to mark as active. 
+     */
+    public void setActive(Profile profile){
+        byte gameID = profile.getGameID();
 
-    private static Profile[] profiles;
-    private static int size;
+        for(int x=0; x<size; x++){
+            if(profiles[x].getGameID() == gameID){
+                if(profile.equals(profiles[x]))
+                    profile.setActive(true);
+                else
+                    profiles[x].setActive(false);
+            }
+        }
+    }
+    
+    private static ProfileFactory instance = null;
 
-    private static int profileIdCounter;
+    private Profile[] profiles;
+    private int size;
 
-    private static boolean profilesNotLoaded = true;
-
+    private int profileIdCounter;
 
     private static final String PROFILES_FILE = "profiles.obj";
 }

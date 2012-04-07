@@ -23,6 +23,7 @@ import com.chockly.pm.games.GameFactory;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.util.Arrays;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -37,6 +38,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     public ProfileManager(byte gameId) {
         // CUSTOM CODE
         this.gameID = gameId;
+        pf = ProfileFactory.getInstance();
         profileListModel = new javax.swing.DefaultListModel();
         // END CUSTOM CODE
         
@@ -60,13 +62,13 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         // Set the frames iconImages
         java.util.List<java.awt.Image> iconImages = new java.util.ArrayList<java.awt.Image>(2);
         
-        iconImages.add(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/mask.png")).getImage());
-        iconImages.add(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/pm_icon_32.png")).getImage());
+        iconImages.add(new ImageIcon(getClass().getResource("/com/chockly/pm/resources/mask.png")).getImage());
+        iconImages.add(new ImageIcon(getClass().getResource("/com/chockly/pm/resources/pm_icon_32.png")).getImage());
         
         setIconImages(iconImages);
         
         // Create the default profile icon
-        defaultProfileIcon = new javax.swing.ImageIcon("profiles/default.png");
+        defaultProfileIcon = new ImageIcon("profiles/default.png");
 
         // Create the game tabs
         buildTabs();
@@ -583,8 +585,10 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     private javax.swing.Popup currentPopup;
     private boolean popupOn = false;
     
-    private javax.swing.DefaultListModel profileListModel;
-    private javax.swing.ImageIcon defaultProfileIcon;
+    private final javax.swing.DefaultListModel profileListModel;
+    private final ImageIcon defaultProfileIcon;
+    
+    private final ProfileFactory pf;
     
     private JFileChooser xmlChooser = null;
     
@@ -760,12 +764,6 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             tabPane.setSelectedIndex(previousTab);
     }
     
-    private void buildXMLFileChooser(){
-        xmlChooser = new JFileChooser();
-        xmlChooser.setFileFilter(new xmlFileFilter());
-        xmlChooser.setDialogTitle("Save ...");
-    }
-    
     /**
      * Displays the ImageFileChooser to change the currently selected profile's
      * image.
@@ -777,7 +775,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         int result = fc.showOpenDialog(this);
         if (result == javax.swing.JFileChooser.APPROVE_OPTION) {
             p.setImage(fc.getSelectedFile().getAbsolutePath());
-            profileImage.setIcon(new javax.swing.ImageIcon(p.getImage()));
+            profileImage.setIcon(new ImageIcon(p.getImage()));
         }
     }
     
@@ -792,7 +790,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                 tabProfilesChecked = Arrays.copyOf(tabProfilesChecked, previousTab+1);
             
             if(!tabProfilesChecked[previousTab] &&
-                    ProfileFactory.getProfiles(gameID).length > 0)
+                    pf.getProfiles(gameID).length > 0)
             {
                 tabProfilesChecked[previousTab] = true;
                 return IOHelper.checkForProfileDirChanges(gameID);
@@ -824,7 +822,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             if(dir.length() > 10)
                 dir = dir.substring(0, 10);
             
-            for(int x=1; ProfileFactory.profileDirExists(dir, gameID); x++){
+            for(int x=1; pf.profileDirExists(dir, gameID); x++){
                 if(x == 1)
                     dir += x;
                 else
@@ -832,7 +830,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             }
 
             // Add the profile and update the profile list
-            ProfileFactory.addProfile(name, dir, gameID);
+            pf.add(name, dir, gameID);
 
             updateProfileList();
         }
@@ -876,9 +874,9 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
         {
             // Remove the profiles
-            Profile[] profiles = ProfileFactory.getProfiles(gameID);
+            Profile[] profiles = pf.getProfiles(gameID);
             for(int i=0; i<profiles.length; i++){
-                ProfileFactory.removeProfile(profiles[i]);
+                pf.remove(profiles[i]);
             }
             
             // Remove the game
@@ -910,7 +908,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             }
             
             // Delete the profile and remove it from the list.
-            ProfileFactory.removeProfile(p);
+            pf.remove(p);
             profileListModel.removeElementAt(
                     profileList.getSelectedIndex());
             
@@ -951,7 +949,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                 String out = file.getParent() + File.separator + fName;
                 
                 if(isProfiles){
-                    XMLHelper.ProfilesToXML(ProfileFactory.getProfiles(gameID), out);
+                    XMLHelper.ProfilesToXML(pf.getProfiles(gameID), out);
                 } else {
                     CustomGame[] g = {(CustomGame) GameFactory.getGameFromID(gameID)};
             
@@ -968,7 +966,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                         infoTxt.setText("No profiles imported.");
                         return;
                     } else {
-                        ProfileFactory.addProfiles(profiles, gameID);
+                        pf.addAll(profiles, gameID);
                         updateProfileList();
                     }
                 } else {
@@ -1046,7 +1044,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         if( Boolean.parseBoolean(Config.get(Config.Key.start_in_last_tab)) )
             Config.set( Config.Key.start_tab, Byte.toString(gameID) );
         
-        ProfileFactory.saveProfiles();
+        pf.saveProfiles();
         Config.saveConfig();
     }
     
@@ -1120,7 +1118,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             if(p.getImage() == null || p.getImage().isEmpty()){
                 profileImage.setIcon(defaultProfileIcon);
             } else {
-                profileImage.setIcon(new javax.swing.ImageIcon(p.getImage()));
+                profileImage.setIcon(new ImageIcon(p.getImage()));
             }
         } else {
             profileImage.setIcon(null);
@@ -1133,7 +1131,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         super.setVisible(b);
         
         // Create the profiles checked array
-        if(tabProfilesChecked == null){
+        if(b && tabProfilesChecked == null){
             tabProfilesChecked = new boolean[GameFactory.getAllGameIds().length];
             Arrays.fill(tabProfilesChecked, false);
 
@@ -1185,19 +1183,21 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     /** Displays the edit profile JDialog and then updates the profile as needed. */
     private void showEditProfile(){
         Profile p = (Profile) profileList.getSelectedValue();
-        String img = p.getImage();
+        String previousImg = p.getImage();
+        
         new EditProfile(this, p).setVisible(true);
-        if( p.getImage() != null ){
-            if(img != null)
-                if(p.getImage().equals(img))
-                    return;
+        
+        // Update the image as needed
+        if( p.getImage() == null ){
+            profileImage.setIcon(defaultProfileIcon);
+        } else {
+            if(previousImg != null && p.getImage().equals(previousImg))
+                return;
             
             if(p.getImage().isEmpty())
                 profileImage.setIcon(defaultProfileIcon);
             else
-                profileImage.setIcon(new javax.swing.ImageIcon(p.getImage()));
-        } else {
-            profileImage.setIcon(defaultProfileIcon);
+                profileImage.setIcon(new ImageIcon(p.getImage()));
         }
     }
     
@@ -1271,7 +1271,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     /** Rebuilds the profileListModel. */
     private void updateProfileList(){
         // Get the profiles
-        Profile[] p = ProfileFactory.getProfiles(gameID);
+        Profile[] p = pf.getProfiles(gameID);
         
         // Sort the profiles
         Arrays.sort(p);

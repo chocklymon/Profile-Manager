@@ -41,7 +41,7 @@ public abstract class BethesdaGame implements Game {
                     getSave() + File.separator + profile.getSaveDir() + File.separator,
                     "[General]");
             
-            ProfileFactory.setActive(profile);
+            ProfileFactory.getInstance().setActive(profile);
             
             return true;
         }
@@ -128,7 +128,8 @@ public abstract class BethesdaGame implements Game {
                 new java.util.HashMap<String, String>();
         
         // Input any existing profiles
-        Profile[] existingProfiles = ProfileFactory.getProfiles(getId());
+        ProfileFactory pf = ProfileFactory.getInstance();
+        Profile[] existingProfiles = pf.getProfiles(getId());
         for(int i=0; i<existingProfiles.length; i++){
             profileData.put(
                     existingProfiles[i].getSaveDir(),
@@ -149,7 +150,7 @@ public abstract class BethesdaGame implements Game {
                     profileData.put(fileName, fileName);
 
                     // Add the new profile
-                    ProfileFactory.addProfile(fileName, fileName, getId());
+                    pf.add(fileName, fileName, getId());
                 }
             }
             // Only process files that have an extension
@@ -247,7 +248,7 @@ public abstract class BethesdaGame implements Game {
                             profileData.put(dirName, characterName.toString());
 
                             // Add the new profile
-                            ProfileFactory.addProfile(
+                            pf.add(
                                     characterName.toString(), dirName, getId());
 
                             /* Comment out this line to print out the newly added profile information
@@ -278,7 +279,7 @@ public abstract class BethesdaGame implements Game {
                     getSave() + File.separator,
                     "[General]");
             
-            ProfileFactory.clearActiveProfile(getId());
+            ProfileFactory.getInstance().clearActiveProfile(getId());
         }
         catch(FileNotFoundException fnfe)
         {

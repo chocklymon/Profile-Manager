@@ -200,10 +200,12 @@ public class EditProfile extends javax.swing.JDialog implements ActionListener {
     
     /** Saves the changes to the Profile and closes the dialog. */
     private void saveAndExit(){
+        ProfileFactory pf = ProfileFactory.getInstance();
+        
         if(editDirCheckBox.isSelected()){
             if( !dirTxt.getText().equals(profile.getSaveDir())){
                 String dir = dirTxt.getText();
-                if(ProfileFactory.profileDirExists(dir, profile.getGameID())){
+                if(pf.profileDirExists(dir, profile.getGameID())){
                     JOptionPane.showMessageDialog(this,
                             "The directory '" + dir + "'\n is already in use by another profile!",
                             "Profile Directory Exists",
@@ -245,7 +247,7 @@ public class EditProfile extends javax.swing.JDialog implements ActionListener {
         if( !imgTxt.getText().equals(profile.getImage()))
             profile.setImage(imgTxt.getText());
         
-        ProfileFactory.saveProfiles();
+        pf.saveProfiles();
         
         this.dispose();
     }

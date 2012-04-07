@@ -39,11 +39,12 @@ public class Uninstall {
         // Build the GameUninstallers
         final GameUninstaller[] gus = new GameUninstaller[gameIds.length];
         Game g;
+        ProfileFactory pf = ProfileFactory.getInstance();
         Profile[] profiles;
         
         for(int i=0; i<gameIds.length; i++){
             g = GameFactory.getGameFromID(gameIds[i]);
-            profiles = ProfileFactory.getProfiles(gameIds[i]);
+            profiles = pf.getProfiles(gameIds[i]);
             
             File dir = new File(g.getDir());
             File[] profileDir = new File[profiles.length];

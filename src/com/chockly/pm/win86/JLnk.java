@@ -77,7 +77,7 @@ public class JLnk {
             if(path.contains("\\"))
                 workingDirectory = path.substring(0, path.lastIndexOf('\\'));
 
-	// Construct the visual basic script that builds the shortcut
+        // Construct the visual basic script that builds the shortcut
         StringBuilder vbscript = new StringBuilder(128);
         String commonEndLine = "\"\r\n";
 
@@ -94,7 +94,7 @@ public class JLnk {
         if(iconLocation != null && !iconLocation.isEmpty())
             vbscript.append("lnk.IconLocation = \"").append(iconLocation).append(",").append(iconIndex).append(commonEndLine);
         
-        if(iconLocation != null && !iconLocation.isEmpty())
+        if(workingDirectory != null && !workingDirectory.isEmpty())
             vbscript.append("lnk.WorkingDirectory = \"").append(workingDirectory).append(commonEndLine);
         
         vbscript.append("lnk.Save\r\n");

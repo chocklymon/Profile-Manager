@@ -284,7 +284,7 @@ public class XMLHelper {
     }
     
     /**
-     * Builds and XML document.
+     * Builds an XML document.
      * @return The XML document.
      * @throws ParserConfigurationException 
      */

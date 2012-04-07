@@ -45,12 +45,12 @@ import java.io.PrintWriter;
  * </pre>
  * 
  * @author Curtis Oakley
- * @version 1.4.0b
+ * @version 1.4.01b
  */
 public class Main {
     
     /** The current version number for the Profile Manager. */
-    public static final String VERSION_NUM = "1.4.0b";
+    public static final String VERSION_NUM = "1.4.01b";
 
     /**
      * This exception level indicates that a fatal error has occurred. This will 
@@ -157,12 +157,13 @@ public class Main {
 
         if(profileID > 0){
             // Profile set change to that profile and launch the game
-            Profile profile = ProfileFactory.getProfile(profileID);
+            ProfileFactory pf = ProfileFactory.getInstance();
+            Profile profile = pf.getProfile(profileID);
             Game game = GameFactory.getGameFromID(profile.getGameID());
             
             if(game.activateProfile(profile)){
 
-                ProfileFactory.saveProfiles();
+                pf.saveProfiles();
 
                 try {
                     IOHelper.startProgram( game.getExe() );
@@ -339,8 +340,10 @@ public class Main {
         output.append("Game\tProfile ID\tProfile Name\tProfile Dir\n"
                 + "=====================================================\n");
         
+        ProfileFactory pf = ProfileFactory.getInstance();
+        
         for(byte id : ids){
-            p = ProfileFactory.getProfiles(id);
+            p = pf.getProfiles(id);
             if(p.length > 0){
                 output.append("- ");
                 output.append(GameFactory.getNameFromID(id));
