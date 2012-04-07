@@ -16,7 +16,7 @@
  */
 package com.chockly.pm;
 
-import com.chockly.pm.games.CustomGame;
+import java.lang.reflect.Array;
 
 /**
  * Contains methods helpful to Array manipulations.
@@ -25,19 +25,31 @@ import com.chockly.pm.games.CustomGame;
 public class Utils {
     
     /**
-     * Removes the specified index from the custom game array. Returning an
-     * array with a length one shorter.
-     * @param array The CustomGame array to splice.
-     * @param index The index of the CustomGame to remove.
+     * Removes the specified index from the array. Returning an array with a
+     * length one shorter than the original.
+     * 
+     * @param original The array to splice.
+     * @param index The index of the object in the array to remove.
      * @return The array with with the specified index removed.
      */
-    public static CustomGame[] splice(CustomGame[] array, int index){
-        CustomGame[] temp = new CustomGame[array.length-1];
-        if(temp.length > 0){
-            System.arraycopy(array, 0, temp, 0, index);
-            System.arraycopy(array, index+1, temp, index, temp.length-index);
+    @SuppressWarnings("unchecked")
+    public static <T> T[] splice(T[] original, int index) {
+        return (T[]) splice(original, index, original.getClass());
+    }
+    
+    private static <T,U> T[] splice(U[] original, int index, Class<? extends T[]> newType) {
+        int newLength = original.length - 1;
+        // Safe because casting to the same type as the one passed in.
+        @SuppressWarnings("unchecked") T[] copy = ((Object)newType == (Object)Object[].class)
+            ? (T[]) new Object[newLength]
+            : (T[]) Array.newInstance(newType.getComponentType(), newLength);
+        
+        if(newLength > 0){
+            System.arraycopy(original, 0, copy, 0, index);
+            System.arraycopy(original, index+1, copy, index, copy.length-index);
         }
-        return temp;
+        
+        return copy;
     }
     
     /**

@@ -16,9 +16,9 @@
  */
 package com.chockly.pm.games;
 
-import com.chockly.pm.Utils;
 import com.chockly.pm.Config;
 import com.chockly.pm.Main;
+import com.chockly.pm.Utils;
 import com.chockly.pm.XMLUtils;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
