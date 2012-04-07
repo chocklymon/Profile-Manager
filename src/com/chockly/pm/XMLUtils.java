@@ -18,6 +18,7 @@ package com.chockly.pm;
 
 import com.chockly.pm.games.CustomGame;
 import java.io.File;
+import java.util.Arrays;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -78,9 +79,6 @@ public class XMLUtils {
      * if no games where loaded.
      */
     public static CustomGame[] GamesFromXML(String fileName){
-        
-        CustomGame[] games;
-        
         try {
             Document doc = DocumentBuilderFactory.newInstance()
                     .newDocumentBuilder().parse(new File(fileName));
@@ -90,13 +88,14 @@ public class XMLUtils {
             
             NodeList gNodes = root.getElementsByTagName(GAME_TAG);
             
-            games = new CustomGame[gNodes.getLength()];
+            CustomGame[] games = new CustomGame[gNodes.getLength()];
+            int size = 0;
             
             String name = null, gameDir = null, exe = null, icon = null,
                     profileDir = null, saveDir = null;
             
-            for(int i=0, nodeIndex=0; i<games.length; i++, nodeIndex++){
-                Node n = gNodes.item(nodeIndex);
+            for(int i=0; i<games.length; i++){
+                Node n = gNodes.item(i);
                 
                 if(n.getNodeType() == Node.ELEMENT_NODE){
                     Element game = (Element) n;
@@ -124,36 +123,35 @@ public class XMLUtils {
                         }
                     }
                     
-                    if(name == null
-                            || gameDir == null
-                            || exe == null
-                            || profileDir == null
-                            || saveDir == null)
+                    if(name != null
+                            && gameDir != null
+                            && exe != null
+                            && profileDir != null
+                            && saveDir != null)
                     {
-                        // Invalid remove from the profile array
-                        games = Utils.splice(games, i);
-                        i--;
-                    } else {
-                        games[i] = new CustomGame(Byte.parseByte(game.getAttribute(ID_ATR)),
+                        // Add the game
+                        games[size] = new CustomGame(Byte.parseByte(game.getAttribute(ID_ATR)),
                             name, gameDir, exe, icon, profileDir, saveDir);
+                        size++;
                     }
 
                     // Reset the variables
                     name = null; gameDir = null; exe = null; icon = null;
                     profileDir = null; saveDir = null;
                     
-                } else {
-                    i--;
                 }
             }
+            
+            if(size == games.length)
+                return games;
+            else
+                return Arrays.copyOf(games, size);
             
         } catch (Exception ex) {
             Main.handleException("Exception occured while loading the custom game(s).",
                     ex, Main.WARN_LEVEL);
-            games = null;
+            return null;
         }
-        
-        return games;
     }
     
     /**
@@ -196,9 +194,6 @@ public class XMLUtils {
      * if no games where found.
      */
     public static Profile[] ProfilesFromXML(String fileName){
-        
-        Profile[] profiles;
-        
         try {
             Document doc = DocumentBuilderFactory.newInstance()
                     .newDocumentBuilder().parse(new File(fileName));
@@ -208,12 +203,13 @@ public class XMLUtils {
             
             NodeList pNodes = root.getElementsByTagName(PROFILE_TAG);
             
-            profiles = new Profile[pNodes.getLength()];
+            Profile[] profiles = new Profile[pNodes.getLength()];
+            int size = 0;
             
             String name = null, dir = null, img = null;
             
-            for(int i=0, nodeIndex=0; i<profiles.length; i++, nodeIndex++){
-                Node n = pNodes.item(nodeIndex);
+            for(int i=0; i<profiles.length; i++){
+                Node n = pNodes.item(i);
                 
                 if(n.getNodeType() == Node.ELEMENT_NODE){
                     Element profile = (Element) n;
@@ -235,32 +231,30 @@ public class XMLUtils {
                         }
                     }
                     
-                    if(name == null || dir == null){
-                        // Invalid remove from the profile array
-                        profiles = Utils.splice(profiles, i);
-                        
-                        i--;
-                    } else {
-                        profiles[i] = new Profile(name, dir, 
+                    if(name != null && dir != null){
+                        // Add the new profile
+                        profiles[size] = new Profile(name, dir, 
                                 Byte.parseByte(profile.getAttribute(GAME_ID_ATR)),
                                 Integer.parseInt(profile.getAttribute(ID_ATR)));
-                        profiles[i].setImage(img);
+                        profiles[size].setImage(img);
+                        size++;
                     }
 
                     // Reset the variables
                     name = null; dir = null; img = null;
-                } else {
-                    i--;
                 }
             }
+            
+            if(size == profiles.length)
+                return profiles;
+            else
+                return Arrays.copyOf(profiles, size);
             
         } catch (Exception ex) {
             Main.handleException("Exception occured while loading the profile(s).",
                     ex, Main.WARN_LEVEL);
-            profiles = null;
+            return null;
         }
-        
-        return profiles;
     }
     
     /**
