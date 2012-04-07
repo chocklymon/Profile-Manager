@@ -19,9 +19,7 @@ package com.chockly.pm.games;
 import com.chockly.pm.Config;
 import com.chockly.pm.Main;
 import com.chockly.pm.Utils;
-import com.chockly.pm.XMLUtils;
 import java.util.Arrays;
-import javax.swing.JOptionPane;
 
 /**
  * Keeps track of all the Games in the program.
@@ -41,120 +39,15 @@ public class GameFactory {
     public static final byte FALLOUT_3_ID = 8;
     /** This represents the ID for Fallout: New Vegas type games. */
     public static final byte FALLOUT_NV_ID = 10;
-    
-    private static final String CUSTOM_GAME_FILE = "lib/games.xml";
-    
-    private static CustomGame[] customGames = null;
 
-
-    public static void addCustomGame(String name,
-            String gameDir,
-            String exe,
-            String icon,
-            String profileDir,
-            String saveDir)
-    {
-        if(customGames == null)
-            loadCustomGames();
-        
-        byte id = getNextAvailableId();
-        
-        // Increase the size of the array and add the new custom game.
-        customGames = java.util.Arrays.copyOf(customGames, customGames.length + 1);
-        customGames[customGames.length - 1] = new CustomGame(id,
-                name, gameDir, exe, icon, profileDir, saveDir);
-        
-        // Save the changes
-        saveCustomGames();
-        
-        // Put the custom game into the active games configuration.
-        String activeTabs = Config.get(Config.Key.active_tabs);
-        
-        if(activeTabs != null)
-            Config.set(Config.Key.active_tabs, activeTabs + ',' + id);
+    public static void addCustomGame(String name, String dir, String exe, String text, String profileDir, String saveDir) {
+        CustomGameFactory.getInstance().addCustomGame(name, dir, exe, text, profileDir, saveDir);
     }
 
-    public static void addCustomGames(CustomGame[] games){
-        int start = customGames.length;
-        byte newId = getNextAvailableId();
-        String activeTabs = Config.get(Config.Key.active_tabs);
-
-        customGames = Arrays.copyOf(customGames, start + games.length);
-        for(int i=0; i<games.length; i++){
-            customGames[start + i] = games[i].clone(newId);
-
-            if(activeTabs != null){
-                if( !activeTabs.contains(Byte.toString(newId)))
-                    activeTabs += "," + newId;
-            }
-
-            newId++;
-        }
-        
-        saveCustomGames();
-
-        if(activeTabs != null)
-            Config.set(Config.Key.active_tabs, activeTabs);
+    public static void addCustomGames(CustomGame[] games) {
+        CustomGameFactory.getInstance().addCustomGames(games);
     }
     
-    /** Checks if any of the game IDs are the same (conflicting). */
-    private static void checkForConflicts(){
-        // Check for conflicts with the built in ids
-        boolean changed = checkForConflicts(getAllBuiltInGameIds());
-        
-        // Check for conflicts with the custom games
-        byte[] ids = new byte[customGames.length];
-        for(int i=0; i<customGames.length; i++){
-            ids[i] = customGames[i].getId();
-        }
-        changed = checkForConflicts(ids) ? true : changed;
-        
-        // Save the profile id changes if needed
-        if(changed)
-            saveCustomGames();
-    }
-    
-    /**
-     * Checks if any of the custom games have the same ID number.
-     * @param checkMe The byte array to check against.
-     * @return True if a game had a conflict.
-     */
-    private static boolean checkForConflicts(byte[] checkMe){
-        boolean changed = false;
-        for(int i=0; i<customGames.length; i++){
-            for(int j=0; j<checkMe.length; j++){
-                if(customGames[i].getId() == checkMe[j]){
-                    if(i == j && checkMe[j] > FALLOUT_NV_ID)
-                        continue;// Same game skip
-                    
-                    changed = true;
-                    
-                    String[] options = new String[] {"Update Id","Ignore"};
-                    
-                    if( JOptionPane.showOptionDialog(null,
-                            "The game '" + customGames[i].getName() + "' has the same ID number as another game.\n\nYou can change this game's ID number, or ignore this game and not load it.",
-                            "Game ID Conflict",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            options,
-                            options[0]) == JOptionPane.YES_OPTION )
-                    {
-                        // Change the games id
-                        customGames[i] = customGames[i].clone(getNextAvailableId());
-                        checkMe[i] = customGames[i].getId();
-                    }
-                    else
-                    {
-                        // Remove the CustomGame
-                        customGames = Utils.splice(customGames, i);
-                    }
-                }
-            }
-        }
-        return changed;
-    }
-
     /**
      * Gets all the active game IDs.<br/>
      * <br/>
@@ -218,8 +111,7 @@ public class GameFactory {
      */
     public static byte[] getAllGameIds(){
         // Load the custom games if needed
-        if(customGames == null)
-            loadCustomGames();
+        byte[] customGames = CustomGameFactory.getInstance().getIds();
         
         // Build the ids array
         byte[] builtInIds = getAllBuiltInGameIds();
@@ -229,9 +121,7 @@ public class GameFactory {
         
         // Populate the ids array
         System.arraycopy(builtInIds, 0, allIds, 0, builtInIdSize);
-        for(int i=builtInIdSize; i<allIds.length; i++){
-            allIds[i] = customGames[i - builtInIdSize].getId();
-        }
+        System.arraycopy(customGames, 0, allIds, builtInIdSize, customGames.length);
 
         return allIds;
     }
@@ -242,31 +132,21 @@ public class GameFactory {
      * @return A name object that is the specific implementation of name for the name id.
      */
     public static Game getGameFromID(byte gameID){
-        if(customGames == null)
-            loadCustomGames();
-        
-        Game game;
         // Check if the game id is a built in game
         switch(gameID){
-            case MORROWIND_ID: game = new Morrowind(); break;
-            case OBLIVION_ID: game = new Oblivion(); break;
-            case SKYRIM_ID: game = new Skyrim(); break;
-            case FALLOUT_3_ID: game = new Fallout3(); break;
-            case FALLOUT_NV_ID: game = new FalloutNV(); break;
-            default: game=null;
+            case MORROWIND_ID:
+                return new Morrowind();
+            case OBLIVION_ID:
+                return new Oblivion();
+            case SKYRIM_ID:
+                return new Skyrim();
+            case FALLOUT_3_ID:
+                return new Fallout3();
+            case FALLOUT_NV_ID:
+                return new FalloutNV();
         }
         
-        if(game == null){
-            // Search the customGames array
-            for(int i=0; i<customGames.length; i++){
-                if(customGames[i].getId() == gameID){
-                    game = customGames[i];
-                    break;
-                }
-            }
-        }
-        
-        return game;
+        return CustomGameFactory.getInstance().getGameFromId(gameID);
     }
     
     /**
@@ -280,23 +160,6 @@ public class GameFactory {
     }
     
     /**
-     * Gets the next open ID number.
-     * @return The next open ID number.
-     */
-    private static byte getNextAvailableId(){
-        byte max = FALLOUT_NV_ID+1;
-        
-        for(int i=0; i<customGames.length; i++){
-            if(customGames[i].getId() >= max){
-                max = customGames[i].getId();
-                max++;
-            }
-        }
-        
-        return max;
-    }
-    
-    /**
      * Returns if the provided game id represents an custom game.
      * @param gameId The game id to check.
      * @return <tt>true</tt> if the game is a custom game, <tt>false</tt> false
@@ -305,57 +168,9 @@ public class GameFactory {
     public static boolean isCustomGame(byte gameId){
         return Utils.getIndex(getAllBuiltInGameIds(), gameId) == -1;
     }
-    
-    /** Loads the custom games from disk. */
-    private static void loadCustomGames(){
-        if(new java.io.File(CUSTOM_GAME_FILE).exists())
-            customGames = XMLUtils.GamesFromXML(CUSTOM_GAME_FILE);
-        
-        if(customGames == null)
-            // Create an empty custom game
-            customGames = new CustomGame[0];
-        else
-            // check for id conflicts
-            checkForConflicts();
-    }
-    
-    /**
-     * Removes the custom game from the list of custom games.
-     * @param id The id number of the game to remove.
-     */
-    public static void removeCustomGame(byte id){
-        for(int i=0; i<customGames.length; i++){
-            if(id == customGames[i].getId()){
-                // Remove the custom Game from the array and save
-                customGames = Utils.splice(customGames, i);
-                saveCustomGames();
-                
-                // Remove from the active tabs
-                String activeTabs = Config.get(Config.Key.active_tabs);
-                if(activeTabs != null){
-                    if(activeTabs.contains("," + id + ",")){
-                        // Game id in the middle of the tabs
-                        activeTabs = activeTabs.replace("," + id + ",", ",");
-                    } else if(activeTabs.endsWith("," + id)){
-                        // Game id at the end
-                        activeTabs = activeTabs.substring(0, activeTabs.lastIndexOf(","));
-                    } else if(activeTabs.startsWith(id + ",")){
-                        // Game id at the start
-                        activeTabs = activeTabs.substring(activeTabs.indexOf(",")+1);
-                    }
 
-                    Config.set(Config.Key.active_tabs, activeTabs);
-                }
-                
-                break;
-            }
-        }
-    }
-    
-    /** Saves the custom games to disk. */
-    public static void saveCustomGames(){
-        if(customGames != null)
-            XMLUtils.GamesToXML(customGames, CUSTOM_GAME_FILE);
+    public static void removeCustomGame(byte gameID) {
+        CustomGameFactory.getInstance().removeCustomGame(gameID);
     }
 
     /**
@@ -374,14 +189,7 @@ public class GameFactory {
             String exe,
             String icon,
             String profileDir,
-            String saveDir)
-    {
-        for(int i=0; i<customGames.length; i++){
-            if(customGames[i].equals(game)){
-                customGames[i] = new CustomGame(game.getId(),
-                        name, gameDir, exe, icon, profileDir, saveDir);
-                saveCustomGames();
-            }
-        }
+            String saveDir) {
+        CustomGameFactory.getInstance().updateCustomGame(game, name, gameDir, exe, icon, profileDir, saveDir);
     }
 }
