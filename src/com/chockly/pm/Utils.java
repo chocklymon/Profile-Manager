@@ -16,41 +16,11 @@
  */
 package com.chockly.pm;
 
-import java.lang.reflect.Array;
-
 /**
  * Contains methods helpful to Array manipulations.
  * @author Curtis Oakley
  */
 public class Utils {
-    
-    /**
-     * Removes the specified index from the array. Returning an array with a
-     * length one shorter than the original.
-     * 
-     * @param original The array to splice.
-     * @param index The index of the object in the array to remove.
-     * @return The array with with the specified index removed.
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T[] splice(T[] original, int index) {
-        return (T[]) splice(original, index, original.getClass());
-    }
-    
-    private static <T,U> T[] splice(U[] original, int index, Class<? extends T[]> newType) {
-        int newLength = original.length - 1;
-        // Safe because casting to the same type as the one passed in.
-        @SuppressWarnings("unchecked") T[] copy = ((Object)newType == (Object)Object[].class)
-            ? (T[]) new Object[newLength]
-            : (T[]) Array.newInstance(newType.getComponentType(), newLength);
-        
-        if(newLength > 0){
-            System.arraycopy(original, 0, copy, 0, index);
-            System.arraycopy(original, index+1, copy, index, copy.length-index);
-        }
-        
-        return copy;
-    }
     
     /**
      * Finds the the first index of a byte in a byte array, or -1 if not found.

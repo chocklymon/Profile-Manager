@@ -34,16 +34,16 @@ public class ExeFileFilter extends FileFilter {
         if (f.isDirectory())
             return true;
 
-        String extension = IOUtils.getExtension(f);
-        if (extension != null) {
-            if (extension.equals("exe") ||
-                    extension.equals("bat") ||
-                    extension.equals("cmd") ||
-                    extension.equals("com") ||
-                    extension.equals("jar"))
-                return true;
-            else
-                return false;
+        String s = f.getName();
+        int index = s.lastIndexOf('.');
+
+        if (index > 0 &&  index < s.length() - 1) {
+            String  ext = s.substring(index+1).toLowerCase();
+            return (ext.equals("exe") ||
+                    ext.equals("bat") ||
+                    ext.equals("cmd") ||
+                    ext.equals("com") ||
+                    ext.equals("jar"));
         }
 
         return false;

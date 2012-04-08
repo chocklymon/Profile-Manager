@@ -88,7 +88,7 @@ public class IOUtils {
     }
     
     /**
-     * Attempts to create a directory and it's parent directory.<br/>
+     * Attempts to create a directory and it's parent directories.<br/>
      * Informs the user if the folder isn't created.
      * @param folder The directory to create.
      */
@@ -109,7 +109,9 @@ public class IOUtils {
      * @throws IOException
      * @throws InterruptedException 
      */
-    public static void createShortcut(Profile profile) throws IOException, InterruptedException{
+    public static void createShortcut(Profile profile)
+            throws IOException, InterruptedException
+    {
         Game game = GameFactory.getGameFromID(profile.getGameID());
         
         JLnk link = new JLnk();
@@ -187,23 +189,6 @@ public class IOUtils {
         }
         
         return success;
-    }
-    
-    /**
-     * Gets the file extension of the provided file.
-     * @param f The file to get the extension of.
-     * @return The file's extension or <tt>null</tt> if it has no extension.<br/>
-     * The returned string will be in lower case, and not have the extension's period.
-     */
-    public static String getExtension(File f) {
-        String ext = null;
-        String s = f.getName();
-        int i = s.lastIndexOf('.');
-
-        if (i > 0 &&  i < s.length() - 1) {
-            ext = s.substring(i+1).toLowerCase();
-        }
-        return ext;
     }
     
     /**

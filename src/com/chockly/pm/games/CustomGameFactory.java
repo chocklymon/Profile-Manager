@@ -151,7 +151,7 @@ final class CustomGameFactory {
                     else
                     {
                         // Remove the CustomGame
-                        customGames = Utils.splice(customGames, i);
+                        splice(i);
                     }
                 }
             }
@@ -207,7 +207,7 @@ final class CustomGameFactory {
         for(int i=0; i<customGames.length; i++){
             if(id == customGames[i].getId()){
                 // Remove the custom Game from the array and save
-                customGames = Utils.splice(customGames, i);
+                splice(i);
                 saveCustomGames();
                 
                 // Remove from the active tabs
@@ -230,6 +230,23 @@ final class CustomGameFactory {
                 break;
             }
         }
+    }
+   
+    /**
+     * Removes the specified index from the custom game array. Returning an
+     * array with a length one shorter.
+     * @param array The CustomGame array to splice.
+     * @param index The index of the CustomGame to remove.
+     * @return The array with with the specified index removed.
+     */
+    private void splice(int index){
+        // TODO, try to remove uses of this method (ie, make the custom game list function like an ArrayList)s
+        CustomGame[] temp = new CustomGame[customGames.length-1];
+        if(temp.length > 0){
+            System.arraycopy(customGames, 0, temp, 0, index);
+            System.arraycopy(customGames, index+1, temp, index, temp.length-index);
+        }
+        customGames = temp;
     }
     
     /** Saves the custom games to disk. */

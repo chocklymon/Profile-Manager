@@ -16,7 +16,6 @@
  */
 package com.chockly.pm.gui;
 
-import com.chockly.pm.IOUtils;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
