@@ -58,9 +58,7 @@ public class Profile implements java.io.Serializable, Comparable<Profile> {
      * @return A duplicate of the Profile with with a different game id.
      */
     public Profile clone(byte newGameId){
-        Profile p = new Profile(profileName,profileSaveDir,newGameId,ID);
-        p.setImage(image);
-        return p;
+        return clone(newGameId, ID);
     }
     
     /**

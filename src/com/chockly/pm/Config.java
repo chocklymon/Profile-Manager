@@ -25,6 +25,8 @@ import java.util.Properties;
  * pairs. Also contains methods to save and load these configuration settings
  * to disk as a properties file.
  * 
+ * This basically functions as a static wrapper for {@link java.util.Properties}.
+ * 
  * @author Curtis Oakley
  */
 public class Config {
@@ -184,17 +186,21 @@ public class Config {
         
         private final String defaultValue;
 
-        /** Creates a new ConfigKey with the default value of <tt>null</tt>. */
+        /** Creates a new configuration Key with the default value of <tt>null</tt>. */
         private Key(){
             defaultValue = null;
         }
 
+        /** Creates a new configuration Key with the specified default value. */
         private Key(String defaultValue){
             this.defaultValue = defaultValue;
         }
 
         /**
-         * Returns the default value of the configuration key.
+         * Returns the default value of the configuration key.<br/>
+         * <br/>
+         * Note: the default value may be <tt>null</tt>.
+         * 
          * @return The default value of the Key.
          */
         public String getDefaultValue(){
@@ -282,6 +288,16 @@ public class Config {
         }
     }
     
+    /**
+     * Retrieves the value for the provided configuration key.<br/>
+     * If the key has no value specified in the configuration file, then the
+     * key's default value will be returned.
+     * 
+     * @param key The configuration key to retrieve the value of.
+     * @return The value of the configuration key, or the key's default value
+     * if the key has no value (the default value my be <tt>null</tt>). See
+     * {@link com.chockly.pm.Config.Key#getDefaultValue()}.
+     */
     public static String get(Key key){
         return props.getProperty(key.toString(), key.getDefaultValue());
     }
