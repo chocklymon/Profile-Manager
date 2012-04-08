@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.gui;
 
 import java.awt.Component;
@@ -51,12 +52,7 @@ public class ImageFileChooser extends JComponent implements PropertyChangeListen
         fc = new JFileChooser();
         
         fc.setApproveButtonText("Select");
-        
-        // Create a generic filter for images
-        fc.setFileFilter(new GenericFileFilter(
-                new String[] {"jpg","jpeg","gif","png","bmp"},
-                "Images (*.jpg, *.gif, *.png)"));
-        
+        fc.setFileFilter(new ImageFileFilter());
         fc.setAcceptAllFileFilterUsed(false);
         fc.setDialogTitle("Select profile image");
         
@@ -163,4 +159,5 @@ public class ImageFileChooser extends JComponent implements PropertyChangeListen
             }
         }
     }
+    
 }

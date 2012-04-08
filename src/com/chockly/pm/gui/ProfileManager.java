@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,17 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.gui;
 
 import com.chockly.pm.*;
-import com.chockly.pm.games.CustomGame;
 import com.chockly.pm.games.Game;
 import com.chockly.pm.games.GameFactory;
-import java.beans.PropertyChangeEvent;
-import java.io.File;
-import java.util.Arrays;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -38,7 +33,6 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     public ProfileManager(byte gameId) {
         // CUSTOM CODE
         this.gameID = gameId;
-        pf = ProfileFactory.getInstance();
         profileListModel = new javax.swing.DefaultListModel();
         // END CUSTOM CODE
         
@@ -62,14 +56,14 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         // Set the frames iconImages
         java.util.List<java.awt.Image> iconImages = new java.util.ArrayList<java.awt.Image>(2);
         
-        iconImages.add(new ImageIcon(getClass().getResource("/com/chockly/pm/resources/mask.png")).getImage());
-        iconImages.add(new ImageIcon(getClass().getResource("/com/chockly/pm/resources/pm_icon_32.png")).getImage());
+        iconImages.add(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/mask.png")).getImage());
+        iconImages.add(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/pm_icon_32.png")).getImage());
         
         setIconImages(iconImages);
         
         // Create the default profile icon
-        defaultProfileIcon = new ImageIcon("profiles/default.png");
-
+        defaultProfileIcon = new javax.swing.ImageIcon("profiles/default.png");
+        
         // Create the game tabs
         buildTabs();
         
@@ -102,15 +96,12 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         launchGameBtn = new javax.swing.JButton();
         profileImage = new javax.swing.JLabel();
         infoTxt = new javax.swing.JLabel();
-        progressBar = new javax.swing.JProgressBar();
         popupTextField = new javax.swing.JTextField();
         profilePopupMenu = new javax.swing.JPopupMenu();
         activateProfilePopupMenuItem = new javax.swing.JMenuItem();
         renameProfileMenuItem = new javax.swing.JMenuItem();
         chngeImgPopupMenuItem = new javax.swing.JMenuItem();
-        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         makeShortcutPopupMenuItem = new javax.swing.JMenuItem();
-        backupProfilePopupMenuItem = new javax.swing.JMenuItem();
         separator4 = new javax.swing.JPopupMenu.Separator();
         deleteProfilePopupMenuItem = new javax.swing.JMenuItem();
         tabPane = new javax.swing.JTabbedPane();
@@ -130,22 +121,6 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         makeShortcutMenuItem = new javax.swing.JMenuItem();
         separator3 = new javax.swing.JSeparator();
         deleteProfileMenuItem = new javax.swing.JMenuItem();
-        customGameMenu = new javax.swing.JMenu();
-        newGameMenuItem = new javax.swing.JMenuItem();
-        editGameMenuItem = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        exportGameMenuItem = new javax.swing.JMenuItem();
-        importGameMenuItem = new javax.swing.JMenuItem();
-        jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        deleteGameMenuItem = new javax.swing.JMenuItem();
-        toolsMenu = new javax.swing.JMenu();
-        deactivateMenuItem = new javax.swing.JMenuItem();
-        backupProfileMenuItem = new javax.swing.JMenuItem();
-        jSeparator3 = new javax.swing.JPopupMenu.Separator();
-        exportProfilesMenuItem = new javax.swing.JMenuItem();
-        importProfileMenuItem = new javax.swing.JMenuItem();
-        separator5 = new javax.swing.JPopupMenu.Separator();
-        uninstallMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -176,8 +151,6 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
 
         infoTxt.setText(" ");
 
-        progressBar.setVisible(false);
-
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -186,13 +159,10 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                 .addContainerGap()
                 .addComponent(profileListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(infoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(launchGameBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(profileImage, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(profileImage, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(infoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -205,9 +175,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(profileImage, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(infoTxt, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(progressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(infoTxt))
                     .addComponent(profileListScrollPane, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -233,17 +201,11 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         chngeImgPopupMenuItem.setText("Change Image");
         chngeImgPopupMenuItem.addActionListener(this);
         profilePopupMenu.add(chngeImgPopupMenuItem);
-        profilePopupMenu.add(jSeparator4);
 
         makeShortcutPopupMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/chain--plus.png"))); // NOI18N
         makeShortcutPopupMenuItem.setText("Create Shortcut");
         makeShortcutPopupMenuItem.addActionListener(this);
         profilePopupMenu.add(makeShortcutPopupMenuItem);
-
-        backupProfilePopupMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/vise-drawer.png"))); // NOI18N
-        backupProfilePopupMenuItem.setText("Backup");
-        backupProfilePopupMenuItem.addActionListener(this);
-        profilePopupMenu.add(backupProfilePopupMenuItem);
         profilePopupMenu.add(separator4);
 
         deleteProfilePopupMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/cross-script.png"))); // NOI18N
@@ -338,72 +300,6 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
 
         menuBar.add(profileMenu);
 
-        customGameMenu.setText("Games");
-
-        newGameMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/plus.png"))); // NOI18N
-        newGameMenuItem.setText("New Custom Game");
-        newGameMenuItem.addActionListener(this);
-        customGameMenu.add(newGameMenuItem);
-
-        editGameMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/pencil.png"))); // NOI18N
-        editGameMenuItem.setText("Edit Game");
-        editGameMenuItem.setEnabled(false);
-        editGameMenuItem.addActionListener(this);
-        customGameMenu.add(editGameMenuItem);
-        customGameMenu.add(jSeparator1);
-
-        exportGameMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/script-export.png"))); // NOI18N
-        exportGameMenuItem.setText("Export Game");
-        exportGameMenuItem.setEnabled(false);
-        exportGameMenuItem.addActionListener(this);
-        customGameMenu.add(exportGameMenuItem);
-
-        importGameMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/script-import.png"))); // NOI18N
-        importGameMenuItem.setText("Import Game");
-        importGameMenuItem.addActionListener(this);
-        customGameMenu.add(importGameMenuItem);
-        customGameMenu.add(jSeparator2);
-
-        deleteGameMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/cross-script.png"))); // NOI18N
-        deleteGameMenuItem.setText("Delete Game");
-        deleteGameMenuItem.setEnabled(false);
-        deleteGameMenuItem.addActionListener(this);
-        customGameMenu.add(deleteGameMenuItem);
-
-        menuBar.add(customGameMenu);
-
-        toolsMenu.setText("Tools");
-
-        deactivateMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/tick-red.png"))); // NOI18N
-        deactivateMenuItem.setText("Deactivate Profiles");
-        deactivateMenuItem.addActionListener(this);
-        toolsMenu.add(deactivateMenuItem);
-
-        backupProfileMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/vise-drawer.png"))); // NOI18N
-        backupProfileMenuItem.setText("Backup Profile");
-        backupProfileMenuItem.setEnabled(false);
-        backupProfileMenuItem.addActionListener(this);
-        toolsMenu.add(backupProfileMenuItem);
-        toolsMenu.add(jSeparator3);
-
-        exportProfilesMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/card-export.png"))); // NOI18N
-        exportProfilesMenuItem.setText("Export Profiles");
-        exportProfilesMenuItem.setEnabled(false);
-        exportProfilesMenuItem.addActionListener(this);
-        toolsMenu.add(exportProfilesMenuItem);
-
-        importProfileMenuItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/card-import.png"))); // NOI18N
-        importProfileMenuItem.setText("Import Profiles");
-        importProfileMenuItem.addActionListener(this);
-        toolsMenu.add(importProfileMenuItem);
-        toolsMenu.add(separator5);
-
-        uninstallMenuItem.setText("Uninstall");
-        uninstallMenuItem.addActionListener(this);
-        toolsMenu.add(uninstallMenuItem);
-
-        menuBar.add(toolsMenu);
-
         helpMenu.setText("Help");
 
         helpMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
@@ -452,19 +348,13 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
 
             gameID = activeGames[currentTab];
             launchGameBtn.setText("Launch " + tabPane.getTitleAt(currentTab));
-            
-            previousTab = currentTab;
 
-            // Check the game for profile changes
-            checkForProfileDirChanges();
-            
             updateProfileList();
 
-            // Check if button and menu items need to be changed
             if(profileList.getSelectedIndex() == -1)
-                setProfileIsSelected(false);
-            
-            setCustomGame(GameFactory.isCustomGame(gameID));
+                setProfileEnabled(false);
+
+            previousTab = currentTab;
         }
     }//GEN-LAST:event_tabPaneStateChanged
 
@@ -475,7 +365,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     private void profileListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_profileListValueChanged
         // If a profile is selected update the UI
         if(profileList.getSelectedIndex() >= 0)
-            setProfileIsSelected(true);
+            setProfileEnabled(true);
     }//GEN-LAST:event_profileListValueChanged
 
     private void profileListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_profileListMouseClicked
@@ -510,10 +400,8 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             // Set the selected index to the item being righ clicked on
             profileList.setSelectedIndex(
                     profileList.locationToIndex(evt.getPoint()));
-            
-            // Show the right click menu (Only when something is selected).
-            if( !profileList.isSelectionEmpty() )
-                profilePopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+            // Show the right click menu
+            profilePopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_profileListMouseClicked
 
@@ -528,37 +416,22 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     private javax.swing.JMenuItem activateProfileMenuItem;
     private javax.swing.JMenuItem activateProfilePopupMenuItem;
     private javax.swing.JMenuItem autoProfileMenuItem;
-    private javax.swing.JMenuItem backupProfileMenuItem;
-    private javax.swing.JMenuItem backupProfilePopupMenuItem;
     private javax.swing.JMenuItem chngeImgMenuItem;
     private javax.swing.JMenuItem chngeImgPopupMenuItem;
-    private javax.swing.JMenu customGameMenu;
-    private javax.swing.JMenuItem deactivateMenuItem;
-    private javax.swing.JMenuItem deleteGameMenuItem;
     private javax.swing.JMenuItem deleteProfileMenuItem;
     private javax.swing.JMenuItem deleteProfilePopupMenuItem;
-    private javax.swing.JMenuItem editGameMenuItem;
     private javax.swing.JMenuItem editProfileMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenuItem exportGameMenuItem;
-    private javax.swing.JMenuItem exportProfilesMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem helpMenuItem;
-    private javax.swing.JMenuItem importGameMenuItem;
-    private javax.swing.JMenuItem importProfileMenuItem;
     private javax.swing.JLabel infoTxt;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JPopupMenu.Separator jSeparator2;
-    private javax.swing.JPopupMenu.Separator jSeparator3;
-    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JButton launchGameBtn;
     private javax.swing.JMenuItem launchMenuItem;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuItem makeShortcutMenuItem;
     private javax.swing.JMenuItem makeShortcutPopupMenuItem;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem newGameMenuItem;
     private javax.swing.JMenuItem newProfileMenuItem;
     private javax.swing.JTextField popupTextField;
     private javax.swing.JMenuItem prefMenuItem;
@@ -567,16 +440,12 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     private javax.swing.JScrollPane profileListScrollPane;
     private javax.swing.JMenu profileMenu;
     private javax.swing.JPopupMenu profilePopupMenu;
-    private javax.swing.JProgressBar progressBar;
     private javax.swing.JMenuItem renameProfileMenuItem;
     private javax.swing.JSeparator separator1;
     private javax.swing.JSeparator separator2;
     private javax.swing.JSeparator separator3;
     private javax.swing.JPopupMenu.Separator separator4;
-    private javax.swing.JPopupMenu.Separator separator5;
     private javax.swing.JTabbedPane tabPane;
-    private javax.swing.JMenu toolsMenu;
-    private javax.swing.JMenuItem uninstallMenuItem;
     // End of variables declaration//GEN-END:variables
 
     // BEGIN CUSTOM CODE
@@ -585,15 +454,10 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
     private javax.swing.Popup currentPopup;
     private boolean popupOn = false;
     
-    private final javax.swing.DefaultListModel profileListModel;
-    private final ImageIcon defaultProfileIcon;
-    
-    private final ProfileFactory pf;
-    
-    private JFileChooser xmlChooser = null;
+    private javax.swing.DefaultListModel profileListModel;
+    private javax.swing.ImageIcon defaultProfileIcon;
     
     private int previousTab = 0;
-    private boolean[] tabProfilesChecked = null;
     private byte[] activeGames;
     private byte gameID;
     
@@ -640,26 +504,6 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                 createShortcut();
             } else if(source.equals(renameProfileMenuItem)){
                 showRenamePopup();
-            } else if(source.equals(deactivateMenuItem)){
-                deactivateProfiles();
-            } else if(source.equals(backupProfileMenuItem) || source.equals(backupProfilePopupMenuItem)){
-                backupProfile();
-            } else if(source.equals(uninstallMenuItem)){
-                uninstall();
-            } else if(source.equals(newGameMenuItem)){
-                showEditGame(false);
-            } else if(source.equals(editGameMenuItem)){
-                showEditGame(true);
-            } else if(source.equals(deleteGameMenuItem)){
-                deleteCustomGame();
-            } else if(source.equals(exportGameMenuItem)){
-                exportImport(true, false);
-            } else if(source.equals(exportProfilesMenuItem)){
-                exportImport(true, true);
-            } else if(source.equals(importGameMenuItem)){
-                exportImport(false, false);
-            } else if(source.equals(importProfileMenuItem)){
-                exportImport(false, true);
             }
         } catch(Exception ex){
             // Log the error and inform the user
@@ -697,33 +541,13 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         }
     }
     
-    /** Creates an archive file of the currently selected profile. */
-    private void backupProfile(){
-        
-        // Update the GUI
-        infoTxt.setText("Creating backup...");
-        progressBar.setValue(0);
-        progressBar.setIndeterminate(false); 
-        progressBar.setVisible(true);
-        backupProfileMenuItem.setEnabled(false);
-        
-        ProfileBackup pb = new ProfileBackup((Profile) profileList.getSelectedValue(), this);
-        pb.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                progressBarUpdate(evt);
-            }
-        });
-        pb.execute();
-    }
-    
     /** Initializes the game tabs. */
     private void buildTabs(){
         // Get the active games
         byte[] activeGameIds = GameFactory.getActiveGameIds();
         
         // Only run when the active games has changed
-        if(Arrays.equals(activeGameIds, activeGames))
+        if(java.util.Arrays.equals(activeGameIds, activeGames))
             return;
 
         // Store the active games
@@ -744,12 +568,10 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         
         for(int x=0; x<activeGames.length; x++){
             g = GameFactory.getGameFromID(activeGames[x]);
-            
-            if(g != null)
-                tabPane.addTab(g.getName(),
-                        g.getIcon(),
-                        emptyPanels[x],
-                        "Manage " + g.getFullName() + " Profiles");
+            tabPane.addTab(g.getName(),
+                    g.getIcon(),
+                    emptyPanels[x],
+                    "Manage " + g.getFullName() + " Profiles");
         }
 
         // Set the selected tab as best as possible
@@ -775,28 +597,8 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         int result = fc.showOpenDialog(this);
         if (result == javax.swing.JFileChooser.APPROVE_OPTION) {
             p.setImage(fc.getSelectedFile().getAbsolutePath());
-            profileImage.setIcon(new ImageIcon(p.getImage()));
+            profileImage.setIcon(new javax.swing.ImageIcon(p.getImage()));
         }
-    }
-    
-    /**
-     * Checks the current tab's profile directory for changes.
-     * @return True if profiles where changed.
-     */
-    private boolean checkForProfileDirChanges(){
-        if(tabProfilesChecked != null){
-            // Increase the size of the tabProfilesChecked array.
-            if(tabProfilesChecked.length <= previousTab)
-                tabProfilesChecked = Arrays.copyOf(tabProfilesChecked, previousTab+1);
-            
-            if(!tabProfilesChecked[previousTab] &&
-                    pf.getProfiles(gameID).length > 0)
-            {
-                tabProfilesChecked[previousTab] = true;
-                return IOUtils.checkForProfileDirChanges(gameID);
-            }
-        }
-        return false;
     }
 
     /**
@@ -808,7 +610,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         String name = JOptionPane.showInputDialog(this, "Profile Name?",
                 "Create New Profile", JOptionPane.QUESTION_MESSAGE);
         if(name != null){
-            // Validate the directory
+
             String dir = name.replaceAll("[^a-zA-Z0-9]", "");
             
             if(dir.length() == 0){
@@ -822,15 +624,11 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             if(dir.length() > 10)
                 dir = dir.substring(0, 10);
             
-            for(int x=1; pf.profileDirExists(dir, gameID); x++){
-                if(x == 1)
-                    dir += x;
-                else
-                    dir = dir.substring(0, dir.length()-1) + x;
+            for(int x=0; ProfileFactory.profileDirExists(dir, gameID); x++){
+                dir += x;
             }
 
-            // Add the profile and update the profile list
-            pf.add(name, dir, gameID);
+            ProfileFactory.addProfile(name, dir, gameID);
 
             updateProfileList();
         }
@@ -843,48 +641,12 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         
         try {
             // Try to create the shortcut
-            IOUtils.createShortcut(p);
+            IOHelper.createShortcut(p);
 
             infoTxt.setText("Shortcut created");
 
         } catch(Exception ex){
             Main.handleException("Unable to create shortcut", ex, Main.WARN_LEVEL);
-        }
-    }
-    
-    /** Deactivates the profiles for the currently selected games. */
-    private void deactivateProfiles(){
-        if( JOptionPane.showConfirmDialog(this,
-                "Are you sure that you wish to deactivate the profiles for this game?",
-                "Deactivate Profiles",
-                JOptionPane.YES_NO_OPTION)
-                == JOptionPane.YES_OPTION )
-        {
-            GameFactory.getGameFromID(gameID).deactivateProfiles();
-            updateProfileList();
-            setProfileIsSelected(false);
-        }
-    }
-    
-    /** Deletes the current custom game. */
-    private void deleteCustomGame(){
-        if(JOptionPane.showConfirmDialog(this,
-                "Are you sure that you want to delete this game?",
-                "Delete Game",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
-        {
-            // Remove the profiles
-            Profile[] profiles = pf.getProfiles(gameID);
-            for(int i=0; i<profiles.length; i++){
-                pf.remove(profiles[i]);
-            }
-            
-            // Remove the game
-            GameFactory.removeCustomGame(gameID);
-
-            // Rebuild the tabs
-            tabPane.setSelectedIndex(0);
-            buildTabs();
         }
     }
     
@@ -904,19 +666,16 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                     JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
             {
                 // Delete the files
-                IOUtils.deleteProfileDir(p);
+                IOHelper.deleteProfileDir(p);
             }
             
             // Delete the profile and remove it from the list.
-            pf.remove(p);
+            ProfileFactory.removeProfile(p);
             profileListModel.removeElementAt(
                     profileList.getSelectedIndex());
             
             // Indicate that no profile is selected.
-            setProfileIsSelected(false);
-            
-            // Enabled/disable the export profiles buttons as needed
-            exportProfilesMenuItem.setEnabled( !profileListModel.isEmpty());
+            setProfileEnabled(false);
         }
     }
     
@@ -929,82 +688,6 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         
         Main.closeErrorLog();
         this.dispose();
-    }
-    
-    private void exportImport(boolean isExport, boolean isProfiles){
-        if(xmlChooser == null){
-            xmlChooser = new JFileChooser();
-            xmlChooser.setFileFilter(new GenericFileFilter(new String[] {"xml"}, "xml"));
-        }
-        
-        if(isExport){
-            if(xmlChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-                File file = xmlChooser.getSelectedFile();
-
-                String fName = file.getName();
-                if( !fName.contains(".") || 
-                        !fName.substring(fName.lastIndexOf('.')).equalsIgnoreCase(".xml"))
-                    fName += ".xml";
-
-                String out = file.getParent() + File.separator + fName;
-                
-                if(isProfiles){
-                    XMLUtils.ProfilesToXML(pf.getProfiles(gameID), out);
-                } else {
-                    CustomGame[] g = {(CustomGame) GameFactory.getGameFromID(gameID)};
-            
-                    XMLUtils.GamesToXML(g, out);
-                }
-
-                infoTxt.setText("Export complete.");
-            }
-        } else {
-            if(xmlChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-                if(isProfiles){
-                    Profile[] profiles = XMLUtils.ProfilesFromXML(xmlChooser.getSelectedFile().getAbsolutePath());
-                    if(profiles == null || profiles.length == 0){
-                        infoTxt.setText("No profiles imported.");
-                        return;
-                    } else {
-                        pf.addAll(profiles, gameID);
-                        updateProfileList();
-                    }
-                } else {
-                    CustomGame[] games = XMLUtils.GamesFromXML(xmlChooser.getSelectedFile().getAbsolutePath());
-                    if(games == null || games.length == 0){
-                        infoTxt.setText("No games imported.");
-                        return;
-                    } else {
-                        GameFactory.addCustomGames(games);
-                        buildTabs();
-                    }
-                }
-                
-                infoTxt.setText("Import complete.");
-            }
-        }
-    }
-    
-    /** Signals that a profile backup has completed, updates the GUI to reflect this. */
-    public void finishBackupProfile(){
-        progressBar.setVisible(false);
-        
-        if( !profileList.isSelectionEmpty())
-            backupProfileMenuItem.setEnabled(true);
-        
-        infoTxt.setText("Backup complete");
-    }
-    
-    private String getSelectedXMLFile(){
-        File file = xmlChooser.getSelectedFile();
-
-        String fName = file.getName();
-        if( !fName.contains(".") || 
-                !fName.substring(fName.lastIndexOf('.')).equalsIgnoreCase(".xml"))
-            fName += ".xml";
-
-
-        return file.getParent() + File.separator + fName;
     }
     
     /** Launches the game using the currently selected profile. */
@@ -1021,10 +704,10 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
 
             try {
                 // Launch the game
-                IOUtils.startProgram( g.getExe() );
+                IOHelper.startProgram( g.getExePath() );
 
                 // Exit if needed
-                if( Boolean.parseBoolean(Config.get(Config.Key.exit_on_launch)) )
+                if(Boolean.parseBoolean(Config.get(Config.EXIT_ON_LAUNCH, "true")))
                     this.dispose();
 
             } catch(java.io.FileNotFoundException fnfe){
@@ -1041,23 +724,11 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         Config.setPrivateProperty(Config.GUI_X_LOCATION, Integer.toString(this.getX()));
         Config.setPrivateProperty(Config.GUI_Y_LOCATION, Integer.toString(this.getY()));
         
-        if( Boolean.parseBoolean(Config.get(Config.Key.start_in_last_tab)) )
-            Config.set( Config.Key.start_tab, Byte.toString(gameID) );
+        if( Boolean.parseBoolean(Config.get(Config.START_IN_LAST_TAB, "true")) )
+            Config.set( Config.START_TAB, Byte.toString(gameID) );
         
-        pf.saveProfiles();
+        ProfileFactory.saveProfiles();
         Config.saveConfig();
-    }
-    
-    /**
-     * Sets the buttons and menu items to the correct state for a custom game.
-     * @param enabled If the custom game buttons should be enabled.
-     */
-    private void setCustomGame(boolean enabled){
-        if(editGameMenuItem.isEnabled() != enabled){
-            editGameMenuItem.setEnabled(enabled);
-            exportGameMenuItem.setEnabled(enabled);
-            deleteGameMenuItem.setEnabled(enabled);
-        }
     }
     
     /**
@@ -1065,11 +736,10 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
      * the configuration settings.
      */
     private void setDoubleClickActions(){
-        dbIconActivates = Config.get(Config.Key.double_click_icon)
-                .equals(Config.DB_CLICK_ACTIVATE);
+        dbIconActivates = Config.get(Config.DB_CLICK_ICON_KEY, Config.DB_CLICK_ACTIVATE).equals(Config.DB_CLICK_ACTIVATE);
         
         // Set to rename by default
-        String textAction = Config.get(Config.Key.double_click_name);
+        String textAction = Config.get(Config.DB_CLICK_TEXT_KEY, Config.DB_CLICK_RENAME);
         
         if(textAction.equals(Config.DB_CLICK_ACTIVATE))
             // Activate action
@@ -1091,7 +761,7 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
      * been selected, False if the UI should be updated to reflect that no
      * profile is selected.
      */
-    private void setProfileIsSelected(boolean yes){
+    private void setProfileEnabled(boolean yes){
         // Enable/Disable buttons and menu items as needed
         if( launchGameBtn.isEnabled() != yes )
         {
@@ -1104,9 +774,6 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             deleteProfileMenuItem.setEnabled(yes);
             editProfileMenuItem.setEnabled(yes);
             makeShortcutMenuItem.setEnabled(yes);
-            
-            // Enable other buttons
-            backupProfileMenuItem.setEnabled(yes);
         }
         
         // Update the profile image as needed
@@ -1118,31 +785,12 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
             if(p.getImage() == null || p.getImage().isEmpty()){
                 profileImage.setIcon(defaultProfileIcon);
             } else {
-                profileImage.setIcon(new ImageIcon(p.getImage()));
+                profileImage.setIcon(new javax.swing.ImageIcon(p.getImage()));
             }
         } else {
             profileImage.setIcon(null);
             profileImage.setText("Select a Profile");
         }
-    }
-    
-    @Override
-    public void setVisible(boolean b){
-        super.setVisible(b);
-        
-        // Create the profiles checked array
-        if(b && tabProfilesChecked == null){
-            tabProfilesChecked = new boolean[GameFactory.getAllGameIds().length];
-            Arrays.fill(tabProfilesChecked, false);
-
-            if(checkForProfileDirChanges())
-                updateProfileList();
-        }
-    }
-    
-    /** Displays the about box JDialog. */
-    private void showAboutBox(){
-        new AboutBox(this).setVisible(true);
     }
     
     /**
@@ -1159,45 +807,27 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         setDoubleClickActions();
     }
     
-    /**
-     * Shows the Edit Game dialog.
-     * @param editing True if the dialog is editing a current custom game, if
-     * false then the dialog is adding a new game.
-     */
-    private void showEditGame(boolean editing){
-        if(editing){
-            new EditGame(this, (CustomGame) GameFactory.getGameFromID(gameID)).setVisible(true);
-            
-            // Update the game tab
-            Game g = GameFactory.getGameFromID(gameID);
-            tabPane.setTitleAt(previousTab, g.getName());
-            tabPane.setIconAt(previousTab, g.getIcon());
-        } else {
-            new EditGame(this).setVisible(true);
-            
-            // Rebuild the tabs in-case of a new game
-            buildTabs();
-        }
+    /** Displays the about box JDialog. */
+    private void showAboutBox(){
+        new AboutBox(this).setVisible(true);
     }
     
     /** Displays the edit profile JDialog and then updates the profile as needed. */
     private void showEditProfile(){
         Profile p = (Profile) profileList.getSelectedValue();
-        String previousImg = p.getImage();
-        
+        String img = p.getImage();
         new EditProfile(this, p).setVisible(true);
-        
-        // Update the image as needed
-        if( p.getImage() == null ){
-            profileImage.setIcon(defaultProfileIcon);
-        } else {
-            if(previousImg != null && p.getImage().equals(previousImg))
-                return;
+        if( p.getImage() != null ){
+            if(img != null)
+                if(p.getImage().equals(img))
+                    return;
             
             if(p.getImage().isEmpty())
                 profileImage.setIcon(defaultProfileIcon);
             else
-                profileImage.setIcon(new ImageIcon(p.getImage()));
+                profileImage.setIcon(new javax.swing.ImageIcon(p.getImage()));
+        } else {
+            profileImage.setIcon(defaultProfileIcon);
         }
     }
     
@@ -1230,16 +860,6 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         popupOn = true;
     }
     
-    private void progressBarUpdate(PropertyChangeEvent evt) {
-        if ("progress".equals(evt.getPropertyName())) {
-            int progress = (Integer) evt.getNewValue();
-            if (progress == 100)
-                progressBar.setIndeterminate(true);
-            else
-                progressBar.setValue(progress);
-        }
-    }
-    
     /**
      * Renames the currently selected profile's name based on what is in the
      * popupTextField.
@@ -1256,37 +876,23 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
         currentPopup.hide();
     }
 
-    private void uninstall() {
-        if(JOptionPane.showConfirmDialog(this,
-                "Are you sure that you wish to begin the uninstall process?\n\n"
-                + "Clicking yes will open the uninstall manager.",
-                "Uninstall",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
-        {
-            dispose();
-            Uninstall.uninstall(activeGames, this);
-        }
-    }
-
     /** Rebuilds the profileListModel. */
     private void updateProfileList(){
         // Get the profiles
-        Profile[] p = pf.getProfiles(gameID);
+        Profile[] p = ProfileFactory.getProfiles(gameID);
         
         // Sort the profiles
-        Arrays.sort(p);
+        java.util.Arrays.sort(p);
         
         // Add them to the profileListModel
         profileListModel.removeAllElements();
         for(int x=0; x<p.length; x++){
             profileListModel.addElement(p[x]);
-
+            
             // Auto select the active profile
             if(p[x].isActive())
                 profileList.setSelectedIndex(x);
         }
-        
-        // Enabled/disable the export profiles buttons as needed
-        exportProfilesMenuItem.setEnabled(p.length > 0);
     }
+
 }

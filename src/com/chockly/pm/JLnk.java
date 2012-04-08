@@ -14,7 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.chockly.pm.win86;
+
+package com.chockly.pm;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,7 +27,7 @@ import java.io.IOException;
  * The shortcut is created by building a VBScript file and then running it.
  * 
  * @author Curtis Oakley
- * @version 0.4.1
+ * @version 0.4
  */
 public class JLnk {
     
@@ -77,7 +78,7 @@ public class JLnk {
             if(path.contains("\\"))
                 workingDirectory = path.substring(0, path.lastIndexOf('\\'));
 
-        // Construct the visual basic script that builds the shortcut
+	// Construct the visual basic script that builds the shortcut
         StringBuilder vbscript = new StringBuilder(128);
         String commonEndLine = "\"\r\n";
 
@@ -94,9 +95,7 @@ public class JLnk {
         if(iconLocation != null && !iconLocation.isEmpty())
             vbscript.append("lnk.IconLocation = \"").append(iconLocation).append(",").append(iconIndex).append(commonEndLine);
         
-        if(workingDirectory != null && !workingDirectory.isEmpty())
-            vbscript.append("lnk.WorkingDirectory = \"").append(workingDirectory).append(commonEndLine);
-        
+        vbscript.append("lnk.WorkingDirectory = \"").append(workingDirectory).append(commonEndLine);
         vbscript.append("lnk.Save\r\n");
         vbscript.append("Set lnk = Nothing");
 
@@ -118,7 +117,7 @@ public class JLnk {
         Process exec = Runtime.getRuntime().exec("cscript " + SCRIPT_FILE_NAME);
         
         if(exec.waitFor() != 0)
-            throw new IOException("Create .LNK script exited abnormally.");
+            throw new IOException("Create .LNK script exited abnormally");
         
         // Delete the script
         scriptFile.delete();

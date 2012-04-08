@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,11 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.games;
 
-import com.chockly.pm.*;
+import com.chockly.pm.Config;
+import com.chockly.pm.IOHelper;
+import com.chockly.pm.Main;
+import com.chockly.pm.Profile;
+import com.chockly.pm.ProfileFactory;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -29,26 +33,30 @@ import java.io.IOException;
  */
 public abstract class BethesdaGame implements Game {
     
-    protected static final String SAVES_FOLDER = "Saves";
-    
-    @Override
-    public boolean activateProfile(Profile profile) {
+    /**
+     * Activates a profile.<br/>
+     * <br/>
+     * This sets the ini's "SLocalSavePath" in the "[General]" section to the profile's save directory.
+     * @param ini The ini file and it's path.
+     * @param profile The Profile to activate.
+     * @return True if the profile was correctly activated, false otherwise.
+     */
+    protected boolean activateProfile(String ini, Profile profile) {
         try
         {
-            IOUtils.setINIValue(
-                    getDir() + getIni(),
+            IOHelper.setINIValue(
+                    getDir() + ini,
                     "SLocalSavePath",
-                    getSave() + File.separator + profile.getSaveDir() + File.separator,
+                    getSave() + java.io.File.separator + profile.getSaveDir() + java.io.File.separator,
                     "[General]");
             
-            ProfileFactory.getInstance().setActive(profile);
+            ProfileFactory.setActive(profile);
             
             return true;
         }
-        catch(FileNotFoundException fnfe)
+        catch(java.io.FileNotFoundException fnfe)
         {
-            Main.handleException("Unable to find the file '" + getIni()
-                    + "'\nMake sure that the settings for this game are correct.",
+            Main.handleException("Unable to find the file '" + ini + "'\nMake sure that the settings for this game are correct.",
                     fnfe, Main.WARN_LEVEL);
             
             return false;
@@ -99,16 +107,16 @@ public abstract class BethesdaGame implements Game {
      * 
      * @param repeatNameEnd If the nameEnd variable should be subtracted from the
      * character's name twice.
+     * 
+     * @param gameId The ID number of the game that the profiles should be
+     * attached to.
      */
     protected void autoSetupProfiles(String[] validExtensions,
-            long nameStartOffset,
-            int backTrackAmount,
-            String nameStart,
-            String nameEnd,
-            boolean repeatNameEnd)
+            long nameStartOffset, int backTrackAmount,
+            String nameStart, String nameEnd, boolean repeatNameEnd, byte gameId)
     {
         // Detect the state of the deepscan
-        String deepScan = Config.get(Config.Key.deep_scan);
+        String deepScan = Config.get(Config.DEEP_SCAN_KEY, Config.DEEP_SCAN_AUTO);
         int deepScanFlag = 0;
         if( !deepScan.equalsIgnoreCase(Config.DEEP_SCAN_AUTO))
             deepScanFlag = Boolean.parseBoolean(deepScan) ? 1 : 2;
@@ -128,8 +136,7 @@ public abstract class BethesdaGame implements Game {
                 new java.util.HashMap<String, String>();
         
         // Input any existing profiles
-        ProfileFactory pf = ProfileFactory.getInstance();
-        Profile[] existingProfiles = pf.getProfiles(getId());
+        Profile[] existingProfiles = ProfileFactory.getProfiles(gameId);
         for(int i=0; i<existingProfiles.length; i++){
             profileData.put(
                     existingProfiles[i].getSaveDir(),
@@ -150,7 +157,7 @@ public abstract class BethesdaGame implements Game {
                     profileData.put(fileName, fileName);
 
                     // Add the new profile
-                    pf.add(fileName, fileName, getId());
+                    ProfileFactory.addProfile(fileName, fileName, gameId);
                 }
             }
             // Only process files that have an extension
@@ -248,8 +255,8 @@ public abstract class BethesdaGame implements Game {
                             profileData.put(dirName, characterName.toString());
 
                             // Add the new profile
-                            pf.add(
-                                    characterName.toString(), dirName, getId());
+                            ProfileFactory.addProfile(
+                                    characterName.toString(), dirName, gameId);
 
                             /* Comment out this line to print out the newly added profile information
                             System.out.println("-New Profile-\nSave Folder: " + savesFolder +
@@ -260,32 +267,12 @@ public abstract class BethesdaGame implements Game {
                         }
 
                         // Move the saved game file
-                        IOUtils.moveFile(
+                        IOHelper.moveFile(
                                 new File(savesFolder + fileName),
                                 new File(savesFolder + dirName + File.separator + fileName ));
                     }
                 }
             }
-        }
-    }
-    
-    @Override
-    public void deactivateProfiles(){
-        try
-        {
-            IOUtils.setINIValue(
-                    getDir() + getIni(),
-                    "SLocalSavePath",
-                    getSave() + File.separator,
-                    "[General]");
-            
-            ProfileFactory.getInstance().clearActiveProfile(getId());
-        }
-        catch(FileNotFoundException fnfe)
-        {
-            Main.handleException("Unable to find the file '" + getIni()
-                    + "'\nMake sure that the settings for this game are correct.",
-                    fnfe, Main.WARN_LEVEL);
         }
     }
     
@@ -315,12 +302,14 @@ public abstract class BethesdaGame implements Game {
     
     @Override
     public void setupProfile(Profile profile) {
-        IOUtils.createFolder(
-                new File(getDir() + getSave(), profile.getSaveDir()));
+        IOHelper.createFolder(
+                new File(getDir() + getSave() +
+                java.io.File.separator + profile.getSaveDir()));
     }
     
     @Override
-    public boolean usesIni(){
-        return true;
+    public boolean usesExternalProfileDir(){
+        return false;
     }
+    
 }

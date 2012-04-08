@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.gui;
 
-import com.chockly.pm.IOUtils;
+import com.chockly.pm.IOHelper;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
@@ -34,16 +35,16 @@ public class ExeFileFilter extends FileFilter {
         if (f.isDirectory())
             return true;
 
-        String s = f.getName();
-        int index = s.lastIndexOf('.');
-
-        if (index > 0 &&  index < s.length() - 1) {
-            String  ext = s.substring(index+1).toLowerCase();
-            return (ext.equals("exe") ||
-                    ext.equals("bat") ||
-                    ext.equals("cmd") ||
-                    ext.equals("com") ||
-                    ext.equals("jar"));
+        String extension = IOHelper.getExtension(f);
+        if (extension != null) {
+            if (extension.equals("exe") ||
+                    extension.equals("bat") ||
+                    extension.equals("cmd") ||
+                    extension.equals("com") ||
+                    extension.equals("jar"))
+                return true;
+            else
+                return false;
         }
 
         return false;
@@ -53,4 +54,5 @@ public class ExeFileFilter extends FileFilter {
     public String getDescription() {
         return "Executables (*.exe, *.bat)";
     }
+
 }

@@ -18,7 +18,6 @@ package com.chockly.pm;
 
 import com.chockly.pm.games.Game;
 import com.chockly.pm.games.GameFactory;
-import com.chockly.pm.win86.JLnk;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
@@ -27,68 +26,10 @@ import java.nio.channels.FileChannel;
  * Contains static methods to help perform I/O operations.
  * @author Curtis Oakley
  */
-public class IOUtils {
-
-    /**
-     * Checks the provided game's save directory for any folders that have been
-     * added or removed, and then adds or deletes profiles as appropriate.
-     * @param gameID The ID of the game to check.
-     * @return <tt>True</tt> if any profiles where added or removed, <tt>false</tt>
-     * otherwise.
-     */
-    public static boolean checkForProfileDirChanges(byte gameID){
-        Game g = GameFactory.getGameFromID(gameID);
-        boolean changes = false;
-        File saveDir = new File(g.getDir(), g.getSave());
-        
-        if(saveDir.exists()){
-            File[] folders = saveDir.listFiles();
-            if(folders == null)
-                return false;
-            
-            ProfileFactory pf = ProfileFactory.getInstance();
-            Profile[] profiles = pf.getProfiles(gameID);
-            
-            UpdateProfilesChecker check = new UpdateProfilesChecker();
-
-            // Check for new files
-            for(int i=0; i<folders.length; i++){
-                if(folders[i].isDirectory()){
-                    // See if this directory is already used by a profile
-                    String name = folders[i].getName();
-                    if( !dirInUse(name, profiles)){
-                        // Folder not used, add a new profile
-                        if(check.createProfile(name)){
-                            pf.add(name, name, gameID);
-                            changes = true;
-                        }
-                    }
-                }
-            }
-
-            // Check for removed profile folders
-            for(int i=0; i<profiles.length; i++){
-                if( !new File(saveDir, profiles[i].getSaveDir()).exists() ){
-                    // File removed
-                    
-                    if(profiles[i].isActive() && !g.usesIni())
-                        // Profile is active for folder swapping game, ignore
-                        continue;
-                    
-                    if(check.deleteProfile(profiles[i].getName())){
-                        // Delete the profile
-                        pf.remove(profiles[i]);
-                        changes = true;
-                    }
-                }
-            }
-        }
-        
-        return changes;
-    }
+public class IOHelper {
     
     /**
-     * Attempts to create a directory and it's parent directories.<br/>
+     * Attempts to create a directory and it's parent directory.<br/>
      * Informs the user if the folder isn't created.
      * @param folder The directory to create.
      */
@@ -109,9 +50,7 @@ public class IOUtils {
      * @throws IOException
      * @throws InterruptedException 
      */
-    public static void createShortcut(Profile profile)
-            throws IOException, InterruptedException
-    {
+    public static void createShortcut(Profile profile) throws IOException, InterruptedException{
         Game game = GameFactory.getGameFromID(profile.getGameID());
         
         JLnk link = new JLnk();
@@ -122,15 +61,14 @@ public class IOUtils {
         // Get the jar's name and location
         try {
             link.setPath(new File(
-                    IOUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI())
+                    IOHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI())
                     .getAbsolutePath());
-            
         } catch (URISyntaxException ex) {
             throw new IOException(ex.getMessage(), ex);
         }
         
         link.setArguments("-p " + profile.getID());
-        link.setIconLocation(game.getExe());
+        link.setIconLocation(game.getExePath());
         link.setDescription("Start " + game.getName() + " as " + profile.getName());
 
         link.save();
@@ -141,28 +79,19 @@ public class IOUtils {
      * @param p The Profile to delete the directory of.
      */
     public static void deleteProfileDir(Profile p){
+        Game g = GameFactory.getGameFromID(p.getGameID());
         
-        File dir = getProfileDir(GameFactory.getGameFromID(p.getGameID()), p);
+        File dir;
+        
+        if(g.usesExternalProfileDir() && p.isActive())
+            dir = new File(g.getDir() + g.getGameSaveDir());
+        else
+            dir = new File(g.getDir() + g.getSave() + File.separator + p.getSaveDir());
         
         if( !deleteFile(dir) )
             Main.handleException("Unable to delete all the files associated with the profile \""
                     + p.getName() + "\"",
                     null, Main.WARN_LEVEL);
-    }
-    
-    /**
-     * Detects if the provided directory name is in use by a profile.
-     * @param dir The directory name to check.
-     * @param profiles The profiles to check against.
-     * @return True if the directory is used by one of the profiles, false
-     * otherwise.
-     */
-    private static boolean dirInUse(String dir, Profile[] profiles){
-        for(int i=0; i<profiles.length; i++){
-            if(profiles[i].getSaveDir().equals(dir))
-                return true;
-        }
-        return false;
     }
     
     /**
@@ -192,16 +121,20 @@ public class IOUtils {
     }
     
     /**
-     * Gets the directory of Profile.
-     * @param g The Profile's game.
-     * @param p The Profile to get the directory of.
-     * @return The File indicating the Profiles directory.
+     * Gets the file extension of the provided file.
+     * @param f The file to get the extension of.
+     * @return The file's extension or null if it has no extension.<br/>
+     * The returned string will not have the extension's period.
      */
-    public static File getProfileDir(Game g, Profile p){
-        if( !g.usesIni() && p.isActive())
-            return new File(g.getDir() + g.getGameSaveDir());
-        else
-            return new File(g.getDir() + g.getSave() + File.separator + p.getSaveDir());
+    public static String getExtension(File f) {
+        String ext = null;
+        String s = f.getName();
+        int i = s.lastIndexOf('.');
+
+        if (i > 0 &&  i < s.length() - 1) {
+            ext = s.substring(i+1).toLowerCase();
+        }
+        return ext;
     }
     
     /**
@@ -220,11 +153,14 @@ public class IOUtils {
         debugMessage.append("\n\n");
 
         // Make the parent folder
-        File destParent = dest.getParentFile();
+        String destParent = dest.getParent();
 
-        if(destParent != null && ! destParent.exists() ){
-            if( ! destParent.mkdirs() )
-                debugMessage.append("Parent directory failed to create.\n");
+        if(destParent != null ){
+            File parent = new File(destParent);
+            if( ! parent.exists() ){
+                if( ! parent.mkdirs() )
+                    debugMessage.append("Parent directory failed to create.\n");
+            }
         }
 
         // Try to rename the file
@@ -268,10 +204,9 @@ public class IOUtils {
      * adds the key and value if it doesn't exist.<br/>
      * <br/>
      * This will only work on MS INI formated files that use the standard 
-     * key=value arrangement. Attempting to use this method on other file 
+     * key=value arrangment. Attempting to use this method on other file 
      * types/formats may have unexpected results including and quite likely
      * corrupting the provided file.
-     * 
      * @param fileName The name of the file to edit.
      * @param key The key to search for. Do not include the equals sign.
      * @param value The value to replace the keys current value with.
@@ -279,14 +214,13 @@ public class IOUtils {
      * placed in if the key doesn't currently exist. If the section doesn't exist
      * it will be appended to the end of the file. Sections names should contain
      * the opening and closing square brackets. For example: "[General]".
-     * 
      * @throws FileNotFoundException If the file denoted by fileName doesn't exist.
      */
     public static void setINIValue(String fileName, String key, String value, String section)
             throws FileNotFoundException
     {
         try{
-            // Read in the game ini
+            // Read in the fallout ini
             BufferedReader in = new BufferedReader(
                     new FileReader(fileName));
 
@@ -327,7 +261,7 @@ public class IOUtils {
                 // Key found, update it
                 start += key.length() + 1;
 
-                // Replace the current value with the new value
+                // Replace the current save file location
                 file.replace(start,
                         file.indexOf(newLine, start),
                         value);
@@ -348,6 +282,7 @@ public class IOUtils {
                         "An IO Exception has occured while saving the game's INI file to disk.",
                         ioe, Main.WARN_LEVEL);
             }
+
         } catch(FileNotFoundException fnfe){
             throw new FileNotFoundException(fnfe.getMessage());
         } catch(IOException ioe){
@@ -365,8 +300,7 @@ public class IOUtils {
     public static void startProgram(String exe) throws FileNotFoundException {
         
         if( ! new File(exe).exists())
-            throw new FileNotFoundException("Unable to find the specified executable \""
-                    + exe + '"');
+            throw new FileNotFoundException("Unable to find the specified executable \"" + exe + '"');
         
         try
         {
@@ -375,18 +309,18 @@ public class IOUtils {
                 // Extract the path and then change the working directory to the path
                 String path = exe.substring(0, exe.lastIndexOf(File.separator));
 
-                Runtime.getRuntime().exec("cmd /c pushd \"" + path
-                        + "\" & cmd /c \"" + exe + '"');
+                Runtime.getRuntime().exec("cmd /c pushd \"" + path + "\" & cmd /c \"" + exe + '\"');
             
             } else {
                 // Attempt to run the file
-                Runtime.getRuntime().exec("cmd /c \"" + exe + '"');
+                Runtime.getRuntime().exec("cmd /c \"" + exe + "\"");
             }
         }
         catch (IOException ioe)
         {
-            Main.handleException("Unable to start " + exe + '.',
+            Main.handleException("Unable to start " + exe + ".",
                     ioe, Main.WARN_LEVEL);
         }
     }
+
 }

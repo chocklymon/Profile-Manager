@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.games;
 
 import com.chockly.pm.Profile;
@@ -45,10 +46,10 @@ public interface Game {
     public void autoSetupProfiles();
     
     /**
-     * Deactivates all profiles. Effectively restoring the game to it's default
-     * setting.
+     * Get the data (saves and ini) directory's configuration key.
+     * @return The data directory config key.
      */
-    public void deactivateProfiles();
+    public String getDataDirKey();
     
     /**
      * Gets the games directory.<br/>
@@ -61,23 +62,16 @@ public interface Game {
     public String getDir();
     
     /**
-     * Get the data (saves and ini) directory's configuration key.
-     * @return The data directory config key.
-     * @see Game#getDir() 
+     * Gets the executable path configuration key.
+     * @return The exe path config key.
      */
-    public String getDirConfigKey();
+    public String getExeConfigKey();
     
     /**
      * Gets the path to the executable file to run when launching the game.
      * @return The string path to the game's executable file.
      */
-    public String getExe();
-    
-    /**
-     * Gets the executable path configuration key.
-     * @return The exe path config key.
-     */
-    public String getExeConfigKey();
+    public String getExePath();
     
     /**
      * Returns the full name of the game.
@@ -89,11 +83,11 @@ public interface Game {
      * Gets the name of the directory where the saved games are stored.<br/>
      * <br/>
      * This will generally return the same as {@link Game#getSave()} unless the
-     * {@link Game#usesIni()} is <tt>false</tt>.
+     * {@link Game#usesExternalProfileDir()} is true.
      * 
      * @return The name of the directory where profiles are stored.
      * @see Game#getSave()
-     * @see Game#usesIni() 
+     * @see Game#usesExternalProfileDir() 
      */
     public String getGameSaveDir();
 
@@ -102,23 +96,6 @@ public interface Game {
      * @return The game's icon.
      */
     public Icon getIcon();
-    
-    /**
-     * Gets the games ID
-     * @return The id number of the game
-     */
-    public byte getId();
-    
-    /**
-     * Gets the name of the games ini file.<br>
-     * <br>
-     * If {@link Game#usesIni()} returns <tt>false</tt> this will throw an
-     * UnsupportedOperationException.<br/>
-     * <br/>
-     * {@link Game#getDir()} + <tt>this</tt> will return the full path the
-     * game's .ini file.
-     */
-    public String getIni();
 
     /**
      * Returns the name of the game.
@@ -129,13 +106,13 @@ public interface Game {
     /**
      * Gets the name of the directory where the profiles are saved.<br/>
      * <br/>
-     * For games where {@link Game#usesIni()} is <tt>true</tt>
+     * For games where {@link Game#usesExternalProfileDir()} is false
      * {@link Game#getDir()} + getSave() + {@link java.io.File#separator} +
      * {@link Profile#getSaveDir()} will be the full path to the profile's saved
      * game directory.
      * 
      * @return The save game directory name.
-     * @see Game#usesIni() 
+     * @see Game#usesExternalProfileDir() 
      */
     public String getSave();
 
@@ -149,23 +126,21 @@ public interface Game {
     public void setupProfile(Profile profile);
 
     /**
-     * Indicates if the game modifies an ini file to change profiles.<br/>
+     * Indicates if the profile's saved games are stored outside of the game's
+     * saved games directory.<br/>
      * <br/>
-     * When this returns <tt>true</tt> then profiles are stored as child
-     * directories to the games saved game directory, and {@link Game#getSave()}
-     * will return the name of the game's save game directory. When this returns
-     * <tt>false</tt> then game's profiles are saved in child directories of
-     * the directory returned by {@link Game#getSave()} which will be on the
-     * same level as the directory returned by {@link Game#getGameSaveDir()}.
-     * Furthermore in this case the {@link Game#getIni()} will throw an
-     * UnsupportedOperationException.
+     * When this is true then the games save directory will only contain saved
+     * games for the currently active profile and {@link Game#getSave()} returns
+     * the name of the directory where the profiles are stored. Whereas when
+     * this is false the saved game directory will contain sub-directory for
+     * each of the profiles and {@link Game#getSave()} will return the name of
+     * the game's save game directory.
      * 
-     * @return <tt>True</tt> if the game uses an ini file to set it active
-     * profiles. <tt>False</tt> if the game moves folders to activate profiles.
-     * 
+     * @return True if the profiles data is saved outside of the save game
+     * directory.
      * @see Game#getGameSaveDir() 
      * @see Game#getSave()
      */
-    public boolean usesIni();
+    public boolean usesExternalProfileDir();
 
 }

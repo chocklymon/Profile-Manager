@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm;
 
 import com.chockly.pm.games.Game;
 import com.chockly.pm.games.GameFactory;
 import com.chockly.pm.gui.ProfileManager;
-import java.io.PrintWriter;
 
 /**
  * Profile Manger main class.<br/>
@@ -31,40 +31,37 @@ import java.io.PrintWriter;
  *   profile_manager.ini
  *   error.log
  *  [lib]
- *    games.xml
  *    HelpSystem.jar
- *    LICENSE.TXT
- *    Uninstaller.jar
  *   [help_docs]
  *      contents.xml
  *      + The various help documentation HTML files.
  *  [Profiles]
  *    .profile_manager
- *    default.png
  *    profiles.obj
+ *    + The various profile images
  * </pre>
  * 
  * @author Curtis Oakley
- * @version 1.4.01b
+ * @version 1.3.02.4
  */
 public class Main {
     
     /** The current version number for the Profile Manager. */
-    public static final String VERSION_NUM = "1.4.01b";
+    public static final String VERSION_NUM = "1.3.04";
 
     /**
-     * This exception level indicates that a fatal error has occurred. This will 
+     * This exception level indicates that a fatal error has occured. This will 
      * perform the same actions as {@link Main#WARN_LEVEL}, and then terminate 
      * the program.
      */
     public static final byte FATAL_LEVEL = 4;
     /**
-     * This exception level indicates that an error has occurred. This error will
-     * be logged and the user informed of its occurrence.
+     * This exception level indicates that an error has occured. This error will
+     * be logged and the user informed of its occurance.
      */
     public static final byte WARN_LEVEL = 2;
     /**
-     * This exception level indicates that a minor error has occurred. This error
+     * This exception level indicates that a minor error has occured. This error
      * will be logged, but the user will not be informed.
      */
     public static final byte LOG_LEVEL = 0;
@@ -72,7 +69,7 @@ public class Main {
     private static byte gameID = 0;
     private static int profileID = 0;
     
-    private static PrintWriter errFile = null;
+    private static java.io.PrintWriter errFile = null;
 
     /**
      * Starts up the profile manager.
@@ -146,27 +143,26 @@ public class Main {
         Config.loadConfig();
 
         // Set the default user directoy
-        if(Config.get(Config.Key.user_directory) == null){
-            Config.set(Config.Key.user_directory,
+        if(Config.get(Config.USER_DIRECTORY) == null){
+            Config.set(Config.USER_DIRECTORY,
                     javax.swing.filechooser.FileSystemView.getFileSystemView()
                     .getDefaultDirectory().toString() + java.io.File.separatorChar);
         }
-
+        
         // TEST CODE
         // END TEST CODE
 
         if(profileID > 0){
             // Profile set change to that profile and launch the game
-            ProfileFactory pf = ProfileFactory.getInstance();
-            Profile profile = pf.getProfile(profileID);
+            Profile profile = ProfileFactory.getProfile(profileID);
             Game game = GameFactory.getGameFromID(profile.getGameID());
             
             if(game.activateProfile(profile)){
 
-                pf.saveProfiles();
+                ProfileFactory.saveProfiles();
 
                 try {
-                    IOUtils.startProgram( game.getExe() );
+                    IOHelper.startProgram( game.getExePath() );
                 } catch(java.io.FileNotFoundException fnfe){
                     handleException(null, fnfe, WARN_LEVEL);
                 }
@@ -184,7 +180,7 @@ public class Main {
             
             // Find which tab to start in
             final byte startTabNum = (gameID == 0)
-                    ? Byte.parseByte( Config.get(Config.Key.start_tab.toString(),
+                    ? Byte.parseByte( Config.get(Config.START_TAB,
                             Byte.toString(GameFactory.SKYRIM_ID)) )
                     : gameID;
             
@@ -193,7 +189,6 @@ public class Main {
                 @Override
                 public void run() {
                     new ProfileManager(startTabNum).setVisible(true);
-                    //new com.chockly.pm.gui.ConfigGUI(null).setVisible(true);
                 }
             });
         }
@@ -215,16 +210,16 @@ public class Main {
          * Version 1.21 - Add right click to rename functionality to the profiles and double click to activate and launch.        Due: 02/18/2012     Status: COMPLETED
          * Version 1.25 - Add a selection of default profiles pictures using the Bethesdas free wallpapers.                       Due: 02/20/2012     Status: COMPLETED (Only one default was used).
          * Version 1.3  - Create an exe wrapper for the program.                                                                                      Status: COMPLETED
-         * Version 1.31 - Add better handling for missing files (ini, exe, etc.), and option to scan saved games for profile.(1)  Due: 03/08/2012     Status: COMPLETED
-         * Version 1.32 - Add the ability to deactivate all profiles.                                                             Due: 03/09/2012     Status: COMPLETED
-         * Version 1.35 - Add auto-update profiles based on folders.(2)                                                           Due: 03/10/2012     Status: COMPLETED
-         * Version 1.4  - Add backup saves functionality.                                                                         Due: 03/16/2012     Status: COMPLETED
-         * Version 1.44 - Add installer                                                                                           Due: 03/23/2012     Status: COMPLETED
-         * Version 1.45 - Add un-installer                                                                                        Due: 03/30/2012     Status: COMPLETED
+         * Version 1.31 - Add better handling for missing files (ini, exe, etc.), and option to scan saved games for profile.(1)  Due: 03/08/2012     Status: In-Coding
+         * Version 1.32 - Add the ability to deactivate all profiles.                                                             Due: 03/09/2012     Status:
+         * Version 1.35 - Add auto-update profiles based on folders.(2)                                                           Due: 03/10/2012     Status:
+         * Version 1.4  - Add backup saves functionality.                                                                         Due: 03/16/2012     Status: 
+         * Version 1.44 - Add installer                                                                                           Due: 03/23/2012     Status:
+         * Version 1.45 - Add un-installer                                                                                        Due: 03/30/2012     Status:
          * Version 1.46 - Add ability to export/import profiles through xml.                                                      Due: 04/06/2012     Status:
          * Version 2.0  - Add active plugin swapper.                                                                              Due: 05/01/2012     Status:
          * Version 2.1  - Add ini swapper.                                                                                        
-         * Version 2.2  - Add the create own game profile manager.(3)                                                                                 Status: In-coding
+         * Version 2.2  - Add the create own game profile manager.(3)
          * Version 3.0  - Add installed mesh and texture replacer swapper.(4)
          * Version ??   - Add the ability to create different profile manager profiles via command line argument.
          * Version 4.0  - Re-write into C++.
@@ -235,12 +230,6 @@ public class Main {
          * 3 - This will use the morrowind type system of renaming folders to manage profiles, along with an UI to specify the games info (ie. icon, name, full name, etc.). 
          * 4 - For example: you can have EXEMS female body replacer, but your little brother will have the vanilla bodies.
          *     This will need to interface with BAIN, OBMM, FOMM, and NMM + others to be able to detect mods as well as having it's own ability to understand mods.
-         * 
-         * 
-         * Profile Manager, merge/split profiles.
-         * 
-         * Merge, take two profiles and move all their saves into one folder.
-         * Split, open a prompt with two lists, move records between them to split out the two records.
          */
     }
     
@@ -276,7 +265,7 @@ public class Main {
         // Create the error log writer as needed
         if(errFile == null){
             try {
-                errFile = new PrintWriter(new java.io.FileWriter("error.log", true));
+                errFile = new java.io.PrintWriter(new java.io.FileWriter("error.log", true));
             } catch(java.io.IOException ioe){
                 ioe.printStackTrace(System.err);
             }
@@ -340,10 +329,8 @@ public class Main {
         output.append("Game\tProfile ID\tProfile Name\tProfile Dir\n"
                 + "=====================================================\n");
         
-        ProfileFactory pf = ProfileFactory.getInstance();
-        
         for(byte id : ids){
-            p = pf.getProfiles(id);
+            p = ProfileFactory.getProfiles(id);
             if(p.length > 0){
                 output.append("- ");
                 output.append(GameFactory.getNameFromID(id));

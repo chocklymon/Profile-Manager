@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,10 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.games;
 
 import com.chockly.pm.Config;
-import java.io.File;
+import com.chockly.pm.Profile;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -33,44 +34,35 @@ public class FalloutNV extends BethesdaGame {
      * Like all other directory values, this one will have a trailing path
      * separator.
      */
-    private static final String NEW_VEGAS_DATA_DIR = "new_vegas_data_dir";
+    public static final String NEW_VEGAS_DATA_DIR = "new_vegas_data_dir";
     /**
      * Key used to retrieve/store the value indicating the name of the folder in
      * the NEW_VEGAS_DATA_DIR where saves are stored.<br/>
      * The default value for the key is "Saves".
      */
-    private static final String NEW_VEGAS_SAVE_DIR = "new_vegas_save_dir";
+    public static final String NEW_VEGAS_SAVE_DIR = "new_vegas_save_dir";
     /**
      * Key used to retrieve/store the value indicating the executable to run
      * when launching Fallout: New Vegas.
      */
-    private static final String NEW_VEGAS_EXE = "new_vegas_exe";
+    public static final String NEW_VEGAS_EXE = "new_vegas_exe";
 
     @Override
     public void autoSetupProfiles() {
         String[] validExtensions = {".fos",".bak"};
         
-        autoSetupProfiles(validExtensions, 0x67L, 2, "   ", "  ", true);
+        autoSetupProfiles(validExtensions, 0x67L, 2, "   ", "  ", true,
+                GameFactory.FALLOUT_NV_ID);
     }
     
     @Override
-    public String getExe(){
+    public String getExePath(){
         return Config.get(NEW_VEGAS_EXE, "C:\\Program Files\\Steam\\SteamApps\\common\\Fallout New Vegas\\FalloutNV.exe");
     }
     
     @Override
     public Icon getIcon(){
         return new ImageIcon(getClass().getResource("/com/chockly/pm/resources/fallout_new_vegas_icon.png"));
-    }
-    
-    @Override
-    public byte getId(){
-        return GameFactory.FALLOUT_NV_ID;
-    }
-    
-    @Override
-    public String getIni(){
-        return "Fallout.ini";
     }
     
     @Override
@@ -82,6 +74,11 @@ public class FalloutNV extends BethesdaGame {
     public String getFullName() {
         return "Fallout: New Vegas";
     }
+
+    @Override
+    public boolean activateProfile(Profile profile) {
+        return activateProfile("Fallout.ini", profile);
+    }
 	
     /**
      * Gets the user's save and data directory for Fallout: New Vegas.
@@ -91,14 +88,13 @@ public class FalloutNV extends BethesdaGame {
     public String getDir() {
         String path = Config.get(NEW_VEGAS_DATA_DIR);
         if(path == null)
-            path = Config.get(Config.Key.user_directory.toString()) + "My Games"
-                    + File.separator + "FalloutNV" + File.separator;
+            path = Config.get(Config.USER_DIRECTORY) + "My Games" + java.io.File.separator + "FalloutNV" + java.io.File.separator;
         
         return path;
     }
 
     @Override
-    public String getDirConfigKey() {
+    public String getDataDirKey() {
         return NEW_VEGAS_DATA_DIR;
     }
 
@@ -109,6 +105,7 @@ public class FalloutNV extends BethesdaGame {
 
     @Override
     public String getSave() {
-        return Config.get(NEW_VEGAS_SAVE_DIR, SAVES_FOLDER);
+        return Config.get(NEW_VEGAS_SAVE_DIR, "Saves");
     }
+
 }

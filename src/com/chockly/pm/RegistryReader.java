@@ -14,28 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.chockly.pm.win86;
+
+package com.chockly.pm;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Provides methods to read the Windows Registry using the reg.exe.
- * 
- * @author Curtis Oakley
- * @version 0.5
+ *
+ * @author Curtis
  */
 public class RegistryReader {
     
-    /**
-     * Constructs a new RegistryReader.
-     * @throws IOException 
-     */
     public RegistryReader() throws IOException {
         String requestWow6432Node = runQuery(HKLM_SOFTWARE + WOW_6432_NODE);
         
-        if(requestWow6432Node == null)
+        requestWow6432Node = requestWow6432Node.trim();
+        
+        if(requestWow6432Node.startsWith("Error"))
             usesWow6432Node = false;
     }
     
@@ -75,13 +72,6 @@ public class RegistryReader {
         return output.trim();
     }
     
-    /**
-     * Runs a query against the windows registry.
-     * @param query The query to run.
-     * @return The query string result, or null if an error occurred or the 
-     * query returned no result.
-     * @throws IOException 
-     */
     private String runQuery(String query) throws IOException {
         String line;
         StringBuilder output = new StringBuilder(128);

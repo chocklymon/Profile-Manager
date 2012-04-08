@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,15 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.gui;
 
-import com.chockly.pm.Utils;
 import com.chockly.pm.Config;
 import com.chockly.pm.games.Game;
 import com.chockly.pm.games.GameFactory;
-import java.io.File;
-import java.util.Arrays;
-import javax.swing.JFileChooser;
 import javax.swing.event.DocumentEvent;
 
 /**
@@ -33,24 +30,19 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
 
     /** Creates new form ConfigGUI */
     public ConfigGUI(java.awt.Frame parent) {
-        super(parent, true);
-        
-        // Build the game arrays
-        buildGameArrays();
-        
-        // Initialize the GUI's components
+        super(parent, false);
         initComponents();
 
         // Generate the tabs
         buildTabs();
         
         // Set the default state of the radio buttons
-        if(Config.get(Config.Key.double_click_icon).equals(Config.DB_CLICK_ACTIVATE))
+        if(Config.get(Config.DB_CLICK_ICON_KEY, Config.DB_CLICK_ACTIVATE).equals(Config.DB_CLICK_ACTIVATE))
             iconActivatesRB.setSelected(true);
         else
             iconStartsRB.setSelected(true);
         
-        String textAction = Config.get(Config.Key.double_click_name);
+        String textAction = Config.get(Config.DB_CLICK_TEXT_KEY, Config.DB_CLICK_RENAME);
         
         if(textAction.equals(Config.DB_CLICK_ACTIVATE))
             nameActivatesRB.setSelected(true);
@@ -58,14 +50,6 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             nameStartsRB.setSelected(true);
         else
             nameEditsRB.setSelected(true);
-        
-        if(Config.get(Config.Key.archive_format).equals(Config.ZIP_FORMAT)){
-            zipRB.setSelected(true);
-            sevenZipExeTxt.setEnabled(false);
-            findSevenZipExeBtn.setEnabled(false);
-        } else {
-            sevenZipRB.setSelected(true);
-        }
     }
 
     /** This method is called from within the constructor to
@@ -86,16 +70,13 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         exeFileTxt = new javax.swing.JTextField();
         findExeFileBtn = new javax.swing.JButton();
         startInThisTabCB = new javax.swing.JCheckBox();
-        archiveBG = new javax.swing.ButtonGroup();
         iconActionBG = new javax.swing.ButtonGroup();
         nameActionBG = new javax.swing.ButtonGroup();
-        archivePanel = new javax.swing.JPanel();
-        archiveFormatLabel = new javax.swing.JLabel();
-        zipRB = new javax.swing.JRadioButton();
-        sevenZipRB = new javax.swing.JRadioButton();
-        sevenZipExeLabel = new javax.swing.JLabel();
-        sevenZipExeTxt = new javax.swing.JTextField();
-        findSevenZipExeBtn = new javax.swing.JButton();
+        gamesPanel = new javax.swing.JPanel();
+        gamesScrollPane = new javax.swing.JScrollPane();
+        gameList = new javax.swing.JList();
+        moveGameUpBtn = new javax.swing.JButton();
+        moveGameDownBtn = new javax.swing.JButton();
         settingsPanel = new javax.swing.JPanel();
         exitOnLaunchCB = new javax.swing.JCheckBox();
         startInLastTabCB = new javax.swing.JCheckBox();
@@ -106,11 +87,6 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         nameEditsRB = new javax.swing.JRadioButton();
         nameActivatesRB = new javax.swing.JRadioButton();
         nameStartsRB = new javax.swing.JRadioButton();
-        gamesPanel = new javax.swing.JPanel();
-        gamesScrollPane = new javax.swing.JScrollPane();
-        gameList = new javax.swing.JList();
-        moveGameUpBtn = new javax.swing.JButton();
-        moveGameDownBtn = new javax.swing.JButton();
         gameSettingsTabPane = new javax.swing.JTabbedPane();
         saveBtn = new javax.swing.JButton();
         cancelBtn = new javax.swing.JButton();
@@ -118,20 +94,20 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
 
         dataDirLabel.setText("Data Dir:");
 
-        dataDirTxt.getDocument().addDocumentListener(new ConfigTextChangeListener(DATA_DIR));
+        dataDirTxt.getDocument().addDocumentListener(new ConfigTextChangeListener(false));
 
         findDataDirFolderBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/blue-folder-search-result.png"))); // NOI18N
         findDataDirFolderBtn.addActionListener(this);
 
         exeFileLabel.setText("Exe:");
 
-        exeFileTxt.getDocument().addDocumentListener(new ConfigTextChangeListener(EXE_DIR));
+        exeFileTxt.getDocument().addDocumentListener(new ConfigTextChangeListener(true));
 
         findExeFileBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/blue-folder-search-result.png"))); // NOI18N
         findExeFileBtn.addActionListener(this);
 
         startInThisTabCB.setText("Start in this tab");
-        startInThisTabCB.setEnabled( !Boolean.parseBoolean( Config.get(Config.Key.start_in_last_tab) ));
+        startInThisTabCB.setEnabled( !Boolean.parseBoolean( Config.get(Config.START_IN_LAST_TAB, "true") ));
         startInThisTabCB.addActionListener(this);
 
         javax.swing.GroupLayout gameSettingPanelLayout = new javax.swing.GroupLayout(gameSettingPanel);
@@ -178,71 +154,65 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         setTitle("Profile Manager Preferences");
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/gear.png")).getImage());
         setLocationByPlatform(true);
+        setModal(true);
 
-        archivePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Backup Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        gamesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Games", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        gamesPanel.setLayout(new java.awt.GridBagLayout());
 
-        archiveFormatLabel.setText("Backup Format:");
+        populateGameList();
+        gameList.setModel(gameModel);
+        gameList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        gameList.setCellRenderer(new GameListRenderer());
+        gameList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                gameListMouseClicked(evt);
+            }
+        });
+        gameList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                gameListValueChanged(evt);
+            }
+        });
+        gamesScrollPane.setViewportView(gameList);
 
-        archiveBG.add(zipRB);
-        zipRB.setText("Zip");
-        zipRB.addActionListener(this);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 4, 3, 4);
+        gamesPanel.add(gamesScrollPane, gridBagConstraints);
 
-        archiveBG.add(sevenZipRB);
-        sevenZipRB.setText("7z");
-        sevenZipRB.addActionListener(this);
+        moveGameUpBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/control-090.png"))); // NOI18N
+        moveGameUpBtn.setEnabled(false);
+        moveGameUpBtn.addActionListener(this);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
+        gridBagConstraints.weighty = 1.0;
+        gamesPanel.add(moveGameUpBtn, gridBagConstraints);
 
-        sevenZipExeLabel.setText("7z Exe:");
+        moveGameDownBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/control-270.png"))); // NOI18N
+        moveGameDownBtn.setEnabled(false);
+        moveGameDownBtn.addActionListener(this);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 5, 0);
+        gamesPanel.add(moveGameDownBtn, gridBagConstraints);
 
-        sevenZipExeTxt.setText(Config.get(Config.Key.seven_zip_exe));
-        sevenZipExeTxt.setPreferredSize(new java.awt.Dimension(70, 20));
-        sevenZipExeTxt.getDocument().addDocumentListener(new ConfigTextChangeListener(SEVEN_ZIP_DIR));
+        settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
-        findSevenZipExeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/blue-folder-search-result.png"))); // NOI18N
-        findSevenZipExeBtn.addActionListener(this);
-
-        javax.swing.GroupLayout archivePanelLayout = new javax.swing.GroupLayout(archivePanel);
-        archivePanel.setLayout(archivePanelLayout);
-        archivePanelLayout.setHorizontalGroup(
-            archivePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(archivePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(archivePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(archivePanelLayout.createSequentialGroup()
-                        .addComponent(archiveFormatLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(zipRB)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sevenZipRB)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(archivePanelLayout.createSequentialGroup()
-                        .addComponent(sevenZipExeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sevenZipExeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(findSevenZipExeBtn)))
-                .addContainerGap())
-        );
-        archivePanelLayout.setVerticalGroup(
-            archivePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(archivePanelLayout.createSequentialGroup()
-                .addGroup(archivePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(archiveFormatLabel)
-                    .addComponent(zipRB)
-                    .addComponent(sevenZipRB))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(archivePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(sevenZipExeLabel)
-                    .addComponent(sevenZipExeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(findSevenZipExeBtn)))
-        );
-
-        settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "General Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
-
-        exitOnLaunchCB.setSelected(Boolean.parseBoolean( Config.get(Config.Key.exit_on_launch) ));
+        exitOnLaunchCB.setSelected(Boolean.parseBoolean( Config.get(Config.EXIT_ON_LAUNCH, "true") ));
         exitOnLaunchCB.setText("Close on game launch");
         exitOnLaunchCB.addActionListener(this);
 
-        startInLastTabCB.setSelected(Boolean.parseBoolean( Config.get(Config.Key.start_in_last_tab) ));
+        startInLastTabCB.setSelected(Boolean.parseBoolean( Config.get(Config.START_IN_LAST_TAB, "true") ));
         startInLastTabCB.setText("Start up in last tab");
         startInLastTabCB.addActionListener(this);
 
@@ -311,56 +281,6 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        gamesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Games", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
-        gamesPanel.setLayout(new java.awt.GridBagLayout());
-
-        populateGameList();
-        gameList.setModel(gameModel);
-        gameList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        gameList.setCellRenderer(new GameListRenderer());
-        gameList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                gameListMouseClicked(evt);
-            }
-        });
-        gameList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                gameListValueChanged(evt);
-            }
-        });
-        gamesScrollPane.setViewportView(gameList);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 4, 3, 4);
-        gamesPanel.add(gamesScrollPane, gridBagConstraints);
-
-        moveGameUpBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/control-090.png"))); // NOI18N
-        moveGameUpBtn.setEnabled(false);
-        moveGameUpBtn.addActionListener(this);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
-        gridBagConstraints.weighty = 1.0;
-        gamesPanel.add(moveGameUpBtn, gridBagConstraints);
-
-        moveGameDownBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/chockly/pm/resources/control-270.png"))); // NOI18N
-        moveGameDownBtn.setEnabled(false);
-        moveGameDownBtn.addActionListener(this);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 5, 0);
-        gamesPanel.add(moveGameDownBtn, gridBagConstraints);
-
         gameSettingsTabPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         gameSettingsTabPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -383,34 +303,28 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(gameSettingsTabPane, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(gamesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
-                            .addComponent(archivePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(gameSettingsTabPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(saveBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(applyBtn)))
+                        .addComponent(applyBtn))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(gamesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(archivePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(gamesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(gamesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(gameSettingsTabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -440,12 +354,6 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             boolean selected = ! item.isSelected();
             item.setSelected(selected);
             
-            // Enable/Disable tabs as needed
-            int tabIndex = Utils.getIndex(builtInGames, item.getID());
-            if(tabIndex != -1 
-                    && selected != gameSettingsTabPane.isEnabledAt(tabIndex))
-                gameSettingsTabPane.setEnabledAt(tabIndex, selected);
-            
             // Re-build the active games array
             int len = gameModel.size(), activeCount = 0;
             activeGames = new byte[len];
@@ -456,10 +364,14 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
                     activeCount++;
                 }
             }
-            activeGames = Arrays.copyOf(activeGames, activeCount);
+            activeGames = java.util.Arrays.copyOf(activeGames, activeCount);
             
             // Save the active games array in the prefs
-            prefs.put(Config.Key.active_tabs.toString(), implode(activeGames));
+            prefs.put(Config.ACTIVE_TABS, implode(activeGames));
+            
+            // Enable/Disable tabs as needed
+            if(selected != gameSettingsTabPane.isEnabledAt(index))
+                gameSettingsTabPane.setEnabledAt(index, selected);
 
             // Repaint cell
             gameList.repaint(gameList.getCellBounds(index, index));
@@ -483,11 +395,10 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
 
             // Check the start in this tab checkbox.
             if( !startInLastTabCB.isSelected()){
-                String sTab = prefs.get(Config.Key.start_tab.toString());
+                String sTab = prefs.get(Config.START_TAB);
                 if(sTab == null)
                     startInThisTabCB.setSelected(
-                            games[newSelectedTab] == Byte.parseByte(
-                            Config.get(Config.Key.start_tab.toString(), "0")));
+                            games[newSelectedTab] == Byte.parseByte(Config.get(Config.START_TAB,"0")));
                 else
                     startInThisTabCB.setSelected(
                             games[newSelectedTab] == Byte.parseByte(sTab));
@@ -497,16 +408,16 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             selectedTab = newSelectedTab;
 
             // Populate the text fields
-            Game g = GameFactory.getGameFromID(builtInGames[newSelectedTab]);
+            Game g = GameFactory.getGameFromID(games[newSelectedTab]);
             
-            String dir = prefs.get(g.getDirConfigKey());
+            String dir = prefs.get(g.getDataDirKey());
             String exe = prefs.get(g.getExeConfigKey());
             
             if(dir == null)
                 dir = g.getDir();
             
             if(exe == null)
-                exe = g.getExe();
+                exe = g.getExePath();
             
             // Mark these change to the text field as being by the program not the user
             programaticDocChange = true;
@@ -522,9 +433,6 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton applyBtn;
-    private javax.swing.ButtonGroup archiveBG;
-    private javax.swing.JLabel archiveFormatLabel;
-    private javax.swing.JPanel archivePanel;
     private javax.swing.JButton cancelBtn;
     private javax.swing.JLabel dataDirLabel;
     private javax.swing.JTextField dataDirTxt;
@@ -533,7 +441,6 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
     private javax.swing.JCheckBox exitOnLaunchCB;
     private javax.swing.JButton findDataDirFolderBtn;
     private javax.swing.JButton findExeFileBtn;
-    private javax.swing.JButton findSevenZipExeBtn;
     private javax.swing.JList gameList;
     private javax.swing.JPanel gameSettingPanel;
     private javax.swing.JTabbedPane gameSettingsTabPane;
@@ -552,17 +459,9 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
     private javax.swing.JRadioButton nameStartsRB;
     private javax.swing.JButton saveBtn;
     private javax.swing.JPanel settingsPanel;
-    private javax.swing.JLabel sevenZipExeLabel;
-    private javax.swing.JTextField sevenZipExeTxt;
-    private javax.swing.JRadioButton sevenZipRB;
     private javax.swing.JCheckBox startInLastTabCB;
     private javax.swing.JCheckBox startInThisTabCB;
-    private javax.swing.JRadioButton zipRB;
     // End of variables declaration//GEN-END:variables
-
-    private static final byte DATA_DIR = 0;
-    private static final byte EXE_DIR = 1;
-    private static final byte SEVEN_ZIP_DIR = 2;
 
     private javax.swing.DefaultListModel gameModel = new javax.swing.DefaultListModel();
     private javax.swing.JPanel[] emptyPanels;
@@ -572,7 +471,6 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
     private int selectedTab;
     private byte[] activeGames;
     private byte[] games;
-    private byte[] builtInGames;
     
     private boolean programaticDocChange = false;
     
@@ -598,14 +496,11 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             
             if(source.equals(exitOnLaunchCB)){
                 // Save the exit on launch state
-                prefs.put(Config.Key.exit_on_launch.toString(),
-                        Boolean.toString(exitOnLaunchCB.isSelected()));
+                prefs.put(Config.EXIT_ON_LAUNCH, Boolean.toString(exitOnLaunchCB.isSelected()));
             } else if(source.equals(findDataDirFolderBtn)){
-                findFile(DATA_DIR);
+                findFile(false);
             } else if(source.equals(findExeFileBtn)){
-                findFile(EXE_DIR);
-            } else if(source.equals(findSevenZipExeBtn)){
-                findFile(SEVEN_ZIP_DIR);
+                findFile(true);
             } else if(source.equals(moveGameDownBtn)){
                 moveGameDown();
             } else if(source.equals(moveGameUpBtn)){
@@ -615,166 +510,87 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             } else if(source.equals(startInThisTabCB)){
                 setStartInThisTab();
             } else if(source.equals(iconActivatesRB)){
-                prefs.put(Config.Key.double_click_icon.toString(),
-                        Config.DB_CLICK_ACTIVATE);
+                prefs.put(Config.DB_CLICK_ICON_KEY, Config.DB_CLICK_ACTIVATE);
             } else if(source.equals(iconStartsRB)){
-                prefs.put(Config.Key.double_click_icon.toString(),
-                        Config.DB_CLICK_LAUNCH);
+                prefs.put(Config.DB_CLICK_ICON_KEY, Config.DB_CLICK_LAUNCH);
             } else if(source.equals(nameEditsRB)){
-                prefs.put(Config.Key.double_click_name.toString(),
-                        Config.DB_CLICK_RENAME);
+                prefs.put(Config.DB_CLICK_TEXT_KEY, Config.DB_CLICK_RENAME);
             } else if(source.equals(nameActivatesRB)){
-                prefs.put(Config.Key.double_click_name.toString(),
-                        Config.DB_CLICK_ACTIVATE);
+                prefs.put(Config.DB_CLICK_TEXT_KEY, Config.DB_CLICK_ACTIVATE);
             } else if(source.equals(nameStartsRB)){
-                prefs.put(Config.Key.double_click_name.toString(),
-                        Config.DB_CLICK_LAUNCH);
-            } else if(source.equals(zipRB)){
-                toogleArchiveMode(true);
-            } else if(source.equals(sevenZipRB)){
-                toogleArchiveMode(false);
+                prefs.put(Config.DB_CLICK_TEXT_KEY, Config.DB_CLICK_LAUNCH);
             }
         }
     }
     
-    /** Builds the game arrays. */
-    private void buildGameArrays(){
-        byte[] allGames = GameFactory.getAllGameIds();
-        byte[] stanGames = GameFactory.getAllBuiltInGameIds();
-        
-        // Get the active games
-        activeGames = GameFactory.getActiveGameIds();
-        
-
-        // Build the built in games array
-        builtInGames = new byte[stanGames.length];
-        
-        // Place the built in games into the order of active games.
-        int stanGameCount = 0;
-        for(int i=0; i<activeGames.length; i++){
-            byte next = activeGames[i];
-            
-            if(Utils.getIndex(stanGames, next) != -1){
-                builtInGames[stanGameCount] = next;
-                stanGameCount++;
-            }
-        }
-        
-        // Add in any built in games that are not active.
-        if(stanGameCount < stanGames.length){
-            for(int i=0; i<stanGames.length; i++){
-                if(Utils.getIndex(builtInGames, stanGames[i]) == -1){
-                    builtInGames[stanGameCount] = stanGames[i];
-                    stanGameCount++;
-                }
-            }
-        }
-        
-
-        // Build the games array
-        int activeGameCount = activeGames.length;
-        if(activeGameCount == allGames.length){
-            games = Arrays.copyOf(activeGames, activeGameCount);
-        } else {
-            // Add activeGames to all games then add in any games left over.
-            games = new byte[allGames.length];
-            System.arraycopy(activeGames, 0, games, 0, activeGameCount);
-            
-            for(int x=0, added = activeGameCount; x<games.length; x++){
-                if(Utils.getIndex(games, allGames[x]) == -1){
-                    games[added] = allGames[x];
-                    added++;
-                }
-            }
-        }
-    }
-    
-    /** Builds the game settings tabs for the built in games. */
     private void buildTabs(){
-
         if(emptyPanels == null){
-            emptyPanels = new javax.swing.JPanel[builtInGames.length];
-            for(int x=0; x<builtInGames.length; x++){
+            emptyPanels = new javax.swing.JPanel[games.length];
+            for(int x=0; x<games.length; x++){
                 emptyPanels[x] = new javax.swing.JPanel();
             }
         } else {
             gameSettingsTabPane.removeAll();
         }
             
-        for(int x=0; x<builtInGames.length; x++){
+        for(int x=0; x<games.length; x++){
             
-            Game g = GameFactory.getGameFromID(builtInGames[x]);
+            Game g = GameFactory.getGameFromID(games[x]);
             gameSettingsTabPane.addTab(g.getName(), g.getIcon(), emptyPanels[x], "Manage settings for " + g.getFullName());
             
-            if(Utils.getIndex(activeGames, builtInGames[x]) == -1)
+            if(getIndex(activeGames, games[x]) == -1)
                 gameSettingsTabPane.setEnabledAt(x, false);
         }
         
         gameSettingsTabPane.setSelectedIndex(selectedTab);
     }
     
-    /**
-     * Opens up a JFileChooser to select a file/directory.
-     * @param dirTxt A byte representing which textarea the file chooser is for.
-     */
-    private void findFile(byte dirTxt){
-        JFileChooser fc = new JFileChooser();
+    private void findFile(boolean isExe){
+        javax.swing.JFileChooser fc = new javax.swing.JFileChooser();
         
         fc.setApproveButtonText("Set");
         
         Game g = GameFactory.getGameFromID(games[selectedTab]);
-        String path;
         
-        if(dirTxt == EXE_DIR){
+        if(isExe){
             fc.setFileFilter(new ExeFileFilter());
             fc.setAcceptAllFileFilterUsed(false);
             fc.setDialogTitle("Select the " +  g.getName() + " launch executable");
-            
-            path = prefs.get(g.getExeConfigKey());
-            if(path == null)
-                path = g.getExe();
-        } else if(dirTxt == DATA_DIR){
-            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            fc.setDialogTitle("Select the " + g.getName() + " game data folder");
-            
-            path = prefs.get(g.getDirConfigKey());
-            if(path == null)
-                path = g.getDir();
+            fc.setCurrentDirectory(new java.io.File(g.getExePath()));
         } else {
-            // Create a new 7-zip executable filter
-            fc.setFileFilter(new GenericFileFilter(
-                    new String[] {"7z.exe","7za.exe"},
-                    "7z.exe"));
-            
-            fc.setDialogTitle("Select the 7zip Executable");
-            
-            path = prefs.get(Config.Key.seven_zip_exe.toString());
-            if(path == null)
-                path = Config.get(Config.Key.seven_zip_exe);
+            fc.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+            fc.setDialogTitle("Select the " + g.getName() + " game data folder");
+            fc.setCurrentDirectory(new java.io.File(g.getDir()));
         }
-        fc.setCurrentDirectory(new File(path));
         
         int result = fc.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION)
+        if (result == javax.swing.JFileChooser.APPROVE_OPTION)
         {
-            path = fc.getSelectedFile().getAbsolutePath();
+            String path = fc.getSelectedFile().getAbsolutePath();
             
-            if(dirTxt == EXE_DIR){
+            if(isExe){
                 exeFileTxt.setText(path);
-            } else if(dirTxt == DATA_DIR){
+            } else {
                 path += java.io.File.separator;
                 dataDirTxt.setText(path);
-            } else {
-                sevenZipExeTxt.setText(path);
             }
         }
     }
-    
+
     /**
-     * Implodes a byte array into a comma separated string.
-     * @param a The byte array to implode.
-     * @return The byte array as a comma separated string.
+     * Finds the the first index of a byte in a byte array, or -1 if not found.
+     * @param search The byte array to search.
+     * @param find The byte to search for, can also accept ints.
+     * @return The first index of the byte, or -1.
      */
+    private int getIndex(byte[] search, int find){
+        for(int x=0; x<search.length; x++){
+            if(search[x] == find)
+                return x;
+        }
+        return -1;
+    }
+    
     private String implode(byte[] a){
         if (a == null)
             return "";
@@ -793,7 +609,6 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         }
     }
 
-    /** Moves the currently selected game up one in the game list. */
     private void moveGameUp(){
         int index = gameList.getSelectedIndex();
         
@@ -802,21 +617,16 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             byte movedGameId = games[index-1];
             
             // Update the active games array
-            if(Utils.getIndex(activeGames, games[index]) != -1){
-                int movedGameIndex = Utils.getIndex(activeGames, movedGameId);
+            if(getIndex(activeGames, games[index]) != -1){
+                int movedGameIndex = getIndex(activeGames, movedGameId);
 
-                // Only update the active games when the moved game is active and not the last game.
                 if(movedGameIndex != -1 && movedGameIndex < activeGames.length-1){
                     activeGames[movedGameIndex] = activeGames[movedGameIndex+1];
                     activeGames[movedGameIndex+1] = movedGameId;
 
-                    prefs.put(Config.Key.active_tabs.toString(),
-                            implode(activeGames));
+                    prefs.put(Config.ACTIVE_TABS, implode(activeGames));
                 }
             }
-            
-            // Store the built in game ID index
-            int bIndex = Utils.getIndex(builtInGames, games[index]);
 
             // Update the games array
             games[index-1] = games[index];
@@ -827,28 +637,18 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             gameModel.set(index-1, gameModel.get(index));
             gameModel.set(index, tempObj);
             
-            // Update the selected game
             gameList.setSelectedIndex(index-1);
             
-            // Only run this when both games involved are built in.
-            if(bIndex != -1 && Utils.getIndex(builtInGames, movedGameId) != -1)
-            {
-                // Update the games id position in the built in games array
-                builtInGames[bIndex-1] = builtInGames[bIndex];
-                builtInGames[bIndex] = movedGameId;
-                
-                // Rebuild the tabs
-                if(selectedTab == bIndex)
-                    selectedTab--;
-                else if(selectedTab == bIndex-1)
-                    selectedTab++;
-
-                buildTabs();
-            }
+            // Rebuild the tabs
+            if(selectedTab == index)
+                selectedTab--;
+            else if(selectedTab == index-1)
+                selectedTab++;
+            
+            buildTabs();
         }
     }
     
-    /** Moves the currently selected game down one in the game list. */
     private void moveGameDown(){
         final int index = gameList.getSelectedIndex();
         
@@ -857,21 +657,17 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             byte movedGameId = games[index+1];
             
             // Update the active games array
-            if(Utils.getIndex(activeGames, games[index]) != -1){// Only run when the game being moved is active
-                int movedGameIndex = Utils.getIndex(activeGames, movedGameId);
+            if(getIndex(activeGames, games[index]) != -1){// Only run when the game being moved is active
+                int movedGameIndex = getIndex(activeGames, movedGameId);
 
                 // Make sure that the movedGameID is not the first active game
                 if(movedGameIndex > 0){
                     activeGames[movedGameIndex] = activeGames[movedGameIndex-1];
                     activeGames[movedGameIndex-1] = movedGameId;
 
-                    prefs.put(Config.Key.active_tabs.toString(),
-                            implode(activeGames));
+                    prefs.put(Config.ACTIVE_TABS, implode(activeGames));
                 }
             }
-            
-            // Store the built in game ID index
-            int bIndex = Utils.getIndex(builtInGames, games[index]);
             
             games[index+1] = games[index];
             games[index] = movedGameId;
@@ -882,40 +678,51 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
             
             gameList.setSelectedIndex(index+1);
             
-            // Only run this when both games involved are built in.
-            if(bIndex != -1 && Utils.getIndex(builtInGames, movedGameId) > 0)
-            {
-                // Update the games id position in the built in games array
-                builtInGames[bIndex+1] = builtInGames[bIndex];
-                builtInGames[bIndex] = movedGameId;
-                
-                // Rebuild the tabs
-                if(selectedTab == bIndex)
-                    selectedTab++;
-                else if(selectedTab == bIndex+1)
-                    selectedTab--;
-
-                buildTabs();
-            }
+            // Rebuild the tabs
+            if(selectedTab == index)
+                selectedTab++;
+            else if(selectedTab == index+1)
+                selectedTab--;
+            
+            buildTabs();
         }
     }
 
     /** Populates the gameList JList with all the games. */
     private void populateGameList(){
+        // Get the active and all game information
+        byte[] allGames = GameFactory.getAllGameIds();
+        activeGames = GameFactory.getActiveGameIds();
+        
+        int activeGameCount = activeGames.length;
+        if(activeGameCount == allGames.length){
+            games = java.util.Arrays.copyOf(activeGames, activeGameCount);
+        } else {
+            // Add activeGames to all games then add in any games left over.
+            games = new byte[allGames.length];
+            System.arraycopy(activeGames, 0, games, 0, activeGameCount);
+            
+            for(int x=0, added = activeGameCount; x<games.length; x++){
+                if(getIndex(games, allGames[x]) == -1){
+                    games[added] = allGames[x];
+                    added++;
+                }
+            }
+        }
+        
         // Setup the list model
         for(int x=0; x<games.length; x++){
             // Create and set the gameList Item
             GameListItem game = new GameListItem(
                     GameFactory.getNameFromID(games[x]), games[x]);
-            if(x < activeGames.length)
+            if(x < activeGameCount)
                 game.setSelected(true);
-
+            
             // Add to the model
             gameModel.addElement(game);
         }
     }
 
-    /** Puts the changes into the configuration and saves it to disk. */
     private void saveConfig() {
         // Iterate through the prefs and save to config
         java.util.Iterator<String> i = prefs.keySet().iterator();
@@ -925,13 +732,11 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         }
         Config.saveConfig();
     }
-
-    /** Sets the start in last tab configuration and updates the GUI. */
+    
     private void setStartInLastTab() {
         // Save the start in last tab value
         boolean startInLastTab = startInLastTabCB.isSelected();
-        prefs.put(Config.Key.start_in_last_tab.toString(),
-                Boolean.toString(startInLastTab));
+        prefs.put(Config.START_IN_LAST_TAB, Boolean.toString(startInLastTab));
         
         // Change the startInThisTabs state
         if(startInLastTab){
@@ -945,41 +750,22 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
                 startInThisTabCB.setEnabled(true);
         }
     }
-
-    /** Sets the start in this tab configuration and updates the GUI. */
+    
     private void setStartInThisTab(){
         if(startInThisTabCB.isSelected()){
-            prefs.put(Config.Key.start_tab.toString(),
-                    Byte.toString(games[selectedTab]));
-            prefs.put(Config.Key.start_in_last_tab.toString(), "false");
+            prefs.put(Config.START_TAB, Byte.toString(games[selectedTab]));
+            prefs.put(Config.START_IN_LAST_TAB, "false");
         } else {
-            prefs.put(Config.Key.start_tab.toString(), "0");
+            prefs.put(Config.START_TAB, "0");
         }
-    }
-
-    /**
-     * Toggles if it is possible to edit the 7z settings, and saves the archive
-     * settings.
-     * @param isZip If <tt>true</tt> means that the program is using zip to
-     * archive the profiles, <tt>false</tt> if using 7z.
-     */
-    private void toogleArchiveMode(boolean isZip){
-        // Toogle the seven zip fields as needed
-        if(isZip == sevenZipExeTxt.isEnabled()){
-            sevenZipExeTxt.setEnabled( !isZip );
-            findSevenZipExeBtn.setEnabled( !isZip );
-        }
-        
-        prefs.put(Config.Key.archive_format.toString(),
-                isZip ? Config.ZIP_FORMAT : Config.SEVEN_ZIP_FORMAT);
     }
     
     private class ConfigTextChangeListener implements javax.swing.event.DocumentListener {
 
-        private final byte dirCode;
+        private final boolean isExe;
         
-        private ConfigTextChangeListener(byte dirCode){
-            this.dirCode = dirCode;
+        private ConfigTextChangeListener(boolean isExe){
+            this.isExe = isExe;
         }
         
         private void updatePrefs(){
@@ -988,38 +774,16 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
                 return;
             
             // Get the new text field value
-            String newValue;
-            switch(dirCode){
-                case DATA_DIR:
-                    newValue = dataDirTxt.getText();
-                    break;
-                case EXE_DIR:
-                    newValue = exeFileTxt.getText();
-                    break;
-                default:
-                    newValue = sevenZipExeTxt.getText();
-            }
+            String newValue = isExe ? exeFileTxt.getText() : dataDirTxt.getText();
             
             if(newValue == null || newValue.isEmpty())
                 return;
             
             // Get the config key and previous value
-            Game g = GameFactory.getGameFromID(builtInGames[selectedTab]);
-            String prefsKey;
-            switch(dirCode){
-                case DATA_DIR:
-                    prefsKey = g.getDirConfigKey();
-                    break;
-                case EXE_DIR:
-                    prefsKey = g.getExeConfigKey();
-                    break;
-                default:
-                    prefsKey = Config.Key.seven_zip_exe.toString();
-            }
-
-            String value = prefs.containsKey(prefsKey) ? prefs.get(prefsKey)
-                    : Config.get(prefsKey);
-
+            Game g = GameFactory.getGameFromID(games[selectedTab]);
+            String prefsKey = isExe ? g.getExeConfigKey() : g.getDataDirKey();
+            String value = prefs.containsKey(prefsKey) ? prefs.get(prefsKey) : Config.get(prefsKey);
+            
             if(value == null || !value.equals(newValue)){
                 // Value has changed, update the value
                 if( !applyBtn.isEnabled())
@@ -1043,5 +807,7 @@ public class ConfigGUI extends javax.swing.JDialog implements java.awt.event.Act
         public void changedUpdate(DocumentEvent e) {
             // Ignore
         }
+        
     }
+    
 }

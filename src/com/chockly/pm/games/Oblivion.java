@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,10 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.games;
 
 import com.chockly.pm.Config;
-import java.io.File;
+import com.chockly.pm.Profile;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -33,28 +34,29 @@ public class Oblivion extends BethesdaGame {
      * Like all other directory values, this one will have a trailing path
      * separator.
      */
-    private static final String OBLIVION_DATA_DIR = "oblivion_data_dir";
+    public static final String OBLIVION_DATA_DIR = "oblivion_data_dir";
     /**
      * Key used to retrieve/store the value indicating the name of the folder in
      * the OBLIVION_DATA_DIR where saves are stored.<br/>
      * The default value for the key is "Saves".
      */
-    private static final String OBLIVION_SAVE_DIR = "oblivion_save_dir";
+    public static final String OBLIVION_SAVE_DIR = "oblivion_save_dir";
     /**
      * Key used to retrieve/store the value indicating the executable to run
      * when launching Oblivion.
      */
-    private static final String OBLIVION_EXE = "oblivion_exe";
+    public static final String OBLIVION_EXE = "oblivion_exe";
 
     @Override
     public void autoSetupProfiles() {
         String[] validExtensions = {".ess",".bak"};
         
-        autoSetupProfiles(validExtensions, 0x2bL, 0, " - ", " - ", false);
+        autoSetupProfiles(validExtensions, 0x2bL, 0, " - ", " - ", false,
+                GameFactory.OBLIVION_ID);
     }
     
     @Override
-    public String getExe(){
+    public String getExePath(){
         return Config.get(OBLIVION_EXE,
                 "C:\\Program Files\\Bethesda Softworks\\Oblivion\\Oblivion.exe");
     }
@@ -66,16 +68,6 @@ public class Oblivion extends BethesdaGame {
     }
     
     @Override
-    public byte getId(){
-        return GameFactory.OBLIVION_ID;
-    }
-    
-    @Override
-    public String getIni(){
-        return "Oblivion.ini";
-    }
-    
-    @Override
     public String getName() {
         return "Oblivion";
     }
@@ -83,6 +75,11 @@ public class Oblivion extends BethesdaGame {
     @Override
     public String getFullName() {
         return "The Elder Scrolls IV: Oblivion";
+    }
+
+    @Override
+    public boolean activateProfile(Profile profile) {
+        return activateProfile("Oblivion.ini", profile);
     }
 	
     /**
@@ -93,14 +90,14 @@ public class Oblivion extends BethesdaGame {
     public String getDir() {
         String path = Config.get(OBLIVION_DATA_DIR);
         if(path == null)
-            path = Config.get(Config.Key.user_directory.toString()) + "My Games"
-                    + File.separator + "Oblivion" + File.separator;
+            path = Config.get(Config.USER_DIRECTORY) + "My Games"
+                    + java.io.File.separator + "Oblivion" + java.io.File.separator;
         
         return path;
     }
 
     @Override
-    public String getDirConfigKey() {
+    public String getDataDirKey() {
         return OBLIVION_DATA_DIR;
     }
 
@@ -111,6 +108,7 @@ public class Oblivion extends BethesdaGame {
 
     @Override
     public String getSave() {
-        return Config.get(OBLIVION_SAVE_DIR, SAVES_FOLDER);
+        return Config.get(OBLIVION_SAVE_DIR, "Saves");
     }
+
 }

@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,10 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.games;
 
 import com.chockly.pm.Config;
-import java.io.File;
+import com.chockly.pm.Profile;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -33,28 +34,35 @@ public class Fallout3 extends BethesdaGame {
      * Like all other directory values, this one will have a trailing path
      * separator.
      */
-    private static final String FALLOUT3_DATA_DIR = "fallout3_data_dir";
+    public static final String FALLOUT3_DATA_DIR = "fallout3_data_dir";
     /**
      * Key used to retrieve/store the value indicating the name of the folder in
      * the FALLOUT3_DATA_DIR where saves are stored.<br/>
      * The default value for the key is "Saves".
      */
-    private static final String FALLOUT3_SAVE_DIR = "fallout3_save_dir";
+    public static final String FALLOUT3_SAVE_DIR = "fallout3_save_dir";
     /**
      * Key used to retrieve the value indicating the executable to run when
      * launching Fallout 3.
      */
-    private static final String FALLOUT3_EXE = "fallout3_exe";
+    public static final String FALLOUT3_EXE = "fallout3_exe";
+
+
+    @Override
+    public boolean activateProfile(Profile profile) {
+        return activateProfile("FALLOUT.INI", profile);
+    }
 
     @Override
     public void autoSetupProfiles() {
         String[] validExtensions = {".fos",".bak"};
         
-        autoSetupProfiles(validExtensions, 0x26L, 2, " - ", ",", true);
+        autoSetupProfiles(validExtensions, 0x26L, 2, " - ", ",", true,
+                GameFactory.FALLOUT_3_ID);
     }
 
     @Override
-    public String getDirConfigKey() {
+    public String getDataDirKey() {
         return FALLOUT3_DATA_DIR;
     }
 
@@ -66,8 +74,7 @@ public class Fallout3 extends BethesdaGame {
     public String getDir() {
         String path = Config.get(FALLOUT3_DATA_DIR);
         if(path == null)
-            path = Config.get(Config.Key.user_directory.toString()) + "My Games"
-                    + File.separator + "Fallout3" + File.separator;
+            path = Config.get(Config.USER_DIRECTORY) + "My Games" + java.io.File.separator + "Fallout3" + java.io.File.separator;
         
         return path;
     }
@@ -78,7 +85,7 @@ public class Fallout3 extends BethesdaGame {
     }
 
     @Override
-    public String getExe(){
+    public String getExePath(){
         return Config.get(FALLOUT3_EXE, "C:\\Program Files\\Bethesda Softworks\\Fallout 3\\Fallout3.exe");
     }
 
@@ -91,16 +98,6 @@ public class Fallout3 extends BethesdaGame {
     public Icon getIcon(){
         return new ImageIcon(getClass().getResource("/com/chockly/pm/resources/fallout3_icon.png"));
     }
-    
-    @Override
-    public String getIni(){
-        return "FALLOUT.INI";
-    }
-    
-    @Override
-    public byte getId(){
-        return GameFactory.FALLOUT_3_ID;
-    }
 
     @Override
     public String getName() {
@@ -109,6 +106,7 @@ public class Fallout3 extends BethesdaGame {
 
     @Override
     public String getSave() {
-        return Config.get(FALLOUT3_SAVE_DIR, SAVES_FOLDER);
+        return Config.get(FALLOUT3_SAVE_DIR, "Saves");
     }
+
 }

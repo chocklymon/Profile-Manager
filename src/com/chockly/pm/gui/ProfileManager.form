@@ -11,14 +11,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="profileListScrollPane" pref="157" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="infoTxt" min="-2" pref="115" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="progressBar" min="-2" pref="79" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="launchGameBtn" min="-2" pref="202" max="-2" attributes="0"/>
                       <Component id="profileImage" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                      <Component id="infoTxt" alignment="0" min="-2" pref="153" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -34,10 +30,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="profileImage" min="-2" pref="200" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="infoTxt" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="progressBar" alignment="1" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="infoTxt" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="profileListScrollPane" alignment="1" max="32767" attributes="2"/>
                   </Group>
@@ -97,11 +90,6 @@
             <Property name="text" type="java.lang.String" value=" "/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JProgressBar" name="progressBar">
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="progressBar.setVisible(false);"/>
-          </AuxValues>
-        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JTextField" name="popupTextField">
@@ -151,8 +139,6 @@
             <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="chngeImgPopupMenuItem.addActionListener(this);"/>
           </AuxValues>
         </MenuItem>
-        <Component class="javax.swing.JPopupMenu$Separator" name="jSeparator4">
-        </Component>
         <MenuItem class="javax.swing.JMenuItem" name="makeShortcutPopupMenuItem">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -162,17 +148,6 @@
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="makeShortcutPopupMenuItem.addActionListener(this);"/>
-          </AuxValues>
-        </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="backupProfilePopupMenuItem">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/com/chockly/pm/resources/vise-drawer.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Backup"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="backupProfilePopupMenuItem.addActionListener(this);"/>
           </AuxValues>
         </MenuItem>
         <Component class="javax.swing.JPopupMenu$Separator" name="separator4">
@@ -342,141 +317,6 @@
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="deleteProfileMenuItem.addActionListener(this);"/>
-              </AuxValues>
-            </MenuItem>
-          </SubComponents>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="customGameMenu">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Games"/>
-          </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="newGameMenuItem">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/com/chockly/pm/resources/plus.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="New Custom Game"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="newGameMenuItem.addActionListener(this);"/>
-              </AuxValues>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="editGameMenuItem">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/com/chockly/pm/resources/pencil.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Edit Game"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="editGameMenuItem.addActionListener(this);"/>
-              </AuxValues>
-            </MenuItem>
-            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator1">
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="exportGameMenuItem">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/com/chockly/pm/resources/script-export.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Export Game"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="exportGameMenuItem.addActionListener(this);"/>
-              </AuxValues>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="importGameMenuItem">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/com/chockly/pm/resources/script-import.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Import Game"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="importGameMenuItem.addActionListener(this);"/>
-              </AuxValues>
-            </MenuItem>
-            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator2">
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="deleteGameMenuItem">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/com/chockly/pm/resources/cross-script.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Delete Game"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="deleteGameMenuItem.addActionListener(this);"/>
-              </AuxValues>
-            </MenuItem>
-          </SubComponents>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="toolsMenu">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Tools"/>
-          </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="deactivateMenuItem">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/com/chockly/pm/resources/tick-red.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Deactivate Profiles"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="deactivateMenuItem.addActionListener(this);"/>
-              </AuxValues>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="backupProfileMenuItem">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/com/chockly/pm/resources/vise-drawer.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Backup Profile"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="backupProfileMenuItem.addActionListener(this);"/>
-                <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="ProfileManager_backupProfileMenuItem"/>
-              </AuxValues>
-            </MenuItem>
-            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator3">
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="exportProfilesMenuItem">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/com/chockly/pm/resources/card-export.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Export Profiles"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="exportProfilesMenuItem.addActionListener(this);"/>
-              </AuxValues>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="importProfileMenuItem">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/com/chockly/pm/resources/card-import.png"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Import Profiles"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="importProfileMenuItem.addActionListener(this);"/>
-              </AuxValues>
-            </MenuItem>
-            <MenuItem class="javax.swing.JPopupMenu$Separator" name="separator5">
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="uninstallMenuItem">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Uninstall"/>
-              </Properties>
-              <AuxValues>
-                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="uninstallMenuItem.addActionListener(this);"/>
               </AuxValues>
             </MenuItem>
           </SubComponents>

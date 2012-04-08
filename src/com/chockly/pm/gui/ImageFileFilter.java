@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,52 +14,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.gui;
 
+import com.chockly.pm.IOHelper;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * Creates a new Executable File Filter.<br/>
- * <br/>
- * This will only accept files that have an .exe, .bat, .cmd, .com, or .jar
- * extension.
+ * Creates a new FileFilter that only accepts files with an image type extension
+ * (.jpg, .jpeg, .gif, .png, .bmp).
  * @author Curtis Oakley
  */
-public class GenericFileFilter extends FileFilter {
-    
-    private final String[] extensions;
-    private final String description;
-    
-    public GenericFileFilter(String[] extensions, String description){
-        this.extensions = new String[extensions.length];
-        for(int i=0; i<extensions.length; i++){
-            this.extensions[i] = extensions[i].toLowerCase();
-        }
-        this.description = description;
-    }
+public class ImageFileFilter extends FileFilter {
 
     @Override
     public boolean accept(File f) {
         if (f.isDirectory())
             return true;
 
-        String s = f.getName();
-        int index = s.lastIndexOf('.');
-
-        if (index > 0 &&  index < s.length() - 1) {
-            String  ext = s.substring(index+1).toLowerCase();
-            for(int i=0; i<extensions.length; i++){
-                if(extensions[i].equals(ext))
-                    return true;
-            }
+        String extension = IOHelper.getExtension(f);
+        if (extension != null) {
+            if (extension.equals("jpg") ||
+                    extension.equals("jpeg") ||
+                    extension.equals("gif") ||
+                    extension.equals("png") ||
+                    extension.equals("bmp"))
+                return true;
+            else
+                return false;
         }
-        
+
         return false;
     }
 
     @Override
     public String getDescription() {
-        return description;
+        return "Images (*.jpg, *.gif, *.png)";
     }
+    
 }

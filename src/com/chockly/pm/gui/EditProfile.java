@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.gui;
 
 import com.chockly.pm.Profile;
@@ -198,14 +199,11 @@ public class EditProfile extends javax.swing.JDialog implements ActionListener {
         }
     }
     
-    /** Saves the changes to the Profile and closes the dialog. */
     private void saveAndExit(){
-        ProfileFactory pf = ProfileFactory.getInstance();
-        
         if(editDirCheckBox.isSelected()){
             if( !dirTxt.getText().equals(profile.getSaveDir())){
                 String dir = dirTxt.getText();
-                if(pf.profileDirExists(dir, profile.getGameID())){
+                if(ProfileFactory.profileDirExists(dir, profile.getGameID())){
                     JOptionPane.showMessageDialog(this,
                             "The directory '" + dir + "'\n is already in use by another profile!",
                             "Profile Directory Exists",
@@ -215,7 +213,7 @@ public class EditProfile extends javax.swing.JDialog implements ActionListener {
                     // Rename the profile folder directory
                     Game game = GameFactory.getGameFromID(profile.getGameID());
                     
-                    if( !game.usesIni() && profile.isActive()){
+                    if(game.usesExternalProfileDir() && profile.isActive()){
                         // If the profiles are stored externally and the profile is active don't rename
                         profile.setSaveDir(dir);
                     } else {
@@ -247,7 +245,7 @@ public class EditProfile extends javax.swing.JDialog implements ActionListener {
         if( !imgTxt.getText().equals(profile.getImage()))
             profile.setImage(imgTxt.getText());
         
-        pf.saveProfiles();
+        ProfileFactory.saveProfiles();
         
         this.dispose();
     }

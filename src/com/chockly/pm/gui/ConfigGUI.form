@@ -62,7 +62,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="dataDirTxt">
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="dataDirTxt.getDocument().addDocumentListener(new ConfigTextChangeListener(DATA_DIR));"/>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="dataDirTxt.getDocument().addDocumentListener(new ConfigTextChangeListener(false));"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="findDataDirFolderBtn">
@@ -82,7 +82,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="exeFileTxt">
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="exeFileTxt.getDocument().addDocumentListener(new ConfigTextChangeListener(EXE_DIR));"/>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="exeFileTxt.getDocument().addDocumentListener(new ConfigTextChangeListener(true));"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="findExeFileBtn">
@@ -99,7 +99,7 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Start in this tab"/>
             <Property name="enabled" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code=" !Boolean.parseBoolean( Config.get(Config.Key.start_in_last_tab) )" type="code"/>
+              <Connection code=" !Boolean.parseBoolean( Config.get(Config.START_IN_LAST_TAB, &quot;true&quot;) )" type="code"/>
             </Property>
           </Properties>
           <AuxValues>
@@ -108,8 +108,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.ButtonGroup" name="archiveBG">
-    </Component>
     <Component class="javax.swing.ButtonGroup" name="iconActionBG">
     </Component>
     <Component class="javax.swing.ButtonGroup" name="nameActionBG">
@@ -122,6 +120,7 @@
       <Connection code="new javax.swing.ImageIcon(getClass().getResource(&quot;/com/chockly/pm/resources/gear.png&quot;)).getImage()" type="code"/>
     </Property>
     <Property name="locationByPlatform" type="boolean" value="true"/>
+    <Property name="modal" type="boolean" value="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -141,28 +140,24 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="gameSettingsTabPane" alignment="0" pref="382" max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="gameSettingsTabPane" alignment="0" pref="404" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="gamesPanel" pref="208" max="32767" attributes="0"/>
-                          <Component id="archivePanel" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="settingsPanel" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="saveBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cancelBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="applyBtn" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="gamesPanel" pref="230" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="settingsPanel" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -170,12 +165,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="archivePanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="gamesPanel" pref="185" max="32767" attributes="0"/>
-                  </Group>
-                  <Component id="settingsPanel" max="32767" attributes="0"/>
+                  <Component id="gamesPanel" max="32767" attributes="0"/>
+                  <Component id="settingsPanel" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="gameSettingsTabPane" min="-2" pref="131" max="-2" attributes="0"/>
@@ -191,261 +182,6 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="archivePanel">
-      <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder justification="2" title="Backup Settings"/>
-          </Border>
-        </Property>
-      </Properties>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="archiveFormatLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="zipRB" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="sevenZipRB" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="sevenZipExeLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="sevenZipExeTxt" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="findSevenZipExeBtn" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="archiveFormatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="zipRB" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="sevenZipRB" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="sevenZipExeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="sevenZipExeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="findSevenZipExeBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-      <SubComponents>
-        <Component class="javax.swing.JLabel" name="archiveFormatLabel">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Backup Format:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="zipRB">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="archiveBG"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Zip"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="zipRB.addActionListener(this);"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="sevenZipRB">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="archiveBG"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="7z"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="sevenZipRB.addActionListener(this);"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JLabel" name="sevenZipExeLabel">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="7z Exe:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="sevenZipExeTxt">
-          <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="Config.get(Config.Key.seven_zip_exe)" type="code"/>
-            </Property>
-            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[70, 20]"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="sevenZipExeTxt.getDocument().addDocumentListener(new ConfigTextChangeListener(SEVEN_ZIP_DIR));"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JButton" name="findSevenZipExeBtn">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/com/chockly/pm/resources/blue-folder-search-result.png"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="findSevenZipExeBtn.addActionListener(this);"/>
-          </AuxValues>
-        </Component>
-      </SubComponents>
-    </Container>
-    <Container class="javax.swing.JPanel" name="settingsPanel">
-      <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder justification="2" title="General Settings"/>
-          </Border>
-        </Property>
-      </Properties>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="exitOnLaunchCB" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="startInLastTabCB" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="iconDBLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="iconActivatesRB" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="iconStartsRB" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="nameEditsRB" min="-2" max="-2" attributes="0"/>
-                      <Component id="nameDBLabel" min="-2" max="-2" attributes="0"/>
-                      <Component id="nameActivatesRB" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="nameStartsRB" alignment="0" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="32767" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="exitOnLaunchCB" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="startInLastTabCB" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="iconDBLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="iconActivatesRB" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="iconStartsRB" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="nameDBLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="nameEditsRB" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="nameActivatesRB" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="nameStartsRB" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-      <SubComponents>
-        <Component class="javax.swing.JCheckBox" name="exitOnLaunchCB">
-          <Properties>
-            <Property name="selected" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="Boolean.parseBoolean( Config.get(Config.Key.exit_on_launch) )" type="code"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Close on game launch"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="exitOnLaunchCB.addActionListener(this);"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="startInLastTabCB">
-          <Properties>
-            <Property name="selected" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="Boolean.parseBoolean( Config.get(Config.Key.start_in_last_tab) )" type="code"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Start up in last tab"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="startInLastTabCB.addActionListener(this);"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JLabel" name="iconDBLabel">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Double click on profile icon:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="iconActivatesRB">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="iconActionBG"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Activates profile"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="iconActivatesRB.addActionListener(this);"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="iconStartsRB">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="iconActionBG"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Launches game"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="iconStartsRB.addActionListener(this);"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JLabel" name="nameDBLabel">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Double click on profile name:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="nameEditsRB">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="nameActionBG"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Renames Profile"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="nameEditsRB.addActionListener(this);"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="nameActivatesRB">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="nameActionBG"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Activates Profile"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="nameActivatesRB.addActionListener(this);"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="nameStartsRB">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="nameActionBG"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Launches Game"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="nameStartsRB.addActionListener(this);"/>
-          </AuxValues>
-        </Component>
-      </SubComponents>
-    </Container>
     <Container class="javax.swing.JPanel" name="gamesPanel">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -517,6 +253,150 @@
               <GridBagConstraints gridX="1" gridY="1" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="2" insetsLeft="0" insetsBottom="5" insetsRight="0" anchor="11" weightX="0.0" weightY="1.0"/>
             </Constraint>
           </Constraints>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="settingsPanel">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder justification="2" title="Settings"/>
+          </Border>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="exitOnLaunchCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="startInLastTabCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="iconDBLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="iconActivatesRB" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="iconStartsRB" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="nameEditsRB" min="-2" max="-2" attributes="0"/>
+                      <Component id="nameDBLabel" min="-2" max="-2" attributes="0"/>
+                      <Component id="nameActivatesRB" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="nameStartsRB" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Component id="exitOnLaunchCB" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="startInLastTabCB" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="iconDBLabel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="iconActivatesRB" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="iconStartsRB" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="nameDBLabel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="nameEditsRB" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="nameActivatesRB" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="nameStartsRB" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JCheckBox" name="exitOnLaunchCB">
+          <Properties>
+            <Property name="selected" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="Boolean.parseBoolean( Config.get(Config.EXIT_ON_LAUNCH, &quot;true&quot;) )" type="code"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Close on game launch"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="exitOnLaunchCB.addActionListener(this);"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="startInLastTabCB">
+          <Properties>
+            <Property name="selected" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="Boolean.parseBoolean( Config.get(Config.START_IN_LAST_TAB, &quot;true&quot;) )" type="code"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Start up in last tab"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="startInLastTabCB.addActionListener(this);"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="iconDBLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Double click on profile icon:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="iconActivatesRB">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="iconActionBG"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Activates profile"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="iconActivatesRB.addActionListener(this);"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="iconStartsRB">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="iconActionBG"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Launches game"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="iconStartsRB.addActionListener(this);"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="nameDBLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Double click on profile name:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="nameEditsRB">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="nameActionBG"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Renames Profile"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="nameEditsRB.addActionListener(this);"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="nameActivatesRB">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="nameActionBG"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Activates Profile"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="nameActivatesRB.addActionListener(this);"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="nameStartsRB">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="nameActionBG"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Launches Game"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="nameStartsRB.addActionListener(this);"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

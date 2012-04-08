@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.gui;
 
 import com.chockly.pm.Profile;
@@ -52,4 +53,5 @@ public class ProfileListRenderer extends DefaultListCellRenderer {
         
         return label;
     }
+    
 }

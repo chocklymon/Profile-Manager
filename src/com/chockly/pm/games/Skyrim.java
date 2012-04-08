@@ -1,4 +1,4 @@
-/* Profile Manager
+/*
  * Copyright (C) 2012 Curtis Oakley
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.chockly.pm.games;
 
 import com.chockly.pm.Config;
+import com.chockly.pm.Profile;
 import java.io.File;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -33,28 +35,29 @@ public class Skyrim extends BethesdaGame {
      * Like all other directory values, this one will have a trailing path
      * separator.
      */
-    private static final String SKYRIM_DATA_DIR = "skyrim_data_dir";
+    public static final String SKYRIM_DATA_DIR = "skyrim_data_dir";
     /**
      * Key used to retrieve/store the value indicating the name of the folder in
      * the SKYRIM_DATA_DIR where saves are stored.<br/>
      * The default value for the key is "Saves".
      */
-    private static final String SKYRIM_SAVE_DIR = "skyrim_save_dir";
+    public static final String SKYRIM_SAVE_DIR = "skyrim_save_dir";
     /**
      * Key used to retrieve/store the value indicating The executable to run
      * when launching Skyrim.
      */
-    private static final String SKYRIM_EXE = "skyrim_exe";
+    public static final String SKYRIM_EXE = "skyrim_exe";
 
     @Override
     public void autoSetupProfiles() {
         String[] validExtensions = {".ess",".bak"};
         
-        autoSetupProfiles(validExtensions, 0x1bL, 1, " - ", "  ", true);
+        autoSetupProfiles(validExtensions, 0x1bL, 1, " - ", "  ", true,
+                GameFactory.SKYRIM_ID);
     }
 
     @Override
-    public String getExe(){
+    public String getExePath(){
         return Config.get(SKYRIM_EXE,
                 "C:\\Program Files\\Steam\\SteamApps\\common\\skyrim\\TESV.exe");
     }
@@ -66,16 +69,6 @@ public class Skyrim extends BethesdaGame {
     }
     
     @Override
-    public String getIni(){
-        return "Skyrim.ini";
-    }
-    
-    @Override
-    public byte getId(){
-        return GameFactory.SKYRIM_ID;
-    }
-    
-    @Override
     public String getName() {
         return "Skyrim";
     }
@@ -84,19 +77,24 @@ public class Skyrim extends BethesdaGame {
     public String getFullName() {
         return "The Elder Scrolls V: Skyrim";
     }
+    
+    @Override
+    public boolean activateProfile(Profile profile) {
+        return activateProfile("Skyrim.ini", profile);
+    }
 
     @Override
     public String getDir(){
         String dir = Config.get(SKYRIM_DATA_DIR);
         if(dir == null)
-            dir = Config.get(Config.Key.user_directory.toString()) + "My Games"
-                    + File.separator + "Skyrim" + File.separator;
+            dir = Config.get(Config.USER_DIRECTORY) + "My Games" + File.separator
+                    + "Skyrim" + File.separator;
 
         return dir;
     }
 
     @Override
-    public String getDirConfigKey() {
+    public String getDataDirKey() {
         return SKYRIM_DATA_DIR;
     }
 
@@ -107,6 +105,7 @@ public class Skyrim extends BethesdaGame {
 
     @Override
     public String getSave() {
-        return Config.get(SKYRIM_SAVE_DIR, SAVES_FOLDER);
+        return Config.get(SKYRIM_SAVE_DIR, "Saves");
     }
+
 }
