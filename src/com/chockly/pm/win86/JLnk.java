@@ -76,7 +76,7 @@ public class JLnk {
         if(workingDirectory == null || workingDirectory.isEmpty())
             if(path.contains("\\"))
                 workingDirectory = path.substring(0, path.lastIndexOf('\\'));
-
+// TODO, build name if not set using the path
         // Construct the visual basic script that builds the shortcut
         StringBuilder vbscript = new StringBuilder(128);
         String commonEndLine = "\"\r\n";

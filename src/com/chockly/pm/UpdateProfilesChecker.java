@@ -65,7 +65,7 @@ public class UpdateProfilesChecker {
                                + "\n\nWould you like to create a new profile for this folder?"
                         : "The saved game folder for "
                                + name
-                               + " has been deleted.\n\nWould you like to delete this profile?",
+                               + " has been deleted.\n\nWould you like to delete this profile also?",
                     creates ? "Create New Profile" : "Delete Profile",
                     JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE,
