@@ -21,6 +21,10 @@
    <file>edit-profile.html</file>
   </article>
   <article>
+   <name>Custom Games</name>
+   <file>custom-games.html</file>
+  </article>
+  <article>
    <name>Keyboard Shortcuts</name>
    <file>keyboard-shortcuts.html</file>
   </article>
