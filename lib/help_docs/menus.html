@@ -66,19 +66,24 @@
    <img style='float:left' src='assets/ui-menu-games.jpg' alt='' />
   </p>
   <p>
-   <b>New Custom Game</b>, opens a window to create a new custom game. See <a href='custom-games.html'>custom games</a> for more information.
+   <b>New Custom Game</b>, opens a window to create a new custom game. See
+   <a href='custom-games.html'>custom games</a> for more information.
   </p>
   <p>
-   <b>Edit Game</b>, .
+   <b>Edit Game</b>, opens a window to edit the current custom game. This button is
+   only enabled when the currenlty selected tab is a custom game.
   </p>
   <p>
-   <b>Export Game</b>, .
+   <b>Export Game</b>, exports the current custom game to an xml file suitable for importing.
+   This button is only enabled when the currently selected tab is a custom game.
   </p>
   <p>
-   <b>Import Game</b>, .
+   <b>Import Game</b>, imports a custom game from an xml file. This button and Export Game
+   allow for moving custom games between computers and users.
   </p>
   <p>
-   <b>Delete Game</b>, .
+   <b>Delete Game</b>, removes the currently select custom game.  This button is only
+   enabled when the currently selected tab is a custom game.
   </p>
   
   <h3>Tools Menu</h3>
@@ -86,19 +91,25 @@
    <img style='float:left' src='assets/ui-menu-tools.jpg' alt='' />
   </p>
   <p>
-   <b>Deactivate Profiles</b>, .
+   <b>Deactivate Profiles</b>, turns all profiles off. This resets the .INI file (for
+   games that use one) to point back to the default save game folder.
   </p>
   <p>
-   <b>Backup Profile</b>, .
+   <b>Backup Profile</b>, takes the currently selected profile and stores all of the saves
+   into a compressed archive. The compressing settings can be controlled in the
+   <a href="config-basic.html">settings window</a>.
   </p>
   <p>
-   <b>Export Profiles</b>, .
+   <b>Export Profiles</b>, exports the profiles for the currently selected game into an xml file.
+   This can be used to backup the profile data or transfer it to another computer.
   </p>
   <p>
-   <b>Import Profiles</b>, .
+   <b>Import Profiles</b>, imports profiles from an xml file. This adds new profiles, and 
+   updates existing profiles (only profiles with matching IDs and saved game directories will be updated).
   </p>
   <p>
-   <b>Uninstall</b>, .
+   <b>Uninstall</b>, brings up the uninstallation wizard. The uninstallation wizard will help remove
+   the Profile Manager and undo any changes that it has made.
   </p>
   
   <h3>Help Menu</h3>
@@ -113,6 +124,7 @@
   </p>
   
   <div id='nav'>
+   <br/>
    <a href="interface.html">Prev</a> - <a href="edit-profile.html">Next</a>
   </div>
  </body>
