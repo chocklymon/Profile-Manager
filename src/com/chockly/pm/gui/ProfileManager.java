@@ -809,18 +809,15 @@ public class ProfileManager extends javax.swing.JFrame implements java.awt.event
                 "Create New Profile", JOptionPane.QUESTION_MESSAGE);
         if(name != null){
             // Validate the directory
-            String dir = name.replaceAll("[^a-zA-Z0-9]", "");
+            String dir = Utils.sanitizeDir(name);
             
-            if(dir.length() == 0){
+            if(dir.isEmpty()){
                 JOptionPane.showMessageDialog(this,
                         "Invalid profile name provided.\nProfile names must contain at least one alphanumeric character.",
                         "Invalid name provided",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
-            if(dir.length() > 10)
-                dir = dir.substring(0, 10);
             
             for(int x=1; pf.profileDirExists(dir, gameID); x++){
                 if(x == 1)

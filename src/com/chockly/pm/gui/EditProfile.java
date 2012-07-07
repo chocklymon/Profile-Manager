@@ -18,6 +18,7 @@ package com.chockly.pm.gui;
 
 import com.chockly.pm.Profile;
 import com.chockly.pm.ProfileFactory;
+import com.chockly.pm.Utils;
 import com.chockly.pm.games.Game;
 import com.chockly.pm.games.GameFactory;
 import java.awt.event.ActionEvent;
@@ -202,40 +203,44 @@ public class EditProfile extends javax.swing.JDialog implements ActionListener {
     private void saveAndExit(){
         ProfileFactory pf = ProfileFactory.getInstance();
         
-        if(editDirCheckBox.isSelected()){
-            if( !dirTxt.getText().equals(profile.getSaveDir())){
-                String dir = dirTxt.getText();
-                if(pf.profileDirExists(dir, profile.getGameID())){
-                    JOptionPane.showMessageDialog(this,
-                            "The directory '" + dir + "'\n is already in use by another profile!",
-                            "Profile Directory Exists",
-                            JOptionPane.WARNING_MESSAGE);
-                    return;
+        if(editDirCheckBox.isSelected() &&
+                !dirTxt.getText().equals(profile.getSaveDir()))
+        {// Rename the profile's directory
+
+            // Sanatize the input
+            String dir = Utils.sanitizeDir(dirTxt.getText());
+            
+            if(pf.profileDirExists(dir, profile.getGameID())){
+                // Inform the user that the directory is in use
+                JOptionPane.showMessageDialog(this,
+                        "The directory '" + dir + "'\n is already in use by another profile!",
+                        "Profile Directory Exists",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            } else {
+                // Rename the profile folder directory
+                Game game = GameFactory.getGameFromID(profile.getGameID());
+
+                if( !game.usesIni() && profile.isActive()){
+                    // If the profiles are stored externally and the profile is active don't rename
+                    profile.setSaveDir(dir);
                 } else {
-                    // Rename the profile folder directory
-                    Game game = GameFactory.getGameFromID(profile.getGameID());
-                    
-                    if( !game.usesIni() && profile.isActive()){
-                        // If the profiles are stored externally and the profile is active don't rename
+
+                    String saveDir = game.getDir() + game.getSave() + File.separator;
+
+                    File oldDir = new File(saveDir + profile.getSaveDir());
+                    if(oldDir.renameTo(new File(saveDir + dir))){
                         profile.setSaveDir(dir);
+
+                        // If the profile is active re-activate it so that it points to the correct directory
+                        if(profile.isActive())
+                            game.activateProfile(profile);
                     } else {
-
-                        String saveDir = game.getDir() + game.getSave() + File.separator;
-
-                        File oldDir = new File(saveDir + profile.getSaveDir());
-                        if(oldDir.renameTo(new File(saveDir + dir))){
-                            profile.setSaveDir(dir);
-
-                            // If the profile is active re-activate it so that it points to the correct directory
-                            if(profile.isActive())
-                                game.activateProfile(profile);
-                        } else {
-                            JOptionPane.showMessageDialog(this,
-                                    "Unable to change the profile's save game directory.",
-                                    "Error",
-                                    JOptionPane.WARNING_MESSAGE);
-                            return;
-                        }
+                        JOptionPane.showMessageDialog(this,
+                                "Unable to change the profile's save game directory.",
+                                "Error",
+                                JOptionPane.WARNING_MESSAGE);
+                        return;
                     }
                 }
             }

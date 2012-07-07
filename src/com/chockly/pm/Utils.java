@@ -35,4 +35,26 @@ public class Utils {
         }
         return -1;
     }
+    
+    /**
+     * Takes a directory name and removes any illegal characters and shortens
+     * it to 64 characters if needed.
+     * @param name The name of the directory to clean.
+     * @return The sanitized directory name.
+     */
+    public static String sanitizeDir(String name){
+        // Remove illegal characters
+        name = name.replaceAll("[\\\\/:*?\\\"<>|"// Invalid folder chars
+                + "\\x00-\\x1F]",// Control characters
+                "");
+        
+        // Remove trailing white space
+        name = name.trim();
+        
+        // Shorten to 64 characters in length
+        if(name.length() > 64)
+            name = name.substring(0, 64);
+        
+        return name;
+    }
 }
