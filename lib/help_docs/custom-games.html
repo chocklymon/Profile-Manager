@@ -7,6 +7,67 @@
  <body>
   <h1>Custom Games</h1>
   
+  <h3>How They Work</h3>
+  <p>
+   Custom games work by swapping out the contents of the game's saved game folder with the
+   contents of the profile's folder. This means that you can create a custom game for any
+   game that has a save game folder that contains only save game data and <b>not</b>
+   other necessary game files.
+  </p>
+  <p>
+   When you activate a profile all the files inside the game's saved game folder are moved
+   into the profile folder of the previously active profile. Then all the files inside
+   the folder of the profile being activated are moved into the save game folder.
+  </p>
+  
+  <h3>Set Up</h3>
+  <p class='center'>
+   <img src='assets/ui-add-custom-game.jpg' alt='' />
+  </p>
+  <p>
+   <b>Name</b>, this is what will appear in the game's as its name.
+  </p>
+  <p>
+   <b>Directory</b>, the folder that contains the saves folder and does/will contain
+   the profile folder.
+  </p>
+  <p>
+   <b>Exe</b>, this is the program that will be run when the custom game is launched.
+  </p>
+  <p>
+   <b>Profile Folder</b>, the name of the folder inside the directory that will
+   contain the profiles.
+  </p>
+  <p>
+   <b>Saves Folder</b>, the name of the folder inside the directory that contains
+   the game's saved game data.
+  </p>
+  <p>
+   <b>Icon</b>, this is the icon that will be displayed for the game on its tab.
+   This should be between 16 x 16px and 18 x 18px in size.
+  </p>
+  
+  <h3>Setting Up Profiles</h3>
+  <p>
+   The auto create profiles function for custom games will create a profile for every folder
+   inside the game's saved game folder and the profile folder. It will <b>not</b> sort existing
+   saved games into folders. There are two ways to set up profiles, both require manually sorting
+   the saved games:<br/>
+   <b>1)</b> Go into the game's saved game folder and create a new folder for each character.
+   Then moved the saved games into their respective folder. Once finished run auto create profiles.<br/>
+   <b>2)</b> Create a new profile inside the Profile Manager for each character. Then
+   move the saved games from the saved game folder into the respective profile folder.
+  </p>
+  
+  <h3>Importing &amp; Exporting</h3>
+  <p>
+   Custom games can be exported and imported into an XML file format. This allows for them to
+   be backed-up and exchanged between users. When a game is imported from another user
+   the directory and exe may need to be updated to reflect their location on your current
+   machine. When exporting to share with other, if you are using a custom icon be sure
+   to include it when sending the file to others.
+  </p>
+  
   <div id='nav'>
    <a href="edit-profile.html">Prev</a> - <a href="keyboard-shortcuts.html">Next</a>
   </div>
