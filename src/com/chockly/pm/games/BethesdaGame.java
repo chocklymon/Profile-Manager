@@ -36,7 +36,7 @@ public abstract class BethesdaGame implements Game {
         try
         {
             IOUtils.setINIValue(
-                    getDir() + getIni(),
+                    new File(getDir(), getIni()),
                     "SLocalSavePath",
                     getSave() + File.separator + profile.getSaveDir() + File.separator,
                     "[General]");
@@ -274,7 +274,7 @@ public abstract class BethesdaGame implements Game {
         try
         {
             IOUtils.setINIValue(
-                    getDir() + getIni(),
+                    new File(getDir(), getIni()),
                     "SLocalSavePath",
                     getSave() + File.separator,
                     "[General]");

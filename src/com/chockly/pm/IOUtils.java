@@ -272,7 +272,7 @@ public class IOUtils {
      * types/formats may have unexpected results including and quite likely
      * corrupting the provided file.
      * 
-     * @param fileName The name of the file to edit.
+     * @param file The file to edit.
      * @param key The key to search for. Do not include the equals sign.
      * @param value The value to replace the keys current value with.
      * @param section The section of the ini that the key value pair should be
@@ -282,45 +282,52 @@ public class IOUtils {
      * 
      * @throws FileNotFoundException If the file denoted by fileName doesn't exist.
      */
-    public static void setINIValue(String fileName, String key, String value, String section)
+    public static void setINIValue(File file, String key, String value, String section)
             throws FileNotFoundException
     {
         try{
+            // Make sure that it is possible to write to the file
+            if(!file.canWrite()){
+                if(!file.setWritable(true))
+                    throw new FileNotFoundException(file.getName() +
+                            " is read only.\nThis file must be writable in order for the Profile Manager to work.");
+            }
+            
             // Read in the game ini
             BufferedReader in = new BufferedReader(
-                    new FileReader(fileName));
+                    new FileReader(file));
 
             String line, newLine = System.getProperty("line.separator");
-            StringBuilder file = new StringBuilder(1024);
+            StringBuilder contents = new StringBuilder(1024);
 
             while( (line = in.readLine()) != null ){
-                file.append(line);
-                file.append(newLine);
+                contents.append(line);
+                contents.append(newLine);
             }
             in.close();
 
             // Find the key's value start location
-            int start = file.indexOf(key);
+            int start = contents.indexOf(key);
             
             // Check if the key was found
             if(start == -1){
                 // Key not found, add it.
-                start = file.indexOf(section);
+                start = contents.indexOf(section);
                 
                 String keyValue = key + "=" + value + newLine;
                 
                 if(start == -1){
                     // Section not found append it.
-                    file.append(newLine);
-                    file.append(section);
-                    file.append(newLine);
+                    contents.append(newLine);
+                    contents.append(section);
+                    contents.append(newLine);
                     
-                    file.append(keyValue);
+                    contents.append(keyValue);
                     
                 } else {
                     // Section found, append the line after it
                     start += section.length() + newLine.length();
-                    file.insert(start, keyValue);
+                    contents.insert(start, keyValue);
                 }
                 
             } else {
@@ -328,17 +335,17 @@ public class IOUtils {
                 start += key.length() + 1;
 
                 // Replace the current value with the new value
-                file.replace(start,
-                        file.indexOf(newLine, start),
+                contents.replace(start,
+                        contents.indexOf(newLine, start),
                         value);
             }
 
             // Save the file information back to disk
             try{
                 BufferedWriter out = new BufferedWriter(new
-                        FileWriter(fileName));
+                        FileWriter(file));
 
-                out.write(file.toString());
+                out.write(contents.toString());
 
                 out.flush();
                 out.close();
@@ -352,7 +359,7 @@ public class IOUtils {
             throw new FileNotFoundException(fnfe.getMessage());
         } catch(IOException ioe){
             Main.handleException(
-                    "An IO Exception has occured while attempting to read the file '" + fileName + "'",
+                    "An IO Exception has occured while attempting to read the file '" + file.getName() + "'",
                     ioe, Main.WARN_LEVEL);
         }
     }
