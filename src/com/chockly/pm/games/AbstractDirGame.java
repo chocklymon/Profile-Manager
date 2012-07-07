@@ -166,10 +166,9 @@ public abstract class AbstractDirGame implements Game {
         // Re-activate the last active profile
         if(activeProfile != null){
             profilesFolder = new File(profilesFolder, activeProfile.getSaveDir());
-            File[] saves = profilesFolder.listFiles();
-            for(int i=0; i<saves.length; i++){
-                IOUtils.moveFile(saves[i],
-                        new File(savesFolder, saves[i].getName()));
+            for(File save : profilesFolder.listFiles()){
+                IOUtils.moveFile(save,
+                        new File(savesFolder, save.getName()));
             }
             
             // Delete the profile's folder in the profiles directory

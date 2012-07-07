@@ -197,41 +197,43 @@ public class Morrowind extends AbstractDirGame {
                     }
 
                     // Create the save directory's name
-                    String dirName = characterName.toString()
-                            .replaceAll("[ ]", "");
+                    String dirName = Utils.sanitizeDir(characterName.toString());
 
-                    // See if we have already created this profile
-                    if( profileData.get(dirName) == null ){
-                        // Profile doesn't exists, add a new profile \\
+                    // Ignore empty directory names
+                    if( !dirName.isEmpty()){
+                        
+                        // See if we have already created this profile
+                        if( profileData.get(dirName) == null ){
+                            // Profile doesn't exists, add a new profile \\
 
-                        // Make sure that the directory name doesn't exist
-                        for(int x=1; new File(dirName).exists(); x++)
-                        {
-                            if(x == 1)
-                                dirName += x;
-                            else
-                                dirName = dirName.substring(0, dirName.length()-1) + x;
+                            // Make sure that the directory name doesn't exist
+                            for(int x=1; new File(dirName).exists(); x++)
+                            {
+                                if(x == 1)
+                                    dirName += x;
+                                else
+                                    dirName = dirName.substring(0, dirName.length()-1) + x;
+                            }
+
+                            // Update the hash map with the new dirName
+                            profileData.put(dirName, characterName.toString());
+
+                            // Add the new profile
+                            pf.add(characterName.toString(), dirName, GameFactory.MORROWIND_ID);
+
+                            /* Comment out this line to print out the newly added profile information
+                            System.out.println("-New Profile-\nSave Folder: " + savesFolder +
+                                "\nFile Name: " + fileName +
+                                "\nDirectory Name: " + dirName +
+                                "\nCharacter Name: " + characterName + "\n");
+                            // */
                         }
 
-                        // Update the hash map with the new dirName
-                        profileData.put(dirName, characterName.toString());
-
-                        // Add the new profile
-                        pf.add(
-                                characterName.toString(), dirName, GameFactory.MORROWIND_ID);
-
-                        /* Comment out this line to print out the newly added profile information
-                        System.out.println("-New Profile-\nSave Folder: " + savesFolder +
-                            "\nFile Name: " + fileName +
-                            "\nDirectory Name: " + dirName +
-                            "\nCharacter Name: " + characterName + "\n");
-                        // */
+                        // Move the saved game file
+                        IOUtils.moveFile(
+                                new File(savesFolder, fileName),
+                                new File(profilesFolder, dirName + File.separator + fileName ));
                     }
-
-                    // Move the saved game file
-                    IOUtils.moveFile(
-                            new File(savesFolder, fileName),
-                            new File(profilesFolder, dirName + File.separator + fileName ));
                 }
             }
         }
@@ -239,10 +241,9 @@ public class Morrowind extends AbstractDirGame {
         // Re-activate the last active profile
         if(activeProfile != null){
             profilesFolder = new File(profilesFolder, activeProfile.getSaveDir());
-            File[] saves = profilesFolder.listFiles();
-            for(int i=0; i<saves.length; i++){
-                IOUtils.moveFile(saves[i],
-                        new File(savesFolder, saves[i].getName()));
+            for(File save : profilesFolder.listFiles()){
+                IOUtils.moveFile(save,
+                        new File(savesFolder, save.getName()));
             }
             
             // Delete the profile's folder in the profiles directory

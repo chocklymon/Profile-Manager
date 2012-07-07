@@ -225,8 +225,7 @@ public abstract class BethesdaGame implements Game {
                     }
 
                     // Create the save directory's name
-                    String dirName = characterName.toString()
-                            .replaceAll("[ ]", "");
+                    String dirName = Utils.sanitizeDir(characterName.toString());
                     
                     // Ignore empty directory names
                     if( !dirName.isEmpty()){
@@ -248,8 +247,7 @@ public abstract class BethesdaGame implements Game {
                             profileData.put(dirName, characterName.toString());
 
                             // Add the new profile
-                            pf.add(
-                                    characterName.toString(), dirName, getId());
+                            pf.add(characterName.toString(), dirName, getId());
 
                             /* Comment out this line to print out the newly added profile information
                             System.out.println("-New Profile-\nSave Folder: " + savesFolder +
