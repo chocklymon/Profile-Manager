@@ -50,7 +50,7 @@ import java.io.PrintWriter;
 public class Main {
     
     /** The current version number for the Profile Manager. */
-    public static final String VERSION_NUM = "1.4.02";
+    public static final String VERSION_NUM = "1.4.03";
 
     /**
      * This exception level indicates that a fatal error has occurred. This will 

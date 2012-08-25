@@ -117,7 +117,7 @@ public class IOUtils {
         JLnk link = new JLnk();
 
         link.setFolder(System.getProperty("user.home") + "\\Desktop");
-        link.setName(profile.getName() + " " + game.getName());
+        link.setName(profile.getSaveDir() + " " + game.getName());
         
         // Get the jar's name and location
         try {
